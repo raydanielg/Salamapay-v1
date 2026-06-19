@@ -1,12 +1,21 @@
-{{-- Call To Action Section --}}
-<section class="py-24 bg-salama-dark relative overflow-hidden">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-salama-gold/8 rounded-full blur-[120px]"></div>
-    <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative">
-        <h2 class="text-4xl md:text-6xl font-black mb-6">Ready to Get <span class="gradient-text">Started</span>?</h2>
-        <p class="text-gray-400 text-lg mb-10 max-w-2xl mx-auto">Join millions of users who trust Salamapay for their daily transactions. Start your financial journey today.</p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="{{ route('register') }}" class="w-full sm:w-auto px-10 py-4 text-base font-bold bg-gradient-to-r from-salama-gold to-salama-gold-dark rounded-xl hover:shadow-xl hover:shadow-salama-gold/30 hover:scale-105 transition-all text-salama-darker text-center">Create Free Account</a>
-            <a href="{{ route('login') }}" class="w-full sm:w-auto px-10 py-4 text-base font-medium border border-white/10 rounded-xl hover:bg-white/5 hover:border-salama-gold/30 transition-all text-center">Already have an account? Sign In</a>
+<section class="py-20 md:py-28 bg-gradient-to-b from-white to-emerald-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="animate-fade-up relative p-10 md:p-16 rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-700 overflow-hidden text-center shadow-2xl shadow-emerald-500/30">
+            <div class="absolute top-0 right-0 w-[300px] h-[300px] rounded-full bg-gold-400/20 blur-[80px]"></div>
+            <div class="absolute bottom-0 left-0 w-[200px] h-[200px] rounded-full bg-emerald-400/20 blur-[60px]"></div>
+            <div class="relative z-10">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-white mb-4">Anza Kutumia SalamaPay Leo</h2>
+                <p class="text-lg md:text-xl text-emerald-100/80 max-w-2xl mx-auto mb-8">Jiunge na maelfu ya biashara zinazotumia SalamaPay kupokea malipo kwa urahisi. Usajili ni bure!</p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="{{ route('register') }}" class="group inline-flex items-center gap-2 px-8 py-4 text-base font-bold text-emerald-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-xl shadow-xl shadow-gold-500/30 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-0.5">
+                        Jiandikishe Bure
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                    </a>
+                    <a href="#how-it-works" class="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-white border border-white/30 hover:border-white/60 rounded-xl backdrop-blur-sm transition-all hover:-translate-y-0.5">
+                        Jifunze Zaidi
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </section>
