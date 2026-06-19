@@ -3,11 +3,6 @@
 @section('title', 'Login - SalamaPay')
 
 @section('content')
-{{-- SalamaPay Logo (above card) --}}
-<div class="text-center mb-6">
-    <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-12 mx-auto brightness-0 invert drop-shadow-lg">
-</div>
-
 <div class="w-full max-w-md" style="animation: simpleFadeIn 0.4s ease-out both;">
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {{-- Header --}}

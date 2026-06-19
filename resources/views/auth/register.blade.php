@@ -3,11 +3,6 @@
 @section('title', 'Register - SalamaPay')
 
 @section('content')
-{{-- SalamaPay Logo (above card) --}}
-<div class="text-center mb-6">
-    <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-12 mx-auto brightness-0 invert drop-shadow-lg">
-</div>
-
 <div class="w-full max-w-md" style="animation: simpleFadeIn 0.4s ease-out both;">
     <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
         {{-- Header --}}
@@ -21,23 +16,34 @@
 
         {{-- Form --}}
         <div class="p-8">
-            <form method="POST" action="{{ route('register') }}" class="space-y-5">
+            <form method="POST" action="{{ route('register') }}" class="space-y-5" id="registerForm">
                 @csrf
 
-                {{-- Name --}}
-                <div>
-                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                {{-- First + Last Name (side by side) --}}
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="first_name" class="block text-sm font-semibold text-gray-700 mb-1.5">First Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autocomplete="given-name" autofocus
+                                class="w-full pl-11 pr-3 py-2.5 rounded-lg border @error('first_name') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                                placeholder="John">
                         </div>
-                        <input id="name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
-                            class="w-full pl-11 pr-4 py-2.5 rounded-lg border @error('name') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
-                            placeholder="John Doe">
+                        @error('first_name')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                    @error('name')
-                        <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>
-                    @enderror
+                    <div>
+                        <label for="last_name" class="block text-sm font-semibold text-gray-700 mb-1.5">Last Name</label>
+                        <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required autocomplete="family-name"
+                            class="w-full px-3 py-2.5 rounded-lg border @error('last_name') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                            placeholder="Doe">
+                        @error('last_name')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 {{-- Email --}}
@@ -49,10 +55,30 @@
                         </div>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email"
                             class="w-full pl-11 pr-4 py-2.5 rounded-lg border @error('email') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
-                            placeholder="you@example.com">
+                            placeholder="name@example.com">
                     </div>
                     @error('email')
                         <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Phone with Tanzania Flag --}}
+                <div>
+                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1.5">Phone</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
+                            <div class="flex items-center gap-1 bg-gray-50 border-r border-gray-200 px-2 py-1.5 rounded-l-md -ml-0.5 h-full">
+                                <img src="https://flagcdn.com/w40/tz.png" alt="Tanzania" class="w-5 h-3.5 object-cover rounded-sm shadow-sm">
+                                <span class="text-xs font-bold text-gray-700">+255</span>
+                            </div>
+                        </div>
+                        <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
+                            class="w-full pl-[90px] pr-4 py-2.5 rounded-lg border @error('phone') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                            placeholder="7XX XXX XXX" maxlength="9">
+                    </div>
+                    <p class="mt-1 text-xs text-gray-400">Enter number without +255 prefix</p>
+                    @error('phone')
+                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -63,9 +89,9 @@
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
-                        <input id="password" type="password" name="password" required autocomplete="new-password"
+                        <input id="password" type="password" name="password" required autocomplete="new-password" minlength="8"
                             class="w-full pl-11 pr-4 py-2.5 rounded-lg border @error('password') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
-                            placeholder="Create a strong password">
+                            placeholder="Min. 8 characters">
                     </div>
                     @error('password')
                         <p class="mt-1.5 text-sm text-red-600 flex items-center gap-1"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{{ $message }}</p>
@@ -74,14 +100,14 @@
 
                 {{-- Confirm Password --}}
                 <div>
-                    <label for="password-confirm" class="block text-sm font-semibold text-gray-700 mb-1.5">Confirm Password</label>
+                    <label for="password-confirm" class="block text-sm font-semibold text-gray-700 mb-1.5">Confirm password</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"
                             class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
-                            placeholder="Confirm your password">
+                            placeholder="Re-enter your password">
                     </div>
                 </div>
 
@@ -108,4 +134,35 @@
 
     <p class="mt-6 text-center text-xs text-gray-400">&copy; {{ date('Y') }} SalamaPay. All rights reserved.</p>
 </div>
+
+{{-- Phone Input Scripts --}}
+<script>
+(function() {
+    const phoneInput = document.getElementById('phone');
+    const form = document.getElementById('registerForm');
+
+    if (phoneInput) {
+        // Only allow digits
+        phoneInput.addEventListener('input', function(e) {
+            let val = this.value.replace(/\D/g, '');
+            // Must start with 7 or 6
+            if (val.length > 0 && !/^[67]/.test(val)) {
+                val = val.substring(1);
+            }
+            if (val.length > 9) val = val.substring(0, 9);
+            this.value = val;
+        });
+
+        // Format on submit: prepend 255
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const raw = phoneInput.value.replace(/\D/g, '');
+                if (raw.length === 9) {
+                    phoneInput.value = '255' + raw;
+                }
+            });
+        }
+    }
+})();
+</script>
 @endsection
