@@ -37,3 +37,17 @@ Route::get('/support', function () {
 Route::get('/docs/{page?}', function ($page = 'introduction') {
     return view('frontend.docs', ['page' => $page]);
 })->name('docs');
+
+// Admin Dashboard Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
+});
+
+// User/Merchant Dashboard Routes
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', function () {
+        return view('user.dashboard');
+    })->name('user.dashboard');
+});
