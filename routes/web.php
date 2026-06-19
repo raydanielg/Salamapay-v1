@@ -22,8 +22,8 @@ Route::get('/blog', function () {
     return view('frontend.blog');
 })->name('blog');
 
-Route::get('/blog/{slug}', function ($slug) {
-    return view('frontend.blog-detail', ['slug' => $slug]);
+Route::get('/blog/{blog:slug}', function (\App\Models\Blog $blog) {
+    return view('frontend.blog-detail', ['blog' => $blog]);
 })->name('blog-detail');
 
 Route::get('/contact', function () {

@@ -3,11 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to SalamaPay - SalamaPay Blog</title>
-    <meta name="description" content="Discover how SalamaPay is transforming digital payments for businesses across Tanzania.">
+    <title>{{ $blog->title }} - SalamaPay Blog</title>
+    <meta name="description" content="{{ $blog->excerpt }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -27,11 +28,22 @@
         .animate-fade-up { animation: fade-up .8s ease-out both; }
         .delay-1 { animation-delay:.1s }
         .delay-2 { animation-delay:.3s }
+        .docs-content h2 { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e5e7eb; }
+        .docs-content h3 { font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-top: 2rem; margin-bottom: 0.75rem; }
+        .docs-content p { color: #4b5563; line-height: 1.75; margin-bottom: 1.25rem; }
+        .docs-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #4b5563; }
+        .docs-content ul li { margin-bottom: 0.5rem; }
+        .docs-content img { border-radius: 0.75rem; margin: 1.5rem 0; max-width: 100%; height: auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .docs-content blockquote { border-left: 4px solid #f9ac00; padding-left: 1rem; color: #4b5563; font-style: italic; margin-bottom: 1.25rem; }
+        .docs-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .docs-content th { background: #f9fafb; padding: 0.75rem; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+        .docs-content td { padding: 0.75rem; border-bottom: 1px solid #e5e7eb; color: #4b5563; }
     </style>
 </head>
 <body class="font-['Nunito',sans-serif] antialiased bg-white text-slate-800">
 
 @include('frontend.partials.header')
+@include('frontend.partials.page-loader')
 
 {{-- Article Header --}}
 <section class="relative pt-[68px] pb-12 bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 overflow-hidden">
@@ -40,14 +52,14 @@
         <div class="animate-fade-up delay-1 flex items-center gap-3 mb-6">
             <a href="{{ route('blog') }}" class="text-emerald-200 hover:text-white text-sm font-medium transition-colors">&larr; Back to Blog</a>
         </div>
-        <span class="inline-flex px-3 py-1 text-xs font-bold text-emerald-700 bg-gold-100 rounded-full mb-4">Payments</span>
-        <h1 class="animate-fade-up delay-2 text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">Welcome to SalamaPay: The Future of Payments</h1>
+        <span class="inline-flex px-3 py-1 text-xs font-bold {{ in_array($blog->category, ['Product','Security','Tips']) ? 'text-gold-700 bg-gold-100' : 'text-emerald-700 bg-emerald-100' }} rounded-full mb-4">{{ $blog->category }}</span>
+        <h1 class="animate-fade-up delay-2 text-3xl md:text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-4">{{ $blog->title }}</h1>
         <div class="animate-fade-up delay-2 flex items-center gap-4 text-emerald-100/80 text-sm">
-            <span>Jun 15, 2026</span>
+            <span>{{ $blog->published_at->format('M d, Y') }}</span>
             <span>&middot;</span>
-            <span>5 min read</span>
+            <span>{{ $blog->read_time }}</span>
             <span>&middot;</span>
-            <span>By James Daudi</span>
+            <span>By {{ $blog->author }}</span>
         </div>
     </div>
 </section>
@@ -55,42 +67,21 @@
 {{-- Featured Image --}}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
     <div class="rounded-2xl overflow-hidden shadow-2xl">
-        <img src="{{ asset('Karibu salamapay (1).png') }}" alt="Karibu SalamaPay" class="w-full h-64 md:h-80 object-cover">
+        @if($blog->image)
+        <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" class="w-full h-64 md:h-80 object-cover">
+        @else
+        <div class="w-full h-64 md:h-80 bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+            <svg class="w-20 h-20 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+        </div>
+        @endif
     </div>
 </div>
 
 {{-- Article Content --}}
 <article class="py-12 bg-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="animate-fade-up delay-1 prose prose-lg max-w-none">
-            <p class="text-gray-600 leading-relaxed mb-6">
-                In today's fast-paced digital economy, businesses need payment solutions that are reliable, affordable, and easy to use. That's exactly why we built SalamaPay.
-            </p>
-            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Why We Started SalamaPay</h2>
-            <p class="text-gray-600 leading-relaxed mb-6">
-                We noticed that small and medium businesses in Tanzania struggled with accepting digital payments. The existing solutions were either too expensive, too complicated, or both. We set out to change that.
-            </p>
-            <p class="text-gray-600 leading-relaxed mb-6">
-                SalamaPay was born from a simple idea: every business, regardless of size, deserves access to world-class payment infrastructure. Whether you are a local shop in Dar es Salaam or a growing e-commerce platform, we have got you covered.
-            </p>
-
-            <div class="my-10 p-6 rounded-2xl bg-emerald-50 border border-emerald-100">
-                <h3 class="text-lg font-bold text-emerald-800 mb-3">What makes SalamaPay different?</h3>
-                <ul class="space-y-2 text-gray-600">
-                    <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Instant settlements - get paid immediately</li>
-                    <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Only 0.5% per mobile money transaction</li>
-                    <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Multiple payment methods supported</li>
-                    <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Developer-friendly APIs and SDKs</li>
-                </ul>
-            </div>
-
-            <h2 class="text-2xl font-bold text-gray-900 mt-10 mb-4">Looking Ahead</h2>
-            <p class="text-gray-600 leading-relaxed mb-6">
-                We are just getting started. Our roadmap includes expanding to more African countries, adding new payment methods, and building tools that help businesses grow faster.
-            </p>
-            <p class="text-gray-600 leading-relaxed mb-6">
-                Thank you for being part of this journey. Together, we are building the future of money in Africa.
-            </p>
+        <div class="animate-fade-up delay-1 docs-content prose prose-lg max-w-none">
+            {!! nl2br($blog->content) !!}
         </div>
 
         {{-- Share --}}
@@ -107,40 +98,35 @@
 </article>
 
 {{-- Related Posts --}}
+@php
+$relatedBlogs = \App\Models\Blog::where('id', '!=', $blog->id)->latest('published_at')->take(3)->get();
+@endphp
+@if($relatedBlogs->count() > 0)
 <section class="py-16 bg-gradient-to-b from-white to-emerald-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-8">More Articles</h2>
         <div class="grid md:grid-cols-3 gap-6">
-            <a href="{{ route('blog-detail', 'new-app-features') }}" class="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all">
+            @foreach($relatedBlogs as $related)
+            <a href="{{ route('blog-detail', $related->slug) }}" class="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all">
                 <div class="h-40 overflow-hidden">
-                    <img src="{{ asset('app (1).png') }}" alt="App Features" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    @if($related->image)
+                    <img src="{{ asset($related->image) }}" alt="{{ $related->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    @else
+                    <div class="w-full h-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                        <svg class="w-12 h-12 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
+                    </div>
+                    @endif
                 </div>
                 <div class="p-5">
-                    <span class="text-xs text-gray-400">Jun 10, 2026</span>
-                    <h3 class="font-bold text-gray-900 mt-1 group-hover:text-emerald-600 transition-colors">New App Features</h3>
+                    <span class="text-xs text-gray-400">{{ $related->published_at->format('M d, Y') }}</span>
+                    <h3 class="font-bold text-gray-900 mt-1 group-hover:text-emerald-600 transition-colors line-clamp-2">{{ $related->title }}</h3>
                 </div>
             </a>
-            <a href="{{ route('blog-detail', 'security-standards') }}" class="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all">
-                <div class="h-40 overflow-hidden">
-                    <img src="{{ asset('end (1).png') }}" alt="Security" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                </div>
-                <div class="p-5">
-                    <span class="text-xs text-gray-400">May 28, 2026</span>
-                    <h3 class="font-bold text-gray-900 mt-1 group-hover:text-emerald-600 transition-colors">Security Standards</h3>
-                </div>
-            </a>
-            <a href="{{ route('blog-detail', 'small-business-growth') }}" class="group block bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all">
-                <div class="h-40 overflow-hidden">
-                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Growth" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                </div>
-                <div class="p-5">
-                    <span class="text-xs text-gray-400">Jun 5, 2026</span>
-                    <h3 class="font-bold text-gray-900 mt-1 group-hover:text-emerald-600 transition-colors">Small Business Growth</h3>
-                </div>
-            </a>
+            @endforeach
         </div>
     </div>
 </section>
+@endif
 
 <footer class="bg-gray-900 text-white py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

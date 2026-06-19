@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -41,6 +42,7 @@
 <body class="font-['Nunito',sans-serif] antialiased bg-white text-slate-800">
 
 @include('frontend.partials.header')
+@include('frontend.partials.page-loader')
 
 {{-- Hero Section --}}
 <section class="relative min-h-[70vh] flex items-center overflow-hidden pt-[68px]">
