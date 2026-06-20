@@ -107,13 +107,13 @@
             {{-- Subtotal --}}
             <div class="flex justify-between items-center">
                 <span class="text-xs text-gray-500">Subtotal</span>
-                <span class="text-sm font-bold text-gray-900" id="subtotalDisplay">TSh 0</span>
+                <span class="text-sm font-bold text-gray-900" id="subtotalDisplay">{{ $currencySymbol }} 0</span>
             </div>
 
             {{-- Discount --}}
             <div class="flex gap-2">
                 <div class="flex-1 relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-bold">-TSh</span>
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-bold">-{{ $currencySymbol }}</span>
                     <input type="number" id="discountInput" placeholder="Discount" class="w-full pl-12 pr-3 py-2 border rounded-lg text-xs font-bold text-red-600 outline-none focus:border-red-400 transition-all" oninput="calculateTotals()">
                 </div>
                 <select id="discountType" class="w-20 border rounded-lg text-xs outline-none focus:border-emerald-500" onchange="calculateTotals()">
@@ -124,25 +124,25 @@
 
             {{-- Tax --}}
             <div class="flex justify-between items-center py-2 border-t border-dashed border-gray-200">
-                <span class="text-xs text-gray-500">Tax (18%)</span>
-                <span class="text-xs font-bold text-gray-700" id="taxDisplay">TSh 0</span>
+                <span class="text-xs text-gray-500">Tax ({{ $settings['tax_rate'] ?? 18 }}%)</span>
+                <span class="text-xs font-bold text-gray-700" id="taxDisplay">{{ $currencySymbol }} 0</span>
             </div>
 
             {{-- Grand Total --}}
             <div class="flex justify-between items-center py-3 bg-emerald-50 rounded-xl px-3">
                 <span class="text-xs font-bold text-emerald-800 uppercase">Total</span>
-                <span class="text-xl font-black text-emerald-700" id="totalDisplay">TSh 0</span>
+                <span class="text-xl font-black text-emerald-700" id="totalDisplay">{{ $currencySymbol }} 0</span>
             </div>
 
             {{-- Amount Paid & Change --}}
             <div class="space-y-2">
                 <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-bold">TSh</span>
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-bold">{{ $currencySymbol }}</span>
                     <input type="number" id="amountPaid" placeholder="Amount received" class="w-full pl-10 pr-3 py-2.5 border rounded-lg text-sm font-bold text-gray-900 outline-none focus:border-emerald-500 transition-all" oninput="calculateTotals()">
                 </div>
                 <div class="flex justify-between items-center px-1">
                     <span class="text-[10px] text-gray-500">Change</span>
-                    <span class="text-sm font-black text-gray-900" id="changeDisplay">TSh 0</span>
+                    <span class="text-sm font-black text-gray-900" id="changeDisplay">{{ $currencySymbol }} 0</span>
                 </div>
             </div>
 
@@ -173,6 +173,8 @@
 <script>
 let cart = [];
 let products = @json($products);
+const currencySymbol = '{{ $currencySymbol }}';
+const taxRate = {{ $taxRate }};
 
 function filterPosProducts(q) {
     const grid = document.getElementById('productsGrid');
