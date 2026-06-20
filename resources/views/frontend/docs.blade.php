@@ -118,12 +118,22 @@
 
             {{-- Footer Nav --}}
             <div class="mt-16 pt-8 border-t border-gray-100 flex items-center justify-between">
-                @if($page != 'introduction')
-                <a href="{{ route('docs', 'introduction') }}" class="text-sm text-gray-500 hover:text-emerald-600 transition-colors">&larr; Introduction</a>
+                @php
+                    $flatPages = $allPages->flatten();
+                    $currentIndex = $flatPages->search(fn($p) => $p->slug === $currentSlug);
+                    $prevPage = $currentIndex > 0 ? $flatPages[$currentIndex - 1] : null;
+                    $nextPage = $currentIndex !== false && $currentIndex < $flatPages->count() - 1 ? $flatPages[$currentIndex + 1] : null;
+                @endphp
+                @if($prevPage)
+                <a href="{{ route('docs', $prevPage->slug) }}" class="text-sm text-gray-500 hover:text-emerald-600 transition-colors">&larr; {{ $prevPage->title }}</a>
                 @else
                 <span></span>
                 @endif
-                <a href="{{ route('docs', 'quickstart') }}" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">Quick Start &rarr;</a>
+                @if($nextPage)
+                <a href="{{ route('docs', $nextPage->slug) }}" class="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors">{{ $nextPage->title }} &rarr;</a>
+                @else
+                <span></span>
+                @endif
             </div>
         </div>
     </main>
@@ -133,9 +143,9 @@
         <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">On this page</div>
         <nav class="space-y-2">
             <a href="#" class="block text-sm text-gray-500 hover:text-emerald-600 transition-colors">Overview</a>
-            <a href="#" class="block text-sm text-gray-500 hover:text-emerald-600 transition-colors">Getting Started</a>
-            <a href="#" class="block text-sm text-gray-500 hover:text-emerald-600 transition-colors">Authentication</a>
-            <a href="#" class="block text-sm text-gray-500 hover:text-emerald-600 transition-colors">API Reference</a>
+            @if($doc)
+            <a href="#" class="block text-sm text-gray-500 hover:text-emerald-600 transition-colors">{{ $doc->title }}</a>
+            @endif
         </nav>
     </aside>
 </div>
