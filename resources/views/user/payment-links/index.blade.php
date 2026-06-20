@@ -80,7 +80,8 @@
                     </td>
                     <td class="px-5 py-3 text-xs font-medium text-gray-700">{{ $link->usage_count }}</td>
                     <td class="px-5 py-3 text-right">
-                        <a href="{{ url('/pay/'.$link->slug) }}" target="_blank" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium mr-2">View</a>
+                        <a href="{{ route('user.payment-links.show', $link->id) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium mr-2">Details</a>
+                        <a href="{{ url('/pay/'.$link->slug) }}" target="_blank" class="text-xs text-gray-500 hover:text-gray-700 font-medium mr-2">View</a>
                         <form action="{{ route('user.payment-links.destroy', $link->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this link?')">
                             @csrf
                             @method('DELETE')
