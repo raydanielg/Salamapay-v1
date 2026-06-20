@@ -11,13 +11,18 @@ class PaymentLinkController extends Controller
 {
     public function show($slug)
     {
-        $link = PaymentLink::with(['user', 'profile'])->where('slug', $slug)->firstOrFail();
+        $link = PaymentLink::with(['user', 'profile.template'])->where('slug', $slug)->firstOrFail();
 
         if (!$link->isValid()) {
             return view('payment.expired', compact('link'));
         }
 
         $merchant = $link->profile ?? $link->user;
+
+        $templateSlug = $link->profile?->template?->slug;
+        if ($templateSlug && view()->exists("payment.templates.{$templateSlug}")) {
+            return view("payment.templates.{$templateSlug}", compact('link', 'merchant'));
+        }
 
         return view('payment.checkout', compact('link', 'merchant'));
     }
