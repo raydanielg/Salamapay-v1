@@ -332,6 +332,8 @@ function deleteSale(id, txId) {
                             setTimeout(() => row.remove(), 300);
                         }
                     });
+                    // Update stats
+                    updateSaleStatsAfterDelete(rowData ? rowData.amount : 0, rowData ? rowData.source_type : 'other');
                     // Show success toast
                     if (typeof saAlert === 'function') {
                         saAlert({ title: 'Deleted!', text: 'Sale deleted successfully.', icon: 'success' });
