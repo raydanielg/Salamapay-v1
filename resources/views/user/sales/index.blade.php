@@ -10,25 +10,51 @@
 
 {{-- Stats Cards --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 text-white">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Sales</p>
-        <p class="text-2xl font-black mt-1">{{ number_format($stats['total']) }}</p>
-        <p class="text-[10px] text-emerald-200 mt-1">All time</p>
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Sales</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ number_format($stats['total']) }}</p>
+        <p class="text-[10px] text-emerald-200 mt-1">{{ $stats['range'] === 'all' ? 'All time' : 'In selected period' }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Today</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ number_format($stats['today']) }}</p>
-        <p class="text-[10px] text-emerald-600 mt-1 font-medium">+{{ rand(2,15) }}% vs yesterday</p>
+    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Revenue</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">TSh {{ number_format($stats['totalAmount']) }}</p>
+        <p class="text-[10px] text-blue-200 mt-1">Total revenue</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">This Week</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ number_format($stats['week']) }}</p>
-        <p class="text-[10px] text-gray-400 mt-1">{{ now()->startOfWeek()->format('M d') }} - {{ now()->endOfWeek()->format('M d') }}</p>
+    <div class="bg-gradient-to-br from-violet-500 to-violet-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-violet-100">Avg Sale</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">TSh {{ number_format($stats['avgAmount']) }}</p>
+        <p class="text-[10px] text-violet-100 mt-1">Per transaction</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Revenue</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">TSh {{ number_format($stats['totalAmount']) }}</p>
-        <p class="text-[10px] text-gray-400 mt-1">Total revenue</p>
+    <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-amber-100">Products vs Services</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <p class="text-xl font-black">{{ $stats['productsCount'] }}</p>
+            <span class="text-[10px] text-amber-100">prod</span>
+            <span class="text-amber-100">/</span>
+            <p class="text-xl font-black">{{ $stats['servicesCount'] }}</p>
+            <span class="text-[10px] text-amber-100">svc</span>
+        </div>
+        <p class="text-[10px] text-amber-100 mt-1">Product vs Service sales</p>
     </div>
 </div>
 
