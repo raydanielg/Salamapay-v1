@@ -318,42 +318,99 @@
 <form id="deleteProductForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
 <script>
-function openProductSettingsModal() {
-    const m = document.getElementById('productSettingsModal');
-    m.classList.remove('hidden'); m.classList.add('flex');
-}
-function closeProductSettingsModal() {
-    const m = document.getElementById('productSettingsModal');
-    m.classList.add('hidden'); m.classList.remove('flex');
-}
-function addCategoryRow() {
-    const list = document.getElementById('categoriesList');
-    const div = document.createElement('div');
-    div.className = 'flex items-center gap-2 cat-row';
-    div.innerHTML = '<input type="text" name="product_categories[]" placeholder="Category name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.cat-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
-    list.appendChild(div);
-}
-function addUnitRow() {
-    const list = document.getElementById('unitsList');
-    const div = document.createElement('div');
-    div.className = 'flex items-center gap-2 unit-row';
-    div.innerHTML = '<input type="text" name="product_units[]" placeholder="Unit name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.unit-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
-    list.appendChild(div);
+let searchTimeout;
+
+// AJAX Search & Filter
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search"]');
+    const statusSelect = document.querySelector('select[name="status"]');
+    const categorySelect = document.querySelector('select[name="category"]');
+
+    function doSearch() {
+        const params = new URLSearchParams();
+        if (searchInput && searchInput.value) params.append('search', searchInput.value);
+        if (statusSelect && statusSelect.value && statusSelect.value !== 'all') params.append('status', statusSelect.value);
+        if (categorySelect && categorySelect.value && categorySelect.value !== 'all') params.append('category', categorySelect.value);
+
+        fetch('{{ route('user.products') }}?' + params.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newBody = doc.querySelector('tbody');
+            const newPagination = doc.querySelector('.px-5.py-3.border-t');
+            if (newBody) {
+                document.querySelector('tbody').innerHTML = newBody.innerHTML;
+            }
+            const pagContainer = document.querySelector('.px-5.py-3.border-t');
+            if (pagContainer && newPagination) {
+                pagContainer.innerHTML = newPagination.innerHTML;
+            } else if (pagContainer && !newPagination) {
+                pagContainer.style.display = 'none';
+            }
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(doSearch, 300);
+        });
+    }
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function(e) {
+            e.preventDefault();
+            doSearch();
+        });
+    }
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function(e) {
+            e.preventDefault();
+            doSearch();
+        });
+    }
+});
+
+// Drawer Tabs
+function switchDrawerTab(tab) {
+    document.getElementById('panelProduct').classList.toggle('hidden', tab !== 'product');
+    document.getElementById('panelSettings').classList.toggle('hidden', tab !== 'settings');
+
+    const tp = document.getElementById('tabProduct');
+    const ts = document.getElementById('tabSettings');
+
+    if (tab === 'product') {
+        tp.className = 'flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors';
+        ts.className = 'flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors';
+    } else {
+        tp.className = 'flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors';
+        ts.className = 'flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors';
+    }
 }
 
-function openProductModal() {
+// Drawer Open/Close
+function openProductDrawer() {
     document.getElementById('productForm').action = '{{ route('user.products.store') }}';
     document.getElementById('methodField').innerHTML = '';
-    document.getElementById('modalTitle').textContent = 'Add Product';
-    ['prodName','prodPrice','prodStock','prodCategory','prodSku','prodDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('drawerTitle').textContent = 'Add Product';
+    ['prodName','prodPrice','prodStock','prodCategory','prodSku','prodDesc'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
     document.getElementById('prodStatus').value = 'active';
-    const m = document.getElementById('productModal');
-    m.classList.remove('hidden'); m.classList.add('flex');
+    switchDrawerTab('product');
+
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('productDrawer');
+    backdrop.classList.remove('closed'); backdrop.classList.add('open');
+    drawer.classList.remove('overlay-closed'); drawer.classList.add('overlay-open');
 }
-function openEditProductModal(id, name, description, price, stock, category, sku, status) {
+function openEditProductDrawer(id, name, description, price, stock, category, sku, status) {
     document.getElementById('productForm').action = '{{ url('products') }}/' + id;
     document.getElementById('methodField').innerHTML = '@method('PUT')';
-    document.getElementById('modalTitle').textContent = 'Edit Product';
+    document.getElementById('drawerTitle').textContent = 'Edit Product';
     document.getElementById('prodName').value = name;
     document.getElementById('prodDesc').value = description;
     document.getElementById('prodPrice').value = price;
@@ -361,13 +418,43 @@ function openEditProductModal(id, name, description, price, stock, category, sku
     document.getElementById('prodCategory').value = category;
     document.getElementById('prodSku').value = sku;
     document.getElementById('prodStatus').value = status;
-    const m = document.getElementById('productModal');
-    m.classList.remove('hidden'); m.classList.add('flex');
+    switchDrawerTab('product');
+
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('productDrawer');
+    backdrop.classList.remove('closed'); backdrop.classList.add('open');
+    drawer.classList.remove('overlay-closed'); drawer.classList.add('overlay-open');
 }
-function closeProductModal() {
-    const m = document.getElementById('productModal');
-    m.classList.add('hidden'); m.classList.remove('flex');
+function openProductSettingsDrawer() {
+    switchDrawerTab('settings');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('productDrawer');
+    backdrop.classList.remove('closed'); backdrop.classList.add('open');
+    drawer.classList.remove('overlay-closed'); drawer.classList.add('overlay-open');
 }
+function closeProductDrawer() {
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('productDrawer');
+    backdrop.classList.remove('open'); backdrop.classList.add('closed');
+    drawer.classList.remove('overlay-open'); drawer.classList.add('overlay-closed');
+}
+
+// Settings rows
+function addDrawerCategoryRow() {
+    const list = document.getElementById('drawerCategoriesList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 cat-row';
+    div.innerHTML = '<input type="text" name="product_categories[]" placeholder="Category name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.cat-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+function addDrawerUnitRow() {
+    const list = document.getElementById('drawerUnitsList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 unit-row';
+    div.innerHTML = '<input type="text" name="product_units[]" placeholder="Unit name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.unit-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+
 function deleteProduct(id, name) {
     saConfirm({
         title: 'Delete Product?',
