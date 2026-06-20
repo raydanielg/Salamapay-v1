@@ -62,7 +62,9 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $this->authorize('update', $product);
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -81,7 +83,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        $this->authorize('delete', $product);
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
         $product->delete();
         return redirect()->route('user.products')->with('success', 'Product deleted successfully.');
     }

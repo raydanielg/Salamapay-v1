@@ -61,7 +61,9 @@ class ServiceController extends Controller
 
     public function update(Request $request, Service $service)
     {
-        $this->authorize('update', $service);
+        if ($service->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
