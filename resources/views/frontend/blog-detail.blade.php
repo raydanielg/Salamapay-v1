@@ -122,7 +122,7 @@
 <article class="py-12 bg-white">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="animate-fade-up delay-1 docs-content prose prose-lg max-w-none">
-            {!! nl2br($blog->content) !!}
+            {!! Illuminate\Support\Str::markdown($blog->content) !!}
         </div>
 
         {{-- Social Share --}}
