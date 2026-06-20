@@ -213,6 +213,18 @@
 .drawer-backdrop { transition: opacity 0.3s ease; }
 .drawer-backdrop.open { opacity: 1; pointer-events: auto; }
 .drawer-backdrop.closed { opacity: 0; pointer-events: none; }
+
+@media print {
+    body * { visibility: hidden; }
+    #printableArea, #printableArea * { visibility: visible; }
+    #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+    #printableArea .overflow-x-auto { overflow: visible !important; }
+    #printableArea table { width: 100% !important; border-collapse: collapse; }
+    #printableArea th, #printableArea td { border: 1px solid #ddd; padding: 8px; }
+    #printableArea .opacity-0 { opacity: 1 !important; }
+    #printableArea button, #printableArea .group-hover\:opacity-100 { opacity: 1 !important; }
+    .no-print { display: none !important; }
+}
 </style>
 
 <div id="drawerBackdrop" class="drawer-backdrop closed fixed inset-0 bg-black/40 backdrop-blur-sm z-[50]" onclick="closeProductDrawer()"></div>
