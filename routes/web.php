@@ -413,6 +413,11 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // Reports
     Route::get('/reports', [App\Http\Controllers\User\ReportController::class, 'index'])->name('user.reports');
 
+    // Support / Messages
+    Route::get('/support', [App\Http\Controllers\SupportMessageController::class, 'index'])->name('user.support');
+    Route::post('/support/{supportMessage}/reply', [App\Http\Controllers\SupportMessageController::class, 'reply'])->name('user.support.reply');
+    Route::post('/support/{supportMessage}/close', [App\Http\Controllers\SupportMessageController::class, 'close'])->name('user.support.close');
+
     // Business Tools
     Route::get('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'index'])->name('user.invoices');
     Route::post('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'store'])->name('user.invoices.store');
