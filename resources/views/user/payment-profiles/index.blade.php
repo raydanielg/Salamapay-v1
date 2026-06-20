@@ -46,61 +46,82 @@
 </div>
 
 {{-- Profiles Grid --}}
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mb-8">
     @forelse($profiles as $profile)
-    <div class="profile-card animate-slide-up delay-{{ $loop->iteration > 2 ? 2 : $loop->iteration }} bg-white rounded-2xl border border-gray-100 p-6 shadow-sm relative overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-1.5" style="background-color: {{ $profile->color }}"></div>
-        <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-lg" style="background: linear-gradient(135deg, {{ $profile->color }} 0%, {{ $profile->color }}dd 100%)">
-                    {{ strtoupper(substr($profile->business_name, 0, 1)) }}
+    <div class="profile-card animate-fade-up delay-{{ $loop->iteration > 3 ? 3 : $loop->iteration }} bg-white rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden flex flex-col">
+        <div class="h-2" style="background-color: {{ $profile->color }}"></div>
+        <div class="p-5 flex-1">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    @if($profile->logo)
+                        <img src="{{ asset('storage/' . $profile->logo) }}" alt="" class="logo-preview shadow-sm">
+                    @else
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-extrabold text-lg shadow-sm" style="background: linear-gradient(135deg, {{ $profile->color }} 0%, {{ $profile->color }}dd 100%)">
+                            {{ strtoupper(substr($profile->business_name, 0, 1)) }}
+                        </div>
+                    @endif
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-bold text-gray-900 truncate">{{ $profile->name }}</h3>
+                        <p class="text-xs text-gray-400 truncate">{{ $profile->business_name }}</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ $profile->name }}</h3>
-                    <p class="text-xs text-gray-400">{{ $profile->business_name }}</p>
-                </div>
+                @if($profile->is_default)
+                <span class="shrink-0 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Default</span>
+                @endif
             </div>
-            @if($profile->is_default)
-            <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Default</span>
+
+            <div class="flex flex-wrap gap-2 mb-3">
+                <span class="type-badge {{ $profile->page_type }} inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border">{{ ucfirst($profile->page_type) }}</span>
+                @if($profile->page_type === 'fixed' && $profile->allow_custom_amount)
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-50 text-gray-600 border border-gray-200">Custom Amount</span>
+                @endif
+                @if($profile->page_type === 'catalog' && !empty($profile->products))
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-gray-50 text-gray-600 border border-gray-200">{{ count($profile->products) }} Products</span>
+                @endif
+            </div>
+
+            <div class="space-y-1.5 text-xs text-gray-500 mb-3">
+                @if($profile->business_type)<p><span class="text-gray-400">Type:</span> <span class="text-gray-700 font-medium">{{ $profile->business_type }}</span></p>@endif
+                @if($profile->phone)<p><span class="text-gray-400">Phone:</span> <span class="text-gray-700 font-medium">{{ $profile->phone }}</span></p>@endif
+                @if($profile->email)<p><span class="text-gray-400">Email:</span> <span class="text-gray-700 font-medium">{{ $profile->email }}</span></p>@endif
+            </div>
+
+            @if($profile->description)
+            <p class="text-xs text-gray-500 leading-relaxed line-clamp-2">{{ $profile->description }}</p>
             @endif
         </div>
 
-        <div class="space-y-2 text-xs text-gray-500 mb-4">
-            @if($profile->business_type)<p>Type: <span class="text-gray-700 font-medium">{{ $profile->business_type }}</span></p>@endif
-            @if($profile->phone)<p>Phone: <span class="text-gray-700 font-medium">{{ $profile->phone }}</span></p>@endif
-            @if($profile->email)<p>Email: <span class="text-gray-700 font-medium">{{ $profile->email }}</span></p>@endif
-            @if($profile->business_tin)<p>TIN: <span class="text-gray-700 font-medium">{{ $profile->business_tin }}</span></p>@endif
-        </div>
-
-        @if($profile->description)
-        <p class="text-xs text-gray-500 mb-4 leading-relaxed">{{ $profile->description }}</p>
-        @endif
-
-        <div class="flex items-center gap-2 pt-3 border-t">
+        <div class="px-5 py-3 border-t border-gray-50 flex items-center gap-2">
+            <button type="button" onclick="copyLink('{{ url('/pay/' . ($profile->paymentLinks->first()->slug ?? 'demo')) }}')" class="flex-1 px-3 py-1.5 text-[11px] font-semibold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                Copy Link
+            </button>
             <form action="{{ route('user.payment-profiles.update', $profile->id) }}" method="POST" class="flex-1">
-                @csrf
-                @method('PUT')
+                @csrf @method('PUT')
                 <input type="hidden" name="name" value="{{ $profile->name }}">
                 <input type="hidden" name="business_name" value="{{ $profile->business_name }}">
+                <input type="hidden" name="page_type" value="{{ $profile->page_type }}">
                 <input type="hidden" name="is_default" value="1">
                 @if(!$profile->is_default)
-                <button type="submit" class="w-full px-3 py-1.5 text-[10px] font-bold text-gray-600 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-all">Set as Default</button>
+                <button type="submit" class="w-full px-3 py-1.5 text-[11px] font-semibold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">Set Default</button>
                 @else
-                <span class="block w-full text-center px-3 py-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg">Current Default</span>
+                <span class="block w-full text-center px-3 py-1.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg">Default</span>
                 @endif
             </form>
-            <form action="{{ route('user.payment-profiles.destroy', $profile->id) }}" method="POST" onsubmit="return confirm('Delete this profile?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="px-3 py-1.5 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-all">Delete</button>
+            <form action="{{ route('user.payment-profiles.destroy', $profile->id) }}" method="POST" onsubmit="return confirm('Delete this profile?')" class="shrink-0">
+                @csrf @method('DELETE')
+                <button type="submit" class="px-3 py-1.5 text-[11px] font-semibold text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100 transition-all">Delete</button>
             </form>
         </div>
     </div>
     @empty
-    <div class="md:col-span-2 xl:col-span-3 text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
-        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <p class="text-sm font-medium text-gray-500">No payment profiles yet</p>
-        <p class="text-xs text-gray-400 mt-1">Create your first profile to customize how customers see your business</p>
+    <div class="md:col-span-2 xl:col-span-3 flex flex-col items-center justify-center py-16 bg-white rounded-2xl border border-gray-100 border-dashed">
+        <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>
+        </div>
+        <p class="text-sm font-semibold text-gray-700">No profiles found</p>
+        <p class="text-xs text-gray-400 mt-1 max-w-xs text-center">Create a profile to customize how customers see your business on payment pages.</p>
+        <button onclick="openModal()" class="mt-4 px-4 py-2 bg-emerald-800 text-white text-sm font-semibold rounded-lg hover:bg-emerald-900 transition-colors">Create Profile</button>
     </div>
     @endforelse
 </div>
