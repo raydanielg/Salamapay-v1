@@ -19,6 +19,7 @@ class Service extends Model
         'category',
         'status',
         'bookings',
+        'variants',
     ];
 
     protected function casts(): array
@@ -26,6 +27,7 @@ class Service extends Model
         return [
             'price' => 'decimal:2',
             'bookings' => 'integer',
+            'variants' => 'array',
         ];
     }
 
