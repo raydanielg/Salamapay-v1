@@ -9,7 +9,7 @@ class BlogSeeder extends Seeder
 {
     public function run(): void
     {
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'welcome-to-salamapay'], [
             'title' => 'Welcome to SalamaPay: The Future of Digital Payments in Africa',
             'slug' => 'welcome-to-salamapay',
             'excerpt' => 'Discover how SalamaPay is transforming digital payments for businesses across Tanzania and beyond with instant settlements, low fees, and powerful APIs.',
@@ -53,7 +53,7 @@ Over 2,000 businesses trust SalamaPay for their payment processing needs. Join t
             'published_at' => '2026-06-15',
         ]);
 
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'new-app-features'], [
             'title' => 'New App Features: Faster, Smarter Payments for Everyone',
             'slug' => 'new-app-features',
             'excerpt' => 'Explore the latest features in the SalamaPay app designed to make your payment experience seamless, secure, and more powerful than ever.',
@@ -105,7 +105,7 @@ Update your SalamaPay app or visit our website to experience these new features.
             'published_at' => '2026-06-10',
         ]);
 
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'small-business-growth'], [
             'title' => 'How Small Businesses Are Growing with Digital Payments',
             'slug' => 'small-business-growth',
             'excerpt' => 'Real stories from entrepreneurs who transformed their businesses using SalamaPay to accept payments and scale their operations.',
@@ -155,7 +155,7 @@ Join thousands of small businesses already growing with SalamaPay. Sign up today
             'published_at' => '2026-06-05',
         ]);
 
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'security-standards'], [
             'title' => 'Keeping Your Money Safe: Our Security Standards Explained',
             'slug' => 'security-standards',
             'excerpt' => 'Learn about the bank-level security measures we use to protect every transaction and keep your business data safe.',
@@ -216,7 +216,7 @@ If you ever suspect unauthorized activity, contact our security team immediately
             'published_at' => '2026-05-28',
         ]);
 
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'fintech-tanzania-2026'], [
             'title' => 'The State of Fintech in Tanzania 2026',
             'slug' => 'fintech-tanzania-2026',
             'excerpt' => 'An in-depth look at how financial technology is reshaping commerce, banking, and daily life across Tanzania.',
@@ -282,7 +282,7 @@ SalamaPay is at the forefront of this transformation. Whether you are a develope
             'published_at' => '2026-05-20',
         ]);
 
-        Blog::create([
+        Blog::updateOrCreate(['slug' => 'reduce-payment-costs'], [
             'title' => '5 Tips to Reduce Payment Processing Costs',
             'slug' => 'reduce-payment-costs',
             'excerpt' => 'Simple strategies to optimize your payment flow and save money on every transaction without compromising customer experience.',
