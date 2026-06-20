@@ -238,7 +238,7 @@
                             </div>
                             @endforelse
                         </div>
-                        <a href="{{ route('user.transactions') }}" class="block px-4 py-2.5 border-t border-gray-50 text-xs font-medium text-emerald-600 text-center hover:bg-emerald-50 transition-colors">
+                        <a href="{{ route('user.payments') }}" class="block px-4 py-2.5 border-t border-gray-50 text-xs font-medium text-emerald-600 text-center hover:bg-emerald-50 transition-colors">
                             View all activity
                         </a>
                     </div>
