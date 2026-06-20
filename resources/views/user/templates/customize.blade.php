@@ -120,6 +120,34 @@
             </div>
         </div>
 
+        {{-- FAQ Content --}}
+        <div class="bg-white rounded-xl border p-5">
+            <h3 class="text-sm font-bold text-gray-900 mb-4">FAQ Questions</h3>
+            <p class="text-[10px] text-gray-400 mb-4">Edit the questions and answers shown on your website</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Question 1</label>
+                    <input type="text" name="template_settings[faqs][0][q]" value="{{ $profile->template_settings['faqs'][0]['q'] ?? 'Is my payment information secure?' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all mb-2">
+                    <textarea name="template_settings[faqs][0][a]" rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all resize-none">{{ $profile->template_settings['faqs'][0]['a'] ?? 'Yes. All transactions are encrypted with bank-level SSL security. We never store your card details.' }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Question 2</label>
+                    <input type="text" name="template_settings[faqs][1][q]" value="{{ $profile->template_settings['faqs'][1]['q'] ?? 'What payment methods are accepted?' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all mb-2">
+                    <textarea name="template_settings[faqs][1][a]" rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all resize-none">{{ $profile->template_settings['faqs'][1]['a'] ?? 'We accept all major Mobile Money providers (M-Pesa, Tigo Pesa, Airtel Money) as well as Visa and Mastercard.' }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Question 3</label>
+                    <input type="text" name="template_settings[faqs][2][q]" value="{{ $profile->template_settings['faqs'][2]['q'] ?? 'How long does it take to confirm?' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all mb-2">
+                    <textarea name="template_settings[faqs][2][a]" rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all resize-none">{{ $profile->template_settings['faqs'][2]['a'] ?? 'Mobile Money payments are confirmed instantly. Card payments are processed within seconds.' }}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Question 4</label>
+                    <input type="text" name="template_settings[faqs][3][q]" value="{{ $profile->template_settings['faqs'][3]['q'] ?? 'Can I get a refund?' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all mb-2">
+                    <textarea name="template_settings[faqs][3][a]" rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all resize-none">{{ $profile->template_settings['faqs'][3]['a'] ?? 'Yes, refunds are available according to the merchant\'s refund policy. Contact the merchant directly for refund requests.' }}</textarea>
+                </div>
+            </div>
+        </div>
+
         {{-- Business Info --}}
         <div class="bg-white rounded-xl border p-5">
             <h3 class="text-sm font-bold text-gray-900 mb-4">Business Information</h3>
