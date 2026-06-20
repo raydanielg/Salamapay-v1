@@ -84,7 +84,6 @@ Route::get('/docs/{page?}', function ($page = 'introduction') {
     $doc = \App\Models\DocumentationPage::published()->where('slug', $page)->first();
 
     if (!$doc) {
-        // Fallback to first published page or show not found
         $doc = \App\Models\DocumentationPage::published()->ordered()->first();
     }
 
@@ -92,6 +91,68 @@ Route::get('/docs/{page?}', function ($page = 'introduction') {
 
     return view('frontend.docs', ['doc' => $doc, 'allPages' => $allPages, 'currentSlug' => $doc?->slug ?? $page]);
 })->name('docs');
+
+// Public Machine-Readable Docs API
+Route::get('/api/docs', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    return response()->json([
+        'meta' => [
+            'project' => 'SalamaPay',
+            'description' => 'Developer documentation and API reference for SalamaPay payment platform.',
+            'version' => '1.0',
+            'generated_at' => now()->toDateTimeString(),
+            'total_pages' => $pages->count(),
+            'formats' => ['json', 'markdown'],
+            'machine_readable' => true,
+        ],
+        'pages' => $pages->map(fn($p) => [
+            'title' => $p->title,
+            'slug' => $p->slug,
+            'category' => $p->category,
+            'sort_order' => $p->sort_order,
+            'is_published' => $p->is_published,
+            'updated_at' => $p->updated_at->toDateTimeString(),
+            'content' => $p->content,
+        ])->toArray(),
+    ]);
+});
+
+Route::get('/api/docs/{slug}', function ($slug) {
+    $page = \App\Models\DocumentationPage::published()->where('slug', $slug)->first();
+    if (!$page) {
+        return response()->json(['error' => 'Page not found'], 404);
+    }
+    return response()->json([
+        'meta' => [
+            'project' => 'SalamaPay',
+            'machine_readable' => true,
+        ],
+        'page' => [
+            'title' => $page->title,
+            'slug' => $page->slug,
+            'category' => $page->category,
+            'sort_order' => $page->sort_order,
+            'updated_at' => $page->updated_at->toDateTimeString(),
+            'content' => $page->content,
+        ]
+    ]);
+});
+
+Route::get('/docs/export.md', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $markdown = "# SalamaPay Documentation\n\n"
+        . "> Complete developer documentation.\n"
+        . "> URL: " . url('/api/docs') . "\n"
+        . "> Generated: " . now()->toDateTimeString() . "\n\n---\n\n";
+    foreach ($pages as $page) {
+        $markdown .= "# {$page->title}\n\n"
+            . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "**Slug:** `{$page->slug}`\n"
+            . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n\n"
+            . $page->content . "\n\n---\n\n";
+    }
+    return response($markdown)->header('Content-Type', 'text/markdown; charset=utf-8');
+});
 
 // Admin Dashboard Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
