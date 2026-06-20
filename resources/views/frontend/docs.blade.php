@@ -5,7 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Documentation - SalamaPay</title>
     <meta name="description" content="SalamaPay API documentation and guides.">
+    <meta property="og:site_name" content="SalamaPay">
+    <meta name="twitter:card" content="summary_large_image">
     @if($doc)
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ $doc->title }} — SalamaPay Docs">
+    <meta property="og:description" content="{{ strip_tags(Illuminate\Support\Str::markdown($doc->content)) }}">
+    <meta property="og:url" content="{{ route('docs', $doc->slug) }}">
+    <meta property="og:updated_time" content="{{ $doc->updated_at->toIso8601String() }}">
+    <meta name="twitter:title" content="{{ $doc->title }} — SalamaPay Docs">
+    <meta name="twitter:description" content="{{ strip_tags(Illuminate\Support\Str::markdown($doc->content)) }}">
     <meta name="doc-title" content="{{ $doc->title }}">
     <meta name="doc-slug" content="{{ $doc->slug }}">
     <meta name="doc-category" content="{{ $doc->category }}">

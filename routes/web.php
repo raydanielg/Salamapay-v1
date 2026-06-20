@@ -92,7 +92,7 @@ Route::get('/docs/{page?}', function ($page = 'introduction') {
     return view('frontend.docs', ['doc' => $doc, 'allPages' => $allPages, 'currentSlug' => $doc?->slug ?? $page]);
 })->name('docs');
 
-// Public Machine-Readable Docs API
+// Public Machine-Readable Docs API (CORS-enabled for AI/LLM access)
 Route::get('/api/docs', function () {
     $pages = \App\Models\DocumentationPage::published()->ordered()->get();
     return response()->json([
@@ -102,8 +102,12 @@ Route::get('/api/docs', function () {
             'version' => '1.0',
             'generated_at' => now()->toDateTimeString(),
             'total_pages' => $pages->count(),
-            'formats' => ['json', 'markdown'],
+            'formats' => ['json', 'markdown', 'text'],
             'machine_readable' => true,
+            'llm_endpoints' => [
+                'llms.txt' => url('/llms.txt'),
+                'llms_full' => url('/llms-full.txt'),
+            ],
         ],
         'pages' => $pages->map(fn($p) => [
             'title' => $p->title,
@@ -114,6 +118,11 @@ Route::get('/api/docs', function () {
             'updated_at' => $p->updated_at->toDateTimeString(),
             'content' => $p->content,
         ])->toArray(),
+    ])->withHeaders([
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        'X-LLM-Compatible' => 'true',
     ]);
 });
 
@@ -126,6 +135,10 @@ Route::get('/api/docs/{slug}', function ($slug) {
         'meta' => [
             'project' => 'SalamaPay',
             'machine_readable' => true,
+            'llm_endpoints' => [
+                'llms.txt' => url('/llms.txt'),
+                'llms_full' => url('/llms-full.txt'),
+            ],
         ],
         'page' => [
             'title' => $page->title,
@@ -135,6 +148,11 @@ Route::get('/api/docs/{slug}', function ($slug) {
             'updated_at' => $page->updated_at->toDateTimeString(),
             'content' => $page->content,
         ]
+    ])->withHeaders([
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Allow-Methods' => 'GET, OPTIONS',
+        'Access-Control-Allow-Headers' => 'Content-Type, Authorization',
+        'X-LLM-Compatible' => 'true',
     ]);
 });
 
