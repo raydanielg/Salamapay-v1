@@ -41,10 +41,29 @@ Route::get('/docs/{page?}', function ($page = 'introduction') {
 })->name('docs');
 
 // Admin Dashboard Routes
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Merchants
+    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users');
+    Route::get('/users/{id}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('admin.users.show');
+    Route::put('/users/{id}/status', [App\Http\Controllers\Admin\UserController::class, 'updateStatus'])->name('admin.users.status');
+
+    // Payments
+    Route::get('/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('admin.payments');
+    Route::get('/payments/{id}', [App\Http\Controllers\Admin\PaymentController::class, 'show'])->name('admin.payments.show');
+
+    // Settlements
+    Route::get('/settlements', [App\Http\Controllers\Admin\SettlementController::class, 'index'])->name('admin.settlements');
+    Route::put('/settlements/{id}/status', [App\Http\Controllers\Admin\SettlementController::class, 'updateStatus'])->name('admin.settlements.status');
+
+    // Reports
+    Route::get('/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports');
+
+    // Settings
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
+    Route::put('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+    Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'store'])->name('admin.settings.store');
 });
 
 // User/Merchant Dashboard Routes
