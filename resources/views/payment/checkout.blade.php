@@ -340,16 +340,32 @@
     </main>
 
     <script>
+    // Merchant brand color
+    const brandColor = '{{ $link->profile->color ?? '#024938' }}';
+
     // Payment method switching
     function selectMethod(type) {
         document.querySelectorAll('.pm-card').forEach(c => {
-            c.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+            c.style.borderColor = '';
+            c.style.backgroundColor = '';
+            c.classList.remove('active');
             c.classList.add('border-gray-200');
+            const iconBox = c.querySelector('.w-10');
+            if (iconBox) { iconBox.style.backgroundColor = '#f3f4f6'; }
+            const iconSvg = c.querySelector('svg');
+            if (iconSvg) { iconSvg.classList.remove('text-white'); iconSvg.classList.add('text-gray-400'); }
         });
+
         const activeCard = document.querySelector('.pm-card[onclick*="' + type + '"]');
         if (activeCard) {
-            activeCard.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+            activeCard.classList.add('active');
             activeCard.classList.remove('border-gray-200');
+            activeCard.style.borderColor = brandColor;
+            activeCard.style.backgroundColor = brandColor + '0D'; // 5% opacity
+            const iconBox = activeCard.querySelector('.w-10');
+            if (iconBox) { iconBox.style.backgroundColor = brandColor; }
+            const iconSvg = activeCard.querySelector('svg');
+            if (iconSvg) { iconSvg.classList.remove('text-gray-400'); iconSvg.classList.add('text-white'); }
         }
 
         const mobileProviders = document.getElementById('mobileProviders');
@@ -363,13 +379,22 @@
             // Ensure first provider is selected
             const firstProvider = document.querySelector('input[name="payment_method"]');
             if (firstProvider) firstProvider.checked = true;
-            // Reset provider styles
-            document.querySelectorAll('.provider-btn').forEach(b => {
-                b.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+            // Reset and select first provider
+            document.querySelectorAll('.provider-chip').forEach(b => {
+                b.classList.remove('active');
                 b.classList.add('border-gray-200');
+                b.style.borderColor = '';
+                b.style.backgroundColor = '';
+                b.style.color = '';
             });
-            const firstBtn = document.querySelector('.provider-btn');
-            if (firstBtn) firstBtn.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+            const firstBtn = document.querySelector('.provider-chip');
+            if (firstBtn) {
+                firstBtn.classList.add('active');
+                firstBtn.classList.remove('border-gray-200');
+                firstBtn.style.borderColor = brandColor;
+                firstBtn.style.backgroundColor = brandColor + '1A';
+                firstBtn.style.color = brandColor;
+            }
         } else {
             mobileProviders?.classList.add('hidden');
             cardDetails?.classList.remove('hidden');
@@ -381,12 +406,18 @@
     }
 
     function selectProvider(el, val) {
-        document.querySelectorAll('.provider-btn').forEach(b => {
-            b.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+        document.querySelectorAll('.provider-chip').forEach(b => {
+            b.classList.remove('active');
             b.classList.add('border-gray-200');
+            b.style.borderColor = '';
+            b.style.backgroundColor = '';
+            b.style.color = '';
         });
-        el.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+        el.classList.add('active');
         el.classList.remove('border-gray-200');
+        el.style.borderColor = brandColor;
+        el.style.backgroundColor = brandColor + '1A';
+        el.style.color = brandColor;
         const radio = el.querySelector('input[type="radio"]');
         if (radio) radio.checked = true;
     }
