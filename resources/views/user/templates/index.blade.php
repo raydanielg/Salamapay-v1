@@ -46,6 +46,9 @@
                     <span class="px-2 py-0.5 bg-gold-400 text-white text-[10px] font-bold rounded-md">PREMIUM</span>
                 </div>
                 @endif
+                <div class="absolute top-2 left-2">
+                    <span class="px-2 py-0.5 bg-emerald-500 text-white text-[10px] font-bold rounded-md shadow-sm">NEW</span>
+                </div>
             </div>
             <div class="p-4">
                 <h3 class="text-sm font-bold text-gray-900">{{ $template->name }}</h3>
@@ -67,6 +70,16 @@
             </div>
         </div>
         @endforeach
+
+        {{-- Coming Soon Card --}}
+        <div class="bg-gray-50 rounded-xl border border-dashed border-gray-200 overflow-hidden flex flex-col items-center justify-center p-6 min-h-[260px]">
+            <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-3">
+                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            </div>
+            <p class="text-sm font-bold text-gray-500 mb-1">More Templates Coming Soon</p>
+            <p class="text-xs text-gray-400 text-center max-w-[200px]">We are working on more beautiful templates for you. Stay tuned!</p>
+            <span class="mt-3 px-2 py-0.5 bg-gray-200 text-gray-500 text-[9px] font-bold uppercase tracking-wide rounded-md">Coming Soon</span>
+        </div>
     </div>
 </div>
 
