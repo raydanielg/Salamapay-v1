@@ -10,7 +10,18 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Rewrite all requests to public/ directory
+    # Route static assets (icons, images, css, js, build) to public/ if they exist there
+    RewriteCond %{REQUEST_URI} ^/(icons|images|img|css|js|build|assets|fonts|storage)/(.*)$
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Route favicon and manifest files
+    RewriteCond %{REQUEST_URI} ^/(favicon|apple-touch-icon|manifest|robots|sitemap)\.(.*)$
+    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+    RewriteRule ^(.*)$ /public/$1 [L]
+
+    # Rewrite all remaining requests to public/ directory
     RewriteCond %{REQUEST_URI} !^/public/
     RewriteRule ^(.*)$ /public/$1 [L]
 </IfModule>
