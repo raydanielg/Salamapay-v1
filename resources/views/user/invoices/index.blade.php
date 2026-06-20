@@ -9,22 +9,39 @@
 @include('user.partials.page-header', ['title' => 'Invoices', 'subtitle' => 'Manage and track all your invoices'])
 
 {{-- Stats Cards --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Invoices</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ number_format($stats['total']) }}</p>
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Invoices</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ number_format($stats['total']) }}</p>
+        <p class="text-[10px] text-emerald-200 mt-1">All invoices</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Paid</p>
-        <p class="text-2xl font-black text-emerald-600 mt-1">{{ number_format($stats['paid']) }}</p>
+    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Paid</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ number_format($stats['paid']) }}</p>
+        <p class="text-[10px] text-blue-200 mt-1">TSh {{ number_format($stats['totalAmount']) }}</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Pending</p>
-        <p class="text-2xl font-black text-amber-600 mt-1">{{ number_format($stats['pending']) }}</p>
-    </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Amount</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">TSh {{ number_format($stats['totalAmount']) }}</p>
+    <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-amber-100">Pending / Overdue</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2">
+            <p class="text-2xl font-black">{{ number_format($stats['pending'] + $stats['overdue']) }}</p>
+            <span class="text-[10px] text-amber-100">pending</span>
+        </div>
+        <p class="text-[10px] text-amber-100 mt-1">TSh {{ number_format($stats['pendingAmount']) }}</p>
     </div>
 </div>
 
