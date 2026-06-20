@@ -10,21 +10,45 @@
 
 {{-- Stats --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Services</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ $stats['total'] }}</p>
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Services</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['total'] }}</p>
+        <p class="text-[10px] text-emerald-200 mt-1">All services</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Active</p>
-        <p class="text-2xl font-black text-emerald-600 mt-1">{{ $stats['active'] }}</p>
+    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Active</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['active'] }}</p>
+        <p class="text-[10px] text-blue-200 mt-1">Available for booking</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Paused</p>
-        <p class="text-2xl font-black text-amber-600 mt-1">{{ $stats['paused'] }}</p>
+    <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-amber-100">Paused</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['paused'] }}</p>
+        <p class="text-[10px] text-amber-100 mt-1">Temporarily unavailable</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Bookings</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ number_format($stats['totalBookings']) }}</p>
+    <div class="bg-gradient-to-br from-violet-500 to-violet-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-violet-100">Total Bookings</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ number_format($stats['totalBookings']) }}</p>
+        <p class="text-[10px] text-violet-100 mt-1">All time bookings</p>
     </div>
 </div>
 
