@@ -216,80 +216,163 @@ $donutOther = ($productVsService['other'] / $donutTotal) * 100;
     </div>
 </div>
 
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6" id="printableArea">
+    {{-- Top Products --}}
+    <div class="stat-card animate-slide-up delay-4 bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-gray-900">Top Products Sold</h3>
+                <p class="text-[10px] text-gray-400">By revenue this period</p>
+            </div>
+        </div>
+        <div class="p-4 space-y-3">
+            @forelse($topProducts as $i => $product)
+            <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-md {{ $i === 0 ? 'bg-amber-100 text-amber-700' : ($i === 1 ? 'bg-gray-100 text-gray-600' : 'bg-gray-50 text-gray-400') }} flex items-center justify-center text-[10px] font-black shrink-0">{{ $i + 1 }}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-bold text-gray-900 truncate">{{ $product['name'] }}</p>
+                        <p class="text-xs font-bold text-gray-900">{{ $fmt($product['revenue']) }}</p>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5">
+                        <div class="bg-gradient-to-r from-emerald-400 to-emerald-500 h-1.5 rounded-full" style="width: {{ $topProducts[0]['revenue'] > 0 ? ($product['revenue'] / $topProducts[0]['revenue'] * 100) : 0 }}%"></div>
+                    </div>
+                </div>
+                <p class="text-[10px] text-gray-400 shrink-0">{{ number_format($product['qty']) }} sold</p>
+            </div>
+            @empty
+            <div class="text-center py-6">
+                <svg class="w-8 h-8 mx-auto mb-1 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                <p class="text-xs text-gray-400">No product sales yet</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Top Customers --}}
+    <div class="stat-card animate-slide-up delay-5 bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-gray-900">Top Customers</h3>
+                <p class="text-[10px] text-gray-400">By spend this period</p>
+            </div>
+        </div>
+        <div class="p-4 space-y-3">
+            @forelse($topCustomers as $i => $customer)
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center text-white text-[10px] font-bold shrink-0">{{ strtoupper(substr($customer->customer_name, 0, 1)) }}</div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-0.5">
+                        <p class="text-xs font-bold text-gray-900 truncate">{{ $customer->customer_name }}</p>
+                        <p class="text-xs font-bold text-gray-900">{{ $fmt($customer->total) }}</p>
+                    </div>
+                    <p class="text-[10px] text-gray-400">{{ number_format($customer->count) }} transactions</p>
+                </div>
+            </div>
+            @empty
+            <div class="text-center py-6">
+                <svg class="w-8 h-8 mx-auto mb-1 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <p class="text-xs text-gray-400">No customer data yet</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    {{-- Transactions List --}}
-    <div class="bg-white rounded-xl border overflow-hidden">
-        <div class="px-5 py-4 border-b">
-            <h3 class="text-sm font-semibold text-gray-900">Recent Transactions</h3>
+    {{-- Payment Methods --}}
+    <div class="stat-card animate-slide-up delay-4 bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-gray-900">Payment Methods</h3>
+                <p class="text-[10px] text-gray-400">Breakdown by channel</p>
+            </div>
+        </div>
+        <div class="p-4 space-y-4">
+            @forelse($methods as $method => $data)
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg {{ strtolower($method) === 'cash' ? 'bg-emerald-50 text-emerald-600' : (strtolower($method) === 'mpesa' || strtolower($method) === 'tigo_pesa' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-500') }} flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="text-xs font-bold text-gray-900">{{ strtoupper($method) }}</p>
+                        <p class="text-xs font-bold text-gray-900">TSh {{ number_format($data['amount']) }}</p>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-emerald-400 to-emerald-500 h-2 rounded-full" style="width: {{ $summary['total_revenue'] > 0 ? ($data['amount'] / $summary['total_revenue'] * 100) : 0 }}%"></div>
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-1">{{ number_format($data['count']) }} transactions</p>
+                </div>
+            </div>
+            @empty
+            <div class="text-center py-6">
+                <svg class="w-8 h-8 mx-auto mb-1 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                <p class="text-xs text-gray-400">No data available</p>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Recent Transactions --}}
+    <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                </div>
+                <h3 class="text-sm font-bold text-gray-900">Recent Transactions</h3>
+            </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="w-full text-xs">
                 <thead>
-                    <tr class="text-left text-xs text-gray-500 bg-gray-50/50">
-                        <th class="px-5 py-2.5 font-medium">Customer</th>
-                        <th class="px-5 py-2.5 font-medium">Amount</th>
-                        <th class="px-5 py-2.5 font-medium">Status</th>
+                    <tr class="text-left text-gray-500 bg-gray-50/50 text-[10px] uppercase tracking-wider">
+                        <th class="px-4 py-3 font-bold">TX ID</th>
+                        <th class="px-4 py-3 font-bold">Customer</th>
+                        <th class="px-4 py-3 font-bold">Type</th>
+                        <th class="px-4 py-3 font-bold">Amount</th>
+                        <th class="px-4 py-3 font-bold">Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse($transactions->take(10) as $tx)
-                    <tr class="border-t border-gray-100">
-                        <td class="px-5 py-2.5 text-xs">{{ $tx->customer_name }}</td>
-                        <td class="px-5 py-2.5 font-semibold text-gray-900">TSh {{ number_format($tx->amount) }}</td>
-                        <td class="px-5 py-2.5">
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($recentTransactions as $tx)
+                    <tr class="hover:bg-gray-50/50 transition-colors">
+                        <td class="px-4 py-3 font-mono font-bold text-gray-900">{{ $tx->tx_id }}</td>
+                        <td class="px-4 py-3">
+                            <p class="font-bold text-gray-900">{{ $tx->customer_name }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $tx->processed_at?->format('M d, H:i') ?? 'N/A' }}</p>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold {{ $tx->source_type === 'product' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($tx->source_type === 'service' ? 'bg-blue-50 text-blue-700 border border-blue-100' : 'bg-gray-50 text-gray-600 border border-gray-200') }}">
+                                {{ $tx->source_type === 'product' ? 'Product' : ($tx->source_type === 'service' ? 'Service' : 'Other') }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 font-bold text-gray-900">{{ $fmt($tx->amount) }}</td>
+                        <td class="px-4 py-3">
                             @if($tx->status === 'success')
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Success</span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Paid</span>
                             @elseif($tx->status === 'pending')
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Pending</span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pending</span>
                             @else
-                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 border border-red-100">Failed</span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-bold text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Failed</span>
                             @endif
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="3" class="px-5 py-8 text-center text-gray-400 text-xs">No transactions</td></tr>
+                    <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400 text-xs">No transactions in this period</td></tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    {{-- Payment Methods Breakdown --}}
-    <div class="stat-card animate-slide-up delay-3 bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-        <div class="px-6 py-5 border-b border-gray-100">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center shadow-lg shadow-gold-500/20">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-gray-900">Payment Methods</h3>
-                    <p class="text-xs text-gray-400">Breakdown by channel</p>
-                </div>
-            </div>
-        </div>
-        <div class="p-6 space-y-5">
-            @forelse($methods as $method => $data)
-            <div class="flex items-center gap-4 group">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center justify-between mb-1.5">
-                        <p class="text-sm font-semibold text-gray-900">{{ $method }}</p>
-                        <p class="text-sm font-bold text-gray-900">TZS {{ number_format($data['amount']) }}</p>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                        <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-2.5 rounded-full transition-all duration-700" style="width: {{ $summary['total_revenue'] > 0 ? ($data['amount'] / $summary['total_revenue'] * 100) : 0 }}%"></div>
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1.5">{{ number_format($data['count']) }} transactions</p>
-                </div>
-            </div>
-            @empty
-            <div class="text-center py-8">
-                <svg class="w-10 h-10 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
-                <p class="text-sm text-gray-400">No data available</p>
-            </div>
-            @endforelse
         </div>
     </div>
 </div>
