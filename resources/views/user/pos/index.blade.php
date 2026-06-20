@@ -242,7 +242,7 @@ function renderCart() {
             <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-[10px] shrink-0">${item.name.charAt(0)}</div>
             <div class="flex-1 min-w-0">
                 <p class="text-[11px] font-bold text-gray-900 truncate">${item.name}</p>
-                <p class="text-[10px] text-gray-400">TSh ${item.price.toLocaleString()}</p>
+                <p class="text-[10px] text-gray-400">${currencySymbol} ${item.price.toLocaleString()}</p>
             </div>
             <div class="flex items-center gap-1.5">
                 <button onclick="updateQty(${item.id},-1)" class="qty-btn w-6 h-6 rounded-md bg-white border flex items-center justify-center text-gray-500 hover:text-emerald-600 hover:border-emerald-300">-</button>
