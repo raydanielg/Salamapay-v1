@@ -5,24 +5,24 @@
                 <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-[60px] lg:h-[72px] xl:h-[88px] w-auto object-contain">
             </a>
             <div class="hidden md:flex items-center space-x-1">
-                <a href="/" class="group flex items-center gap-1.5 px-3 py-2 text-[15px] font-semibold text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors">
+                <a href="/" class="group flex items-center gap-1.5 px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     <span>Home</span>
                 </a>
-                <a href="{{ route('pricing') }}" class="group flex items-center gap-1.5 px-3 py-2 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('pricing') }}" class="group flex items-center gap-1.5 px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>Pricing</span>
                 </a>
-                <a href="{{ route('docs') }}" class="group flex items-center gap-1.5 px-3 py-2 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('docs') }}" class="group flex items-center gap-1.5 px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     <span>Docs</span>
                 </a>
-                <a href="{{ route('about') }}" class="group flex items-center gap-1.5 px-3 py-2 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('about') }}" class="group flex items-center gap-1.5 px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>About</span>
                 </a>
                 <div class="relative group">
-                    <button class="px-3 py-2 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-1.5">
+                    <button class="px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-1.5">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         <span>More</span>
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="flex items-center space-x-2">
-                <a href="tel:+255000000000" class="hidden lg:inline-flex items-center gap-1 px-3 py-2 text-[13px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 rounded-md transition-all duration-200">
+                <a href="tel:+255000000000" class="hidden lg:inline-flex items-center gap-1 px-3 py-2 xl:px-4 xl:py-2.5 text-[13px] xl:text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300 rounded-md transition-all duration-200">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                     Talk to sales
                 </a>
@@ -56,7 +56,7 @@
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span id="langLabel">EN</span>
                 </button>
-                <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-md shadow-sm hover:shadow-md transition-all duration-200">
+                <a href="{{ route('login') }}" class="px-4 py-2 xl:px-6 xl:py-3 text-sm xl:text-base font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-md shadow-sm hover:shadow-md transition-all duration-200">
                     Get Started
                 </a>
                 <button id="mobileMenuToggle" type="button" class="md:hidden p-2.5 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ml-1">
