@@ -23,66 +23,216 @@
         <p class="text-2xl font-black text-gray-500 mt-1">{{ $stats['draft'] }}</p>
     </div>
     <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Sold</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ number_format($stats['totalSold']) }}</p>
+        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Low Stock</p>
+        <p class="text-2xl font-black text-red-600 mt-1">{{ $stats['lowStock'] }}</p>
     </div>
 </div>
 
-{{-- Actions Bar --}}
-<div class="flex items-center justify-between mb-4">
-    <div class="relative flex-1 max-w-sm">
-        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input type="text" placeholder="Search products..." class="w-full pl-10 pr-4 py-2 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-    </div>
-    <button class="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-1.5">
+{{-- Filters + Add --}}
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-4">
+    <form method="GET" action="{{ route('user.products') }}" class="flex-1 flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-1 max-w-sm">
+            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..." class="w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+        </div>
+        <select name="status" onchange="this.form.submit()" class="px-3 py-2.5 border rounded-xl text-xs font-medium text-gray-600 outline-none focus:border-emerald-500 cursor-pointer">
+            <option value="all">All Status</option>
+            <option value="active" {{ request('status')==='active'?'selected':'' }}>Active</option>
+            <option value="draft" {{ request('status')==='draft'?'selected':'' }}>Draft</option>
+            <option value="archived" {{ request('status')==='archived'?'selected':'' }}>Archived</option>
+        </select>
+        @if($categories->count())
+        <select name="category" onchange="this.form.submit()" class="px-3 py-2.5 border rounded-xl text-xs font-medium text-gray-600 outline-none focus:border-emerald-500 cursor-pointer">
+            <option value="all">All Categories</option>
+            @foreach($categories as $cat)
+            <option value="{{ $cat }}" {{ request('category')===$cat?'selected':'' }}>{{ $cat }}</option>
+            @endforeach
+        </select>
+        @endif
+        @if(request()->hasAny(['search','status','category']))
+        <a href="{{ route('user.products') }}" class="px-3 py-2.5 border rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            Clear
+        </a>
+        @endif
+    </form>
+    <button onclick="openProductModal()" class="px-4 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center gap-1.5 active:scale-95">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         Add Product
     </button>
 </div>
 
-{{-- Products Grid --}}
+{{-- Products Table --}}
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-gray-50/50 text-gray-500 text-[10px] uppercase tracking-wider">
                     <th class="text-left px-5 py-3 font-semibold">Product</th>
+                    <th class="text-left px-5 py-3 font-semibold">SKU</th>
                     <th class="text-left px-5 py-3 font-semibold">Price</th>
+                    <th class="text-left px-5 py-3 font-semibold">Stock</th>
                     <th class="text-left px-5 py-3 font-semibold">Status</th>
-                    <th class="text-left px-5 py-3 font-semibold">Sold</th>
                     <th class="text-left px-5 py-3 font-semibold">Action</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                @foreach($products as $product)
-                <tr class="hover:bg-gray-50/50 transition-colors">
+                @forelse($products as $product)
+                <tr class="hover:bg-gray-50/50 transition-colors group">
                     <td class="px-5 py-3.5">
                         <div class="flex items-center gap-3">
                             <div class="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-xs">
-                                {{ strtoupper(substr($product['name'], 0, 1)) }}
+                                {{ strtoupper(substr($product->name, 0, 1)) }}
                             </div>
-                            <p class="font-semibold text-gray-900 text-xs">{{ $product['name'] }}</p>
+                            <div>
+                                <p class="font-semibold text-gray-900 text-xs">{{ $product->name }}</p>
+                                @if($product->category)
+                                <p class="text-[10px] text-gray-400">{{ $product->category }}</p>
+                                @endif
+                            </div>
                         </div>
                     </td>
-                    <td class="px-5 py-3.5 font-bold text-gray-900 text-xs">TSh {{ number_format($product['price']) }}</td>
+                    <td class="px-5 py-3.5 text-xs font-mono text-gray-500">{{ $product->sku ?? '—' }}</td>
+                    <td class="px-5 py-3.5 font-bold text-gray-900 text-xs">TSh {{ number_format($product->price) }}</td>
                     <td class="px-5 py-3.5">
-                        @if($product['status'] === 'active')
+                        <span class="text-xs font-bold {{ $product->stock <= 5 ? 'text-red-600' : 'text-gray-700' }}">{{ $product->stock }}</span>
+                    </td>
+                    <td class="px-5 py-3.5">
+                        @if($product->status === 'active')
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">Active</span>
-                        @else
+                        @elseif($product->status === 'draft')
                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-100 text-gray-600 border border-gray-200">Draft</span>
+                        @else
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-100">Archived</span>
                         @endif
                     </td>
-                    <td class="px-5 py-3.5 text-xs text-gray-500">{{ number_format($product['sold']) }}</td>
                     <td class="px-5 py-3.5">
-                        <div class="flex gap-2">
-                            <button class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700">Edit</button>
-                            <button class="text-[10px] font-bold text-gray-400 hover:text-red-600">Delete</button>
+                        <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="openEditProductModal({{ $product->id }}, '{{ addslashes($product->name) }}', '{{ addslashes($product->description ?? '') }}', {{ $product->price }}, {{ $product->stock }}, '{{ $product->category ?? '' }}', '{{ $product->sku ?? '' }}', '{{ $product->status }}')" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded-md transition-colors">Edit</button>
+                            <button onclick="deleteProduct({{ $product->id }}, '{{ addslashes($product->name) }}')" class="text-[10px] font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded-md transition-colors">Delete</button>
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="6" class="px-5 py-12 text-center">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                            </div>
+                            <p class="text-sm font-bold text-gray-500">No products found</p>
+                            <p class="text-xs text-gray-400 mt-0.5">Add your first product to get started.</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+    @if($products->hasPages())
+    <div class="px-5 py-3 border-t">{{ $products->links() }}</div>
+    @endif
 </div>
+
+{{-- Create Product Modal --}}
+<div id="productModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeProductModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade">
+        <div class="px-5 py-4 border-b flex items-center justify-between">
+            <h3 class="text-sm font-bold text-gray-900" id="modalTitle">Add Product</h3>
+            <button onclick="closeProductModal()" class="p-1 rounded-lg hover:bg-gray-100 transition-colors"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <form id="productForm" method="POST" action="{{ route('user.products.store') }}" class="p-5 space-y-3.5">
+            @csrf
+            <div id="methodField"></div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Product Name</label>
+                <input type="text" name="name" id="prodName" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Premium Plan">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price (TSh)</label>
+                    <input type="number" name="price" id="prodPrice" required min="0" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Stock</label>
+                    <input type="number" name="stock" id="prodStock" required min="0" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Category</label>
+                    <input type="text" name="category" id="prodCategory" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Software">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">SKU</label>
+                    <input type="text" name="sku" id="prodSku" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. PRD-001">
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                <select name="status" id="prodStatus" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 transition-all">
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                <textarea name="description" id="prodDesc" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none" placeholder="Optional description..."></textarea>
+            </div>
+            <div class="pt-1 flex gap-2">
+                <button type="button" onclick="closeProductModal()" class="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Delete Form --}}
+<form id="deleteProductForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
+
+<script>
+function openProductModal() {
+    document.getElementById('productForm').action = '{{ route('user.products.store') }}';
+    document.getElementById('methodField').innerHTML = '';
+    document.getElementById('modalTitle').textContent = 'Add Product';
+    ['prodName','prodPrice','prodStock','prodCategory','prodSku','prodDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('prodStatus').value = 'active';
+    const m = document.getElementById('productModal');
+    m.classList.remove('hidden'); m.classList.add('flex');
+}
+function openEditProductModal(id, name, description, price, stock, category, sku, status) {
+    document.getElementById('productForm').action = '{{ url('products') }}/' + id;
+    document.getElementById('methodField').innerHTML = '@method('PUT')';
+    document.getElementById('modalTitle').textContent = 'Edit Product';
+    document.getElementById('prodName').value = name;
+    document.getElementById('prodDesc').value = description;
+    document.getElementById('prodPrice').value = price;
+    document.getElementById('prodStock').value = stock;
+    document.getElementById('prodCategory').value = category;
+    document.getElementById('prodSku').value = sku;
+    document.getElementById('prodStatus').value = status;
+    const m = document.getElementById('productModal');
+    m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeProductModal() {
+    const m = document.getElementById('productModal');
+    m.classList.add('hidden'); m.classList.remove('flex');
+}
+function deleteProduct(id, name) {
+    saConfirm({
+        title: 'Delete Product?',
+        text: 'Are you sure you want to delete "' + name + '"? This cannot be undone.',
+        icon: 'danger',
+        confirmText: 'Delete',
+        confirmColor: 'red',
+        onConfirm: function() {
+            const form = document.getElementById('deleteProductForm');
+            form.action = '{{ url('products') }}/' + id;
+            form.submit();
+        }
+    });
+}
+</script>
 @endsection
