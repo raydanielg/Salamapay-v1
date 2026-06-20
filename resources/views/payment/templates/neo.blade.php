@@ -94,6 +94,30 @@
         </div>
     </section>
 
+    {{-- STATS / SOCIAL PROOF --}}
+    <section class="py-10 {{ $dark ? 'bg-gray-800/30' : 'bg-white' }} border-b {{ $dark ? 'border-gray-700' : 'border-gray-100' }}">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div>
+                    <p class="text-2xl sm:text-3xl font-extrabold brand-primary">10K+</p>
+                    <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-400' }} mt-1">Payments Processed</p>
+                </div>
+                <div>
+                    <p class="text-2xl sm:text-3xl font-extrabold brand-primary">99.9%</p>
+                    <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-400' }} mt-1">Uptime Guarantee</p>
+                </div>
+                <div>
+                    <p class="text-2xl sm:text-3xl font-extrabold brand-primary">500+</p>
+                    <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-400' }} mt-1">Happy Merchants</p>
+                </div>
+                <div>
+                    <p class="text-2xl sm:text-3xl font-extrabold brand-primary">24/7</p>
+                    <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-400' }} mt-1">Support Available</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="features" class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/50' : 'bg-gray-50' }}">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="text-center mb-12">
