@@ -26,7 +26,7 @@
         .animate-fade { animation: fadeIn 0.3s ease-out both; }
         .sidebar-link { transition: all 0.2s ease; }
         .sidebar-link:hover { background: rgba(255,255,255,0.06); }
-        .sidebar-link.active { background: linear-gradient(90deg, rgba(249,172,0,0.15), transparent); border-left: 3px solid #f9ac00; }
+        .sidebar-link.active { background: rgba(255,255,255,0.08); color: #fff; }
         .sidebar-submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .sidebar-submenu.open { max-height: 500px; }
         ::-webkit-scrollbar { width: 5px; }
