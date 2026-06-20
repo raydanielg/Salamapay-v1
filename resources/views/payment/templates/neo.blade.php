@@ -443,8 +443,18 @@
         </div>
     </footer>
 
+    {{-- Scroll to Top --}}
+    <button id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'});" class="fixed bottom-6 right-6 w-10 h-10 rounded-full shadow-lg text-white flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 z-50" style="background: {{ $primary }};">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+    </button>
+
     <script>
     const brandColor = '{{ $primary }}';
+    window.addEventListener('scroll', function() {
+        const btn = document.getElementById('scrollTop');
+        if (window.scrollY > 400) { btn.classList.remove('opacity-0', 'pointer-events-none'); }
+        else { btn.classList.add('opacity-0', 'pointer-events-none'); }
+    });
     function selectMethod(type) {
         document.querySelectorAll('.pm-card').forEach(c => {
             c.style.borderColor = '';
