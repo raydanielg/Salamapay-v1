@@ -20,6 +20,7 @@ class PaymentLink extends Model
         'slug',
         'is_active',
         'usage_count',
+        'expires_at',
     ];
 
     protected function casts(): array
@@ -27,7 +28,18 @@ class PaymentLink extends Model
         return [
             'amount' => 'decimal:2',
             'is_active' => 'boolean',
+            'expires_at' => 'datetime',
         ];
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->expires_at !== null && $this->expires_at->isPast();
+    }
+
+    public function isValid(): bool
+    {
+        return $this->is_active && !$this->isExpired();
     }
 
     public function user(): BelongsTo
