@@ -127,13 +127,12 @@
             </div>
         </div>
 
-        {{-- Right: Payment Form --}}
-        <div class="lg:col-span-3 animate-slide-up animate-delay-2">
-            <div class="bg-white rounded-2xl border p-5 sm:p-6">
-                <h2 class="text-sm font-semibold text-gray-900 mb-4">Payment Details</h2>
-
-                <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm">
-                    @csrf
+        {{-- Right Column: Payment Form --}}
+        <div class="flex w-full flex-col bg-gray-50/30 lg:w-1/2 lg:items-start lg:justify-center border-t lg:border-t-0 lg:border-l border-gray-100">
+            <div class="w-full max-w-lg lg:h-full">
+                <div class="flex h-full flex-col px-5 pt-6 pb-10 lg:p-10">
+                    <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
+                        @csrf
 
                     {{-- Amount Input (if not fixed) --}}
                     @if(!$link->amount)
