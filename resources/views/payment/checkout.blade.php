@@ -288,6 +288,23 @@
             document.getElementById('payBtn').innerHTML = 'Pay TSh ' + parseInt(this.value || 0).toLocaleString();
         });
     }
+
+    // Catalog product selection
+    function selectProduct(price) {
+        const btn = document.getElementById('payBtn');
+        const hiddenAmount = document.getElementById('catalogAmount');
+        if (hiddenAmount) hiddenAmount.value = price;
+        if (btn) btn.innerHTML = 'Pay TSh ' + price.toLocaleString();
+        if (amountInput) { amountInput.value = price; amountInput.readOnly = true; }
+    }
+
+    // Auto-select first product on load
+    @if($link->profile && $link->profile->page_type === 'catalog' && !empty($link->profile->products))
+        (function() {
+            const firstPrice = {{ $link->profile->products[0]['price'] ?? 0 }};
+            selectProduct(firstPrice);
+        })();
+    @endif
     </script>
 </body>
 </html>
