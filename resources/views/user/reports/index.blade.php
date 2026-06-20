@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
-@section('title', 'Reports - SalamaPay')
-@section('page_title', 'Reports')
+@section('title', 'Business Reports - SalamaPay')
+@section('page_title', 'Business Reports')
 
 @section('content')
 <style>
@@ -15,42 +15,127 @@
     .delay-2 { animation-delay: 0.2s; }
     .delay-3 { animation-delay: 0.3s; }
     .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+    .delay-6 { animation-delay: 0.6s; }
+    .donut-segment { transition: stroke-dashoffset 1s ease; }
+    @media print { body * { visibility:hidden; } #printableArea, #printableArea * { visibility:visible; } #printableArea { position:absolute; left:0; top:0; width:100%; } }
 </style>
 
 @include('user.partials.alert')
 
-@include('user.partials.page-header', ['title' => 'Sales Reports', 'subtitle' => 'Analyze your payment performance'])
+@include('user.partials.page-header', ['title' => 'Business Reports', 'subtitle' => 'Complete overview of your business performance'])
 
 @php
-$fmt = fn($n) => 'TZS ' . number_format($n, 0);
+$fmt = fn($n) => 'TSh ' . number_format($n, 0);
 $revMax = max(array_column($daily, 'revenue')) ?: 1;
+$totalSplit = array_sum($productVsService);
+$donutTotal = $totalSplit > 0 ? $totalSplit : 1;
+$donutProduct = ($productVsService['product'] / $donutTotal) * 100;
+$donutService = ($productVsService['service'] / $donutTotal) * 100;
+$donutOther = ($productVsService['other'] / $donutTotal) * 100;
 @endphp
 
 {{-- Period Filter --}}
 <div class="flex items-center gap-2 mb-6 animate-slide-up">
-    @foreach(['7'=>'Last 7 Days','30'=>'Last 30 Days','90'=>'Last 90 Days'] as $days=>$label)
+    @foreach(['7'=>'7 Days','30'=>'30 Days','90'=>'90 Days','365'=>'1 Year'] as $days=>$label)
     <a href="?period={{ $days }}" class="px-4 py-2 text-xs font-bold rounded-xl {{ $period == $days ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/25' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50' }} transition-all">{{ $label }}</a>
     @endforeach
 </div>
 
-{{-- Summary Cards --}}
-<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-    @foreach([
-        ['label'=>'Total Revenue','value'=>$fmt($summary['total_revenue']),'color'=>'emerald','icon'=>'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z','delay'=>'delay-1'],
-        ['label'=>'Transactions','value'=>number_format($summary['total_count']),'color'=>'blue','icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','delay'=>'delay-2'],
-        ['label'=>'Successful','value'=>number_format($summary['success_count']),'color'=>'emerald','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','delay'=>'delay-3'],
-        ['label'=>'Avg Transaction','value'=>$fmt($summary['avg_transaction']),'color'=>'amber','icon'=>'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6','delay'=>'delay-4']
-    ] as $card)
-    <div class="stat-card animate-slide-up {{ $card['delay'] }} bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+{{-- KPI Row 1: Revenue & Sales --}}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+    <div class="stat-card animate-slide-up delay-1 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl p-5 text-white shadow-sm">
         <div class="flex items-center justify-between mb-3">
-            <span class="text-xs font-semibold text-gray-500">{{ $card['label'] }}</span>
-            <div class="w-8 h-8 rounded-lg bg-{{ $card['color'] }}-50 flex items-center justify-center">
-                <svg class="w-4 h-4 text-{{ $card['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Revenue</span>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
         </div>
-        <p class="text-xl font-bold text-gray-900 tracking-tight">{{ $card['value'] }}</p>
+        <p class="text-xl font-black">{{ $fmt($summary['total_revenue']) }}</p>
+        <p class="text-[10px] text-emerald-200 mt-1">{{ number_format($summary['success_count']) }} successful sales</p>
     </div>
-    @endforeach
+    <div class="stat-card animate-slide-up delay-2 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Transactions</span>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+        </div>
+        <p class="text-xl font-black">{{ number_format($summary['total_count']) }}</p>
+        <p class="text-[10px] text-blue-200 mt-1">{{ number_format($summary['failed_count']) }} failed</p>
+    </div>
+    <div class="stat-card animate-slide-up delay-3 bg-gradient-to-br from-purple-600 to-purple-700 rounded-2xl p-5 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-200">Avg Sale</span>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+        </div>
+        <p class="text-xl font-black">{{ $fmt($summary['avg_transaction']) }}</p>
+        <p class="text-[10px] text-purple-200 mt-1">Per transaction</p>
+    </div>
+    <div class="stat-card animate-slide-up delay-4 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-5 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-3">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-100">Success Rate</span>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-xl font-black">{{ $summary['total_count'] > 0 ? round(($summary['success_count'] / $summary['total_count']) * 100) : 0 }}%</p>
+        <p class="text-[10px] text-amber-100 mt-1">{{ number_format($summary['success_count']) }} of {{ number_format($summary['total_count']) }}</p>
+    </div>
+</div>
+
+{{-- KPI Row 2: Business Overview --}}
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+    <div class="stat-card animate-slide-up delay-1 bg-white rounded-xl border p-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Invoices</p>
+                <p class="text-lg font-black text-gray-900">{{ number_format($invoiceStats['total']) }}</p>
+                <p class="text-[10px] text-emerald-600 font-bold">{{ number_format($invoiceStats['paid']) }} paid</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card animate-slide-up delay-2 bg-white rounded-xl border p-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Products</p>
+                <p class="text-lg font-black text-gray-900">{{ number_format($productStats['total']) }}</p>
+                <p class="text-[10px] text-gray-500">{{ number_format($productStats['active']) }} active</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card animate-slide-up delay-3 bg-white rounded-xl border p-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Services</p>
+                <p class="text-lg font-black text-gray-900">{{ number_format($servicesCount) }}</p>
+                <p class="text-[10px] text-gray-500">Available</p>
+            </div>
+        </div>
+    </div>
+    <div class="stat-card animate-slide-up delay-4 bg-white rounded-xl border p-4 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl {{ $productStats['low_stock'] > 0 ? 'bg-red-100' : 'bg-gray-100' }} flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 {{ $productStats['low_stock'] > 0 ? 'text-red-600' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Low Stock</p>
+                <p class="text-lg font-black {{ $productStats['low_stock'] > 0 ? 'text-red-600' : 'text-gray-900' }}">{{ number_format($productStats['low_stock']) }}</p>
+                <p class="text-[10px] text-gray-500">{{ number_format($productStats['out_of_stock']) }} out of stock</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Revenue Chart --}}
