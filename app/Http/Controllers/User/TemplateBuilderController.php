@@ -41,14 +41,23 @@ class TemplateBuilderController extends Controller
             'template_id' => 'nullable|exists:templates,id',
             'template_settings' => 'nullable|array',
             'logo' => 'nullable|image|max:5120',
+            'cover_image' => 'nullable|image|max:5120',
             'color' => 'nullable|string|max:7',
             'business_name' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1000',
         ]);
 
+        $templateSettings = $request->template_settings ?? [];
+
+        if ($request->hasFile('cover_image')) {
+            $templateSettings['cover_image'] = $request->file('cover_image')->store('profile-covers', 'public');
+        } elseif (isset($profile->template_settings['cover_image'])) {
+            $templateSettings['cover_image'] = $profile->template_settings['cover_image'];
+        }
+
         $data = [
             'template_id' => $request->template_id,
-            'template_settings' => $request->template_settings,
+            'template_settings' => $templateSettings,
             'color' => $request->color ?? $profile->color,
             'business_name' => $request->business_name ?? $profile->business_name,
             'description' => $request->description ?? $profile->description,
