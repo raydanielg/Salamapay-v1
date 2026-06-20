@@ -376,23 +376,6 @@
         }
     }
 
-    function selectProvider(el, val) {
-        document.querySelectorAll('.provider-chip').forEach(b => {
-            b.classList.remove('active');
-            b.classList.add('border-gray-200');
-            b.style.borderColor = '';
-            b.style.backgroundColor = '';
-            b.style.color = '';
-        });
-        el.classList.add('active');
-        el.classList.remove('border-gray-200');
-        el.style.borderColor = brandColor;
-        el.style.backgroundColor = brandColor + '1A';
-        el.style.color = brandColor;
-        const radio = el.querySelector('input[type="radio"]');
-        if (radio) radio.checked = true;
-    }
-
     // Phone input sync
     const phoneDisplay = document.getElementById('phoneDisplay');
     const phoneHidden = document.getElementById('phoneHidden');
