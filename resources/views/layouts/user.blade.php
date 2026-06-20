@@ -335,6 +335,7 @@
             });
         })();
     </script>
+    @include('components.sweet-alert')
     @stack('scripts')
 </body>
 </html>
