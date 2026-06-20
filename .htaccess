@@ -1,8 +1,4 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
 
     # Handle Authorization Header
@@ -16,6 +12,8 @@
 
     # Rewrite everything to public/ directory
     RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ /public/$1 [L]
 </IfModule>
 
@@ -28,10 +26,15 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-<FilesMatch "\.(env|ini|log|sh)$">
+<FilesMatch "\.(env|ini|log|sh|sql)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
+
+# Protect Laravel sensitive directories
+<IfModule mod_rewrite.c>
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|storage|tests|vendor)/(.*)$ /public/$1/$2 [L]
+</IfModule>
 
 # Enable PHP settings if needed
 <IfModule mod_php.c>
@@ -39,4 +42,11 @@ Options -Indexes
     php_value post_max_size 64M
     php_value max_execution_time 300
     php_value max_input_time 300
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
 </IfModule>
