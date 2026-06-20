@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,23 +13,76 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = [
-            ['name' => 'Premium Plan', 'price' => 50000, 'status' => 'active', 'sold' => 128],
-            ['name' => 'Basic Plan', 'price' => 25000, 'status' => 'active', 'sold' => 340],
-            ['name' => 'Enterprise Plan', 'price' => 120000, 'status' => 'active', 'sold' => 45],
-            ['name' => 'Consultation', 'price' => 30000, 'status' => 'draft', 'sold' => 12],
-            ['name' => 'Support Package', 'price' => 15000, 'status' => 'active', 'sold' => 89],
-        ];
+        $query = Product::forUser(auth()->id());
+
+        if ($request->filled('search')) {
+            $query->search($request->search);
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('category') && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        $products = $query->latest()->paginate(15)->withQueryString();
+        $categories = Product::forUser(auth()->id())->select('category')->distinct()->pluck('category')->filter();
 
         $stats = [
-            'total' => 5,
-            'active' => 4,
-            'draft' => 1,
-            'totalSold' => 614,
+            'total' => Product::forUser(auth()->id())->count(),
+            'active' => Product::forUser(auth()->id())->active()->count(),
+            'draft' => Product::forUser(auth()->id())->where('status', 'draft')->count(),
+            'lowStock' => Product::forUser(auth()->id())->where('stock', '<=', 5)->count(),
         ];
 
-        return view('user.products.index', compact('products', 'stats'));
+        return view('user.products.index', compact('products', 'stats', 'categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category' => 'nullable|string|max:100',
+            'sku' => 'nullable|string|max:100|unique:products,sku',
+            'status' => 'required|in:active,draft,archived',
+        ]);
+
+        $validated['user_id'] = auth()->id();
+        Product::create($validated);
+
+        return redirect()->route('user.products')->with('success', 'Product created successfully.');
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $this->authorize('update', $product);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category' => 'nullable|string|max:100',
+            'sku' => 'nullable|string|max:100|unique:products,sku,' . $product->id,
+            'status' => 'required|in:active,draft,archived',
+        ]);
+
+        $product->update($validated);
+
+        return redirect()->route('user.products')->with('success', 'Product updated successfully.');
+    }
+
+    public function destroy(Product $product)
+    {
+        $this->authorize('delete', $product);
+        $product->delete();
+        return redirect()->route('user.products')->with('success', 'Product deleted successfully.');
     }
 }
