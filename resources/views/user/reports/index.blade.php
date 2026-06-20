@@ -138,32 +138,81 @@ $donutOther = ($productVsService['other'] / $donutTotal) * 100;
     </div>
 </div>
 
-{{-- Revenue Chart --}}
-<div class="stat-card animate-slide-up delay-2 bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+{{-- Revenue Chart + Product vs Service --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="lg:col-span-2 stat-card animate-slide-up delay-2 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold text-gray-900">Revenue Trend</h3>
+                    <p class="text-xs text-gray-400">Daily revenue over selected period</p>
+                </div>
             </div>
-            <div>
-                <h3 class="text-base font-bold text-gray-900">Revenue Trend</h3>
-                <p class="text-xs text-gray-400">Daily revenue over selected period</p>
+            <div class="flex gap-3 text-xs">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span>Revenue</span>
             </div>
+        </div>
+        <div class="flex items-end gap-[4px] h-44 px-2">
+            @foreach($daily as $date => $d)
+            @php
+                $pct = min(100, ($d['revenue'] / $revMax) * 100);
+                $isToday = $date === now()->format('Y-m-d');
+                $label = \Carbon\Carbon::parse($date)->format('d');
+                if ($period > 30) $label = \Carbon\Carbon::parse($date)->format('M d');
+                elseif ($period > 7) $label = \Carbon\Carbon::parse($date)->format('d');
+                else $label = \Carbon\Carbon::parse($date)->format('D');
+            @endphp
+            <div class="flex-1 flex flex-col items-center gap-1 group cursor-pointer" title="{{ $date }}: TSh {{ number_format($d['revenue']) }} | {{ $d['success'] }} sales">
+                <div class="w-full bg-gray-50 rounded-t-lg relative h-36 overflow-hidden">
+                    <div class="chart-bar absolute bottom-0 left-0 right-0 rounded-t-lg {{ $isToday ? 'bg-gradient-to-t from-emerald-600 to-emerald-400' : 'bg-gradient-to-t from-emerald-400 to-emerald-200 group-hover:from-emerald-500 group-hover:to-emerald-300' }}" style="height: {{ max($pct, 2) }}%"></div>
+                </div>
+                <span class="text-[9px] text-gray-500 font-bold whitespace-nowrap">{{ $label }}</span>
+            </div>
+            @endforeach
         </div>
     </div>
-    <div class="flex items-end gap-[6px] h-44 px-2">
-        @foreach($daily as $date => $d)
-        @php
-            $pct = min(100, ($d['revenue'] / $revMax) * 100);
-            $isToday = $date === now()->format('Y-m-d');
-        @endphp
-        <div class="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer" title="{{ $date }}: TZS {{ number_format($d['revenue']) }}">
-            <div class="w-full bg-gray-50 rounded-t-xl relative h-36 overflow-hidden">
-                <div class="chart-bar absolute bottom-0 left-0 right-0 rounded-t-xl {{ $isToday ? 'bg-gradient-to-t from-emerald-600 to-emerald-400' : 'bg-gradient-to-t from-emerald-400 to-emerald-200 group-hover:from-emerald-500 group-hover:to-emerald-300' }}" style="height: {{ max($pct, 3) }}%"></div>
+
+    {{-- Product vs Service Donut --}}
+    <div class="stat-card animate-slide-up delay-3 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
             </div>
-            <span class="text-[10px] text-gray-500 font-bold">{{ \Carbon\Carbon::parse($date)->format('d') }}</span>
+            <div>
+                <h3 class="text-base font-bold text-gray-900">Product vs Service</h3>
+                <p class="text-xs text-gray-400">Revenue breakdown (all time)</p>
+            </div>
         </div>
-        @endforeach
+        <div class="flex flex-col items-center">
+            <svg viewBox="0 0 36 36" class="w-40 h-40 -rotate-90">
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#e5e7eb" stroke-width="3"/>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="{{ $donutProduct }}, 100" stroke-dashoffset="0" stroke-linecap="round" class="donut-segment"/>
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#3b82f6" stroke-width="3" stroke-dasharray="{{ $donutService }}, 100" stroke-dashoffset="-{{ $donutProduct }}" stroke-linecap="round" class="donut-segment"/>
+                @if($donutOther > 0)
+                <circle cx="18" cy="18" r="15.915" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="{{ $donutOther }}, 100" stroke-dashoffset="-{{ $donutProduct + $donutService }}" stroke-linecap="round" class="donut-segment"/>
+                @endif
+            </svg>
+            <div class="flex gap-4 mt-4 text-xs">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Products</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>Services</span>
+                @if($donutOther > 0)
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>Other</span>
+                @endif
+            </div>
+            <div class="grid grid-cols-2 gap-3 w-full mt-4">
+                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Products</p>
+                    <p class="text-sm font-black text-emerald-700">{{ $fmt($productVsService['product']) }}</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                    <p class="text-[10px] text-gray-400 font-bold uppercase">Services</p>
+                    <p class="text-sm font-black text-blue-700">{{ $fmt($productVsService['service']) }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
