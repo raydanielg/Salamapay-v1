@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Pay {{ $merchant->business_name ?? $merchant->first_name }} — SalamaPay</title>
+    <title>Pay {{ $link->merchantName() }} — SalamaPay</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,7 +46,7 @@
         <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ $link->description }}</p>
         <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border text-xs text-gray-600">
             <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            Paying <span class="font-semibold text-gray-900">{{ $merchant->business_name ?? $merchant->first_name . ' ' . $merchant->last_name }}</span>
+            Paying <span class="font-semibold text-gray-900">{{ $link->merchantName() }}</span>
         </div>
     </div>
 
@@ -75,15 +75,26 @@
             <div class="bg-white rounded-2xl border p-5">
                 <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">Merchant</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm">
-                        {{ strtoupper(substr($merchant->first_name ?? 'M', 0, 1)) }}
+                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                        {{ strtoupper(substr($link->merchantName(), 0, 1)) }}
                     </div>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-900">{{ $merchant->business_name ?? $merchant->first_name . ' ' . $merchant->last_name }}</p>
-                        <p class="text-xs text-gray-500">{{ $merchant->email }}</p>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ $link->merchantName() }}</p>
+                        <p class="text-xs text-gray-500 truncate">{{ $merchant->email ?? $link->user->email }}</p>
                     </div>
                 </div>
-                @if($merchant->business_name)
+                @if($link->profile && $link->profile->description)
+                <div class="mt-3 pt-3 border-t">
+                    <p class="text-xs text-gray-600 leading-relaxed">{{ $link->profile->description }}</p>
+                </div>
+                @endif
+                @if($link->profile && ($link->profile->business_type || $link->profile->phone))
+                <div class="mt-3 pt-3 border-t space-y-1.5 text-xs text-gray-500">
+                    @if($link->profile->business_type)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>Type: <span class="text-gray-700 font-medium">{{ $link->profile->business_type }}</span></p>@endif
+                    @if($link->profile->phone)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Phone: <span class="text-gray-700 font-medium">{{ $link->profile->phone }}</span></p>@endif
+                    @if($link->profile->business_tin)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>TIN: <span class="text-gray-700 font-medium">{{ $link->profile->business_tin }}</span></p>@endif
+                </div>
+                @elseif($merchant->business_name)
                 <div class="mt-3 pt-3 border-t space-y-1 text-xs text-gray-500">
                     @if($merchant->business_type)<p>Type: <span class="text-gray-700">{{ $merchant->business_type }}</span></p>@endif
                     @if($merchant->phone)<p>Phone: <span class="text-gray-700">{{ $merchant->phone }}</span></p>@endif
@@ -126,6 +137,25 @@
                             <input type="email" name="customer_email" value="{{ old('customer_email') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="john@example.com" required>
                         </div>
                     </div>
+
+                    {{-- Custom Fields --}}
+                    @if(!empty($link->custom_fields))
+                    <div class="mb-4 space-y-3">
+                        <p class="text-xs font-medium text-gray-700">Additional Information</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            @foreach($link->custom_fields as $field)
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">{{ $field['label'] }}</label>
+                                @if($field['type'] === 'textarea')
+                                    <textarea name="custom_{{ $field['name'] }}" {{ $field['required'] ? 'required' : '' }} rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none resize-none" placeholder="{{ $field['label'] }}">{{ old('custom_' . $field['name']) }}</textarea>
+                                @else
+                                    <input type="{{ $field['type'] }}" name="custom_{{ $field['name'] }}" value="{{ old('custom_' . $field['name']) }}" {{ $field['required'] ? 'required' : '' }} class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="{{ $field['label'] }}">
+                                @endif
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
 
                     {{-- Payment Method Selection --}}
                     <p class="text-xs font-medium text-gray-700 mb-2">Select Payment Method</p>
