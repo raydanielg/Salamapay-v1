@@ -178,127 +178,139 @@
     @endif
 </div>
 
-{{-- Create Product Modal --}}
-<div id="productModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeProductModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900" id="modalTitle">Add Product</h3>
-            <button onclick="closeProductModal()" class="p-1 rounded-lg hover:bg-gray-100 transition-colors"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+{{-- Slide-in Product Drawer --}}
+<style>
+#productDrawer { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+#productDrawer.overlay-open { transform: translateX(0); }
+#productDrawer.overlay-closed { transform: translateX(100%); }
+.drawer-backdrop { transition: opacity 0.3s ease; }
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.drawer-backdrop.closed { opacity: 0; pointer-events: none; }
+</style>
+
+<div id="drawerBackdrop" class="drawer-backdrop closed fixed inset-0 bg-black/40 backdrop-blur-sm z-[50]" onclick="closeProductDrawer()"></div>
+<div id="productDrawer" class="fixed inset-y-0 right-0 z-[55] w-full max-w-lg bg-white shadow-2xl flex flex-col overlay-closed">
+    {{-- Drawer Header --}}
+    <div class="px-6 py-4 border-b flex items-center justify-between bg-white shrink-0">
+        <div>
+            <h3 class="text-base font-black text-gray-900" id="drawerTitle">Add Product</h3>
+            <p class="text-[10px] text-gray-400">Manage your product details and settings</p>
         </div>
-        <form id="productForm" method="POST" action="{{ route('user.products.store') }}" class="p-5 space-y-3.5">
-            @csrf
-            <div id="methodField"></div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Product Name</label>
-                <input type="text" name="name" id="prodName" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Premium Plan">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price (TSh)</label>
-                    <input type="number" name="price" id="prodPrice" required min="0" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Stock</label>
-                    <input type="number" name="stock" id="prodStock" required min="0" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Category</label>
-                    <input type="text" name="category" id="prodCategory" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Software">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">SKU</label>
-                    <input type="text" name="sku" id="prodSku" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. PRD-001">
-                </div>
-            </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
-                <select name="status" id="prodStatus" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 transition-all">
-                    <option value="active">Active</option>
-                    <option value="draft">Draft</option>
-                    <option value="archived">Archived</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
-                <textarea name="description" id="prodDesc" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none" placeholder="Optional description..."></textarea>
-            </div>
-            <div class="pt-1 flex gap-2">
-                <button type="button" onclick="closeProductModal()" class="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Product</button>
-            </div>
-        </form>
+        <button onclick="closeProductDrawer()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
-</div>
 
-{{-- Product Settings Modal --}}
-<div id="productSettingsModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeProductSettingsModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-fade">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900">Product Settings</h3>
-            <button onclick="closeProductSettingsModal()" class="p-1 rounded-lg hover:bg-gray-100 transition-colors"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    {{-- Tabs --}}
+    <div class="flex border-b bg-gray-50/50 shrink-0">
+        <button onclick="switchDrawerTab('product')" id="tabProduct" class="flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors">Product</button>
+        <button onclick="switchDrawerTab('settings')" id="tabSettings" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors">Settings</button>
+    </div>
+
+    {{-- Drawer Content --}}
+    <div class="flex-1 overflow-y-auto">
+        {{-- Tab: Product Form --}}
+        <div id="panelProduct" class="p-6 space-y-4">
+            <form id="productForm" method="POST" action="{{ route('user.products.store') }}">
+                @csrf
+                <div id="methodField"></div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Product Name</label>
+                    <input type="text" name="name" id="prodName" required class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Premium Plan">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price (TSh)</label>
+                        <input type="number" name="price" id="prodPrice" required min="0" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Stock</label>
+                        <input type="number" name="stock" id="prodStock" required min="0" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Category</label>
+                        <input type="text" name="category" id="prodCategory" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Software">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">SKU</label>
+                        <input type="text" name="sku" id="prodSku" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. PRD-001">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                    <select name="status" id="prodStatus" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 transition-all">
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                    <textarea name="description" id="prodDesc" rows="3" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none" placeholder="Optional description..."></textarea>
+                </div>
+                <div class="pt-4 flex gap-3 sticky bottom-0 bg-white pb-2">
+                    <button type="button" onclick="closeProductDrawer()" class="flex-1 py-3 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Product</button>
+                </div>
+            </form>
         </div>
-        <form method="POST" action="{{ route('user.tools.update') }}" class="p-5 space-y-5">
-            @csrf
-            @method('PUT')
 
-            {{-- Categories --}}
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Product Categories</label>
-                <div id="categoriesList" class="space-y-2 mb-2">
-                    @php
-                        $cats = json_decode(auth()->user()->settings['product_categories'] ?? '[]', true) ?: ['Drinks','Snacks','Electronics','Clothing','Food'];
-                    @endphp
-                    @foreach($cats as $cat)
-                    <div class="flex items-center gap-2 cat-row">
-                        <input type="text" name="product_categories[]" value="{{ $cat }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-                        <button type="button" onclick="this.closest('.cat-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        {{-- Tab: Settings --}}
+        <div id="panelSettings" class="p-6 space-y-5 hidden">
+            <form method="POST" action="{{ route('user.tools.update') }}">
+                @csrf
+                @method('PUT')
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Product Categories</label>
+                    <div id="drawerCategoriesList" class="space-y-2 mb-2">
+                        @php
+                            $cats = json_decode(auth()->user()->settings['product_categories'] ?? '[]', true) ?: ['Drinks','Snacks','Electronics','Clothing','Food'];
+                        @endphp
+                        @foreach($cats as $cat)
+                        <div class="flex items-center gap-2 cat-row">
+                            <input type="text" name="product_categories[]" value="{{ $cat }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                            <button type="button" onclick="this.closest('.cat-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    <button type="button" onclick="addDrawerCategoryRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Category
+                    </button>
                 </div>
-                <button type="button" onclick="addCategoryRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Add Category
-                </button>
-            </div>
-
-            {{-- Units --}}
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Units of Measurement</label>
-                <div id="unitsList" class="space-y-2 mb-2">
-                    @php
-                        $units = json_decode(auth()->user()->settings['product_units'] ?? '[]', true) ?: ['Piece','Kg','Litre','Pack','Box'];
-                    @endphp
-                    @foreach($units as $unit)
-                    <div class="flex items-center gap-2 unit-row">
-                        <input type="text" name="product_units[]" value="{{ $unit }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-                        <button type="button" onclick="this.closest('.unit-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Units of Measurement</label>
+                    <div id="drawerUnitsList" class="space-y-2 mb-2">
+                        @php
+                            $units = json_decode(auth()->user()->settings['product_units'] ?? '[]', true) ?: ['Piece','Kg','Litre','Pack','Box'];
+                        @endphp
+                        @foreach($units as $unit)
+                        <div class="flex items-center gap-2 unit-row">
+                            <input type="text" name="product_units[]" value="{{ $unit }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                            <button type="button" onclick="this.closest('.unit-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    <button type="button" onclick="addDrawerUnitRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Unit
+                    </button>
                 </div>
-                <button type="button" onclick="addUnitRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Add Unit
-                </button>
-            </div>
-
-            {{-- Low Stock Threshold --}}
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Low Stock Alert Threshold</label>
-                <div class="flex items-center gap-3">
-                    <input type="number" name="low_stock_threshold" value="{{ auth()->user()->settings['low_stock_threshold'] ?? 5 }}" min="1" max="100" class="w-24 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
-                    <span class="text-xs text-gray-400">items or less triggers alert</span>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Low Stock Alert Threshold</label>
+                    <div class="flex items-center gap-3">
+                        <input type="number" name="low_stock_threshold" value="{{ auth()->user()->settings['low_stock_threshold'] ?? 5 }}" min="1" max="100" class="w-24 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                        <span class="text-xs text-gray-400">items or less triggers alert</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="pt-1 flex gap-2">
-                <button type="button" onclick="closeProductSettingsModal()" class="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Settings</button>
-            </div>
-        </form>
+                <div class="pt-4 flex gap-3 sticky bottom-0 bg-white pb-2">
+                    <button type="button" onclick="closeProductDrawer()" class="flex-1 py-3 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Settings</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
