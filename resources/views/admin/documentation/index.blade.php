@@ -83,6 +83,8 @@
                     <td class="px-5 py-3 text-xs text-gray-400">{{ $pg->updated_at->format('M d, Y') }}</td>
                     <td class="px-5 py-3 text-right">
                         <a href="{{ route('admin.documentation.edit', $pg->id) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium mr-2">Edit</a>
+                        <a href="{{ route('admin.documentation.export', $pg->id) }}" class="text-xs text-blue-600 hover:text-blue-700 font-medium mr-2">Export</a>
+                        <button type="button" onclick="copyDocMd('{{ addslashes($pg->title) }}', `{{ addslashes($pg->content) }}`, '{{ $pg->slug }}', '{{ $pg->category }}')" class="text-xs text-gray-500 hover:text-gray-700 font-medium mr-2">Copy</button>
                         <form action="{{ route('admin.documentation.destroy', $pg->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this page?')">
                             @csrf
                             @method('DELETE')
@@ -106,4 +108,19 @@
     <div class="px-5 py-3 border-t">{{ $pages->links() }}</div>
     @endif
 </div>
+
+<script>
+function copyDocMd(title, content, slug, category) {
+    const md = '# ' + title + '\n\n'
+        + '**Category:** ' + category + '\n'
+        + '**Slug:** `' + slug + '`\n'
+        + '**Updated:** ' + new Date().toISOString() + '\n\n---\n\n'
+        + content + '\n';
+    navigator.clipboard.writeText(md).then(() => {
+        alert('Markdown copied to clipboard!');
+    }).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Markdown copied!');
+    });
+}
+</script>
 @endsection
