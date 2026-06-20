@@ -32,14 +32,14 @@
 </style>
 
 {{-- Welcome + Actions --}}
-<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
-        <h1 class="text-xl lg:text-2xl font-bold text-gray-900 tracking-tight">Welcome back, {{ Auth::user()->first_name ?? 'Merchant' }}</h1>
-        <p class="text-sm text-gray-500 mt-0.5">Here's what's happening with your payments today.</p>
+<div class="mb-6 flex flex-row items-start sm:items-center justify-between gap-3 flex-wrap">
+    <div class="min-w-0">
+        <h1 class="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 tracking-tight">Hello {{ Auth::user()->first_name ?? 'Merchant' }} 👋</h1>
+        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Here's what's happening with your payments today.</p>
     </div>
-    <div class="flex items-center gap-2">
-        <button class="px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Export</button>
-        <button class="px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">Create payment link</button>
+    <div class="flex items-center gap-2 shrink-0">
+        <button class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Export</button>
+        <button class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"><span class="hidden sm:inline">Create payment link</span><span class="sm:hidden">New link</span></button>
     </div>
 </div>
 
