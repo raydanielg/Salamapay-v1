@@ -411,6 +411,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
 
     // Business Tools
     Route::get('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'index'])->name('user.invoices');
+    Route::post('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'store'])->name('user.invoices.store');
+    Route::put('/invoices/{invoice}', [App\Http\Controllers\User\InvoiceController::class, 'update'])->name('user.invoices.update');
+    Route::delete('/invoices/{invoice}', [App\Http\Controllers\User\InvoiceController::class, 'destroy'])->name('user.invoices.destroy');
+    Route::post('/invoices/{invoice}/pay', [App\Http\Controllers\User\InvoiceController::class, 'pay'])->name('user.invoices.pay');
     Route::get('/sales', [App\Http\Controllers\User\SaleController::class, 'index'])->name('user.sales');
     Route::delete('/sales/{transaction}', [App\Http\Controllers\User\SaleController::class, 'destroy'])->name('user.sales.destroy');
     Route::get('/pos', [App\Http\Controllers\User\PosController::class, 'index'])->name('user.pos');
