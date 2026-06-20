@@ -155,6 +155,15 @@
         <div class="flex w-full flex-col bg-gray-50/30 lg:w-1/2 lg:items-start lg:justify-center border-t lg:border-t-0 lg:border-l border-gray-100">
             <div class="w-full max-w-lg lg:h-full">
                 <div class="flex h-full flex-col px-5 pt-6 pb-10 lg:p-10">
+                    @php
+                    $brandColor = $link->profile->color ?? '#024938';
+                    $isMobile = old('payment_method') !== 'card';
+                    $isCard = old('payment_method') === 'card';
+                    $isMpesa = old('payment_method') === 'mpesa' || !old('payment_method');
+                    $isTigo = old('payment_method') === 'tigopesa';
+                    $isAirtel = old('payment_method') === 'airtelmoney';
+                    @endphp
+
                     <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
                         @csrf
 
@@ -167,48 +176,48 @@
                         <div>
                             <p class="text-sm font-semibold mb-2.5 text-gray-900">Payment method</p>
                             <div class="grid grid-cols-2 gap-3">
-                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ old('payment_method') !== 'card' ? 'active border-[{{ $link->profile->color ?? '#024938' }}] bg-gray-50' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('mobile')">
+                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ $isMobile ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('mobile')" style="{{ $isMobile ? 'border-color:'.$brandColor.'; background:'.$brandColor.'0D' : '' }}">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ old('payment_method') !== 'card' ? ($link->profile->color ?? '#024938') : '#f3f4f6' }};">
-                                            <svg class="w-5 h-5 {{ old('payment_method') !== 'card' ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ $isMobile ? $brandColor : '#f3f4f6' }};">
+                                            <svg class="w-5 h-5 {{ $isMobile ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-gray-900 leading-none">Mobile Money</p>
                                             <p class="text-[11px] text-gray-500 mt-1">M-Pesa, Tigo, Airtel</p>
                                         </div>
                                     </div>
-                                    <input type="radio" name="payment_method_type" value="mobile" class="hidden" {{ old('payment_method') !== 'card' ? 'checked' : '' }}>
+                                    <input type="radio" name="payment_method_type" value="mobile" class="hidden" {{ $isMobile ? 'checked' : '' }}>
                                 </label>
-                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ old('payment_method') === 'card' ? 'active border-[{{ $link->profile->color ?? '#024938' }}] bg-gray-50' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('card')">
+                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ $isCard ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('card')" style="{{ $isCard ? 'border-color:'.$brandColor.'; background:'.$brandColor.'0D' : '' }}">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ old('payment_method') === 'card' ? ($link->profile->color ?? '#024938') : '#f3f4f6' }};">
-                                            <svg class="w-5 h-5 {{ old('payment_method') === 'card' ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ $isCard ? $brandColor : '#f3f4f6' }};">
+                                            <svg class="w-5 h-5 {{ $isCard ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                                         </div>
                                         <div>
                                             <p class="text-sm font-bold text-gray-900 leading-none">Card</p>
                                             <p class="text-[11px] text-gray-500 mt-1">Visa, Mastercard</p>
                                         </div>
                                     </div>
-                                    <input type="radio" name="payment_method_type" value="card" class="hidden" {{ old('payment_method') === 'card' ? 'checked' : '' }}>
+                                    <input type="radio" name="payment_method_type" value="card" class="hidden" {{ $isCard ? 'checked' : '' }}>
                                 </label>
                             </div>
                         </div>
 
                         {{-- Mobile Money Providers --}}
-                        <div id="mobileProviders" class="{{ old('payment_method') === 'card' ? 'hidden' : '' }}">
+                        <div id="mobileProviders" class="{{ $isCard ? 'hidden' : '' }}">
                             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Select Provider</p>
                             <div class="flex items-center gap-2">
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'mpesa')" style="{{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isMpesa ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'mpesa')" style="{{ $isMpesa ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
                                     <span class="text-xs font-semibold">M-Pesa</span>
-                                    <input type="radio" name="payment_method" value="mpesa" class="hidden" {{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'checked' : '' }}>
+                                    <input type="radio" name="payment_method" value="mpesa" class="hidden" {{ $isMpesa ? 'checked' : '' }}>
                                 </label>
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'tigopesa' ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'tigopesa')" style="{{ old('payment_method') === 'tigopesa' ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isTigo ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'tigopesa')" style="{{ $isTigo ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
                                     <span class="text-xs font-semibold">Tigo Pesa</span>
-                                    <input type="radio" name="payment_method" value="tigopesa" class="hidden" {{ old('payment_method') === 'tigopesa' ? 'checked' : '' }}>
+                                    <input type="radio" name="payment_method" value="tigopesa" class="hidden" {{ $isTigo ? 'checked' : '' }}>
                                 </label>
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'airtelmoney' ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'airtelmoney')" style="{{ old('payment_method') === 'airtelmoney' ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isAirtel ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'airtelmoney')" style="{{ $isAirtel ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
                                     <span class="text-xs font-semibold">Airtel Money</span>
-                                    <input type="radio" name="payment_method" value="airtelmoney" class="hidden" {{ old('payment_method') === 'airtelmoney' ? 'checked' : '' }}>
+                                    <input type="radio" name="payment_method" value="airtelmoney" class="hidden" {{ $isAirtel ? 'checked' : '' }}>
                                 </label>
                             </div>
                         </div>
