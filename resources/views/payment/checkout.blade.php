@@ -223,14 +223,14 @@
                         </div>
 
                         {{-- Card Details --}}
-                        <div id="cardDetails" class="{{ old('payment_method') === 'card' ? '' : 'hidden' }}">
+                        <div id="cardDetails" class="{{ $isCard ? '' : 'hidden' }}">
                             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Card Details</p>
                             <div class="space-y-2.5">
                                 <div class="relative">
                                     <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                                     </div>
-                                    <input type="text" name="card_number" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular" style="--tw-ring-color: {{ $link->profile->color ?? '#024938' }}33;">
+                                    <input type="text" name="card_number" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular" style="--tw-ring-color: {{ $brandColor }}33;">
                                 </div>
                                 <div class="grid grid-cols-2 gap-2.5">
                                     <div class="relative">
