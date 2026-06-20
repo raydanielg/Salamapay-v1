@@ -8,9 +8,9 @@ Route::get('/', function () {
     return view('landing');
 });
 
-// Public Payment Link Routes
+// Public Payment Link Routes (rate limited)
 Route::get('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, 'show'])->name('payment.link');
-Route::post('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, 'process'])->name('payment.process');
+Route::post('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, 'process'])->middleware('throttle:10,1')->name('payment.process');
 Route::get('/pay/{slug}/success', [App\Http\Controllers\PaymentLinkController::class, 'success'])->name('payment.success');
 Route::get('/pay/{slug}/receipt', [App\Http\Controllers\PaymentLinkController::class, 'receipt'])->name('payment.receipt');
 
@@ -46,7 +46,7 @@ Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request
         'success' => true,
         'message' => 'Thank you for subscribing! Check your inbox for confirmation.',
     ]);
-})->name('newsletter.subscribe')->middleware('throttle:newsletter');
+})->middleware('throttle:5,1')->name('newsletter.subscribe');
 
 Auth::routes();
 
