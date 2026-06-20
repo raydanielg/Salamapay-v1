@@ -41,8 +41,14 @@
         <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Here's what's happening with your payments today.</p>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-        <button class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Export</button>
-        <button class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"><span class="hidden sm:inline">Create payment link</span><span class="sm:hidden">New link</span></button>
+        <button onclick="exportTableToCSV('transactions.csv')" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span class="hidden sm:inline">Export</span>
+        </button>
+        <a href="{{ route('user.payment-links.create') }}" class="px-2 sm:px-3 py-1.5 text-[11px] sm:text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors inline-flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span class="hidden sm:inline">Create payment link</span><span class="sm:hidden">New link</span>
+        </a>
     </div>
 </div>
 
