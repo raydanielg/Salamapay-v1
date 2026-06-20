@@ -14,7 +14,7 @@
 @endphp
 
 {{-- Stats Cards --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-8">
     {{-- Total Balance --}}
     <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
         <div class="flex items-start justify-between mb-4">
