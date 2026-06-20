@@ -43,7 +43,16 @@ Route::get('/support', function () {
 })->name('support');
 
 Route::get('/docs/{page?}', function ($page = 'introduction') {
-    return view('frontend.docs', ['page' => $page]);
+    $doc = \App\Models\DocumentationPage::published()->where('slug', $page)->first();
+
+    if (!$doc) {
+        // Fallback to first published page or show not found
+        $doc = \App\Models\DocumentationPage::published()->ordered()->first();
+    }
+
+    $allPages = \App\Models\DocumentationPage::published()->ordered()->get()->groupBy('category');
+
+    return view('frontend.docs', ['doc' => $doc, 'allPages' => $allPages, 'currentSlug' => $doc?->slug ?? $page]);
 })->name('docs');
 
 // Admin Dashboard Routes
