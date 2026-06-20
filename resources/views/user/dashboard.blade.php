@@ -7,14 +7,13 @@
 
 @php
     $fmt = function($n) {
-        if ($n >= 1000000) return number_format($n / 1000000, 2) . 'M';
-        if ($n >= 1000) return number_format($n / 1000, 1) . 'K';
-        return number_format($n);
+        return number_format($n, 0);
     };
     $fmtTz = function($n) {
-        if ($n >= 1000000) return 'TZS ' . number_format($n / 1000000, 2) . 'M';
-        if ($n >= 1000) return 'TZS ' . number_format($n / 1000, 1) . 'K';
-        return 'TZS ' . number_format($n);
+        return 'TZS ' . number_format($n, 0);
+    };
+    $fmtTzFull = function($n) {
+        return 'TZS ' . number_format($n, 2);
     };
 @endphp
 
@@ -29,6 +28,10 @@
     .bar-vol-past:hover { background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%); }
     .mini-spark { stroke-dasharray: 60; stroke-dashoffset: 60; animation: spark 1s ease forwards; }
     @keyframes spark { to { stroke-dashoffset: 0; } }
+    .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite; }
+    @keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .api-key-hidden { filter: blur(4px); user-select: none; letter-spacing: 2px; }
+    .api-key-visible { filter: none; user-select: text; letter-spacing: normal; }
 </style>
 
 {{-- Welcome + Actions --}}
