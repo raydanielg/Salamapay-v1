@@ -28,12 +28,19 @@ class AdminSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'user@salamapay.com'],
             [
-                'name' => 'Test User',
-                'first_name' => 'Test',
-                'last_name' => 'User',
+                'name' => 'Ezra Daniel',
+                'first_name' => 'Ezra',
+                'last_name' => 'Daniel',
                 'phone' => '255712345679',
                 'role' => 'user',
                 'password' => Hash::make('User@1234'),
+                'business_name' => 'Daniel Ventures Ltd',
+                'business_type' => 'limited_company',
+                'business_address' => "123 Samora Avenue, 4th Floor\nDar es Salaam, Tanzania",
+                'business_tin' => '123-456-789',
+                'business_registration_number' => 'TZ1234567',
+                'verification_status' => 'verified',
+                'verified_at' => now()->subDays(30),
             ]
         );
     }
