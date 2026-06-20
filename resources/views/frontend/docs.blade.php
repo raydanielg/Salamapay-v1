@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Documentation - SalamaPay</title>
     <meta name="description" content="SalamaPay API documentation and guides.">
+    @if($doc)
+    <meta name="doc-title" content="{{ $doc->title }}">
+    <meta name="doc-slug" content="{{ $doc->slug }}">
+    <meta name="doc-category" content="{{ $doc->category }}">
+    <meta name="doc-updated" content="{{ $doc->updated_at->toIso8601String() }}">
+    <link rel="alternate" type="application/json" href="{{ url('/api/docs/' . $doc->slug) }}" title="{{ $doc->title }} — JSON">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "{{ $doc->title }}",
+        "description": "{{ strip_tags(Illuminate\Support\Str::markdown($doc->content)) }}",
+        "url": "{{ route('docs', $doc->slug) }}",
+        "dateModified": "{{ $doc->updated_at->toIso8601String() }}",
+        "author": {"@type": "Organization", "name": "SalamaPay"},
+        "publisher": {"@type": "Organization", "name": "SalamaPay"},
+        "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ route('docs', $doc->slug) }}"},
+        "isAccessibleForFree": true,
+        "educationalLevel": "developer",
+        "genre": "{{ ucfirst(str_replace('_', ' ', $doc->category)) }}"
+    }
+    </script>
+    @endif
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
