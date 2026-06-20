@@ -508,5 +508,96 @@ function deleteProduct(id, name) {
         }
     });
 }
+
+// Export Functions
+function toggleExportDropdown() {
+    const dd = document.getElementById('exportDropdown');
+    dd.classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(e) {
+    const container = document.getElementById('exportDropdownContainer');
+    if (container && !container.contains(e.target)) {
+        const dd = document.getElementById('exportDropdown');
+        if (dd) dd.classList.add('hidden');
+    }
+});
+
+function printProducts() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    window.print();
+}
+
+function exportCSV() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    const rows = document.querySelectorAll('tbody tr');
+    let csv = 'Product,SKU,Price,Stock,Status,Category\n';
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            const name = cells[0].innerText.replace(/\n/g, ' ').replace(/,/g, ' ').trim();
+            const sku = cells[1].innerText.trim();
+            const price = cells[2].innerText.replace(/[^0-9]/g, '').trim();
+            const stock = cells[3].innerText.trim();
+            const status = cells[4].innerText.trim();
+            csv += '"' + name + '","' + sku + '","' + price + '","' + stock + '","' + status + '"\n';
+        }
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'products_{{ now()->format('Y-m-d') }}.csv';
+    link.click();
+}
+
+function exportPDF() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    const rows = document.querySelectorAll('tbody tr');
+    let html = `
+    <html><head><title>Products Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        h1 { color: #059669; font-size: 24px; margin-bottom: 8px; }
+        .subtitle { color: #6b7280; font-size: 12px; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th { background: #059669; color: white; padding: 10px; text-align: left; font-size: 11px; text-transform: uppercase; }
+        td { padding: 10px; border-bottom: 1px solid #e5e7eb; font-size: 11px; }
+        tr:nth-child(even) { background: #f9fafb; }
+        .footer { margin-top: 30px; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 12px; }
+        .badge { padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: bold; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-gray { background: #f3f4f6; color: #4b5563; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+    </style></head><body>
+    <h1>Products Catalog</h1>
+    <div class="subtitle">Generated on {{ now()->format('F d, Y H:i') }} | {{ $stats['total'] }} products</div>
+    <table>
+        <thead><tr><th>Product</th><th>SKU</th><th>Price</th><th>Stock</th><th>Status</th></tr></thead>
+        <tbody>`;
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            const name = cells[0].innerText.replace(/\n/g, ' ').trim();
+            const sku = cells[1].innerText.trim();
+            const price = cells[2].innerText.trim();
+            const stock = cells[3].innerText.trim();
+            const status = cells[4].innerText.trim();
+            let badgeClass = 'badge-gray';
+            if (status === 'Active') badgeClass = 'badge-green';
+            if (status === 'Archived') badgeClass = 'badge-red';
+            html += '<tr><td>' + name + '</td><td>' + sku + '</td><td>' + price + '</td><td>' + stock + '</td><td><span class="badge ' + badgeClass + '">' + status + '</span></td></tr>';
+        }
+    });
+    html += `</tbody></table>
+    <div class="footer">
+        <strong>{{ $user->business_name ?? auth()->user()->first_name }}</strong> | Products Report<br>
+        Printed on {{ now()->format('F d, Y H:i') }}
+    </div>
+    </body></html>`;
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => { win.print(); }, 500);
+}
 </script>
 @endsection
