@@ -23,6 +23,8 @@ class PaymentProfile extends Model
         'logo',
         'description',
         'color',
+        'template_id',
+        'template_settings',
         'language',
         'page_type',
         'allow_custom_amount',
@@ -42,12 +44,18 @@ class PaymentProfile extends Model
             'require_email' => 'boolean',
             'products' => 'array',
             'accepted_methods' => 'array',
+            'template_settings' => 'array',
         ];
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(Template::class);
     }
 
     public function paymentLinks(): HasMany
