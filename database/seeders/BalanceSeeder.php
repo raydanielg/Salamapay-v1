@@ -21,15 +21,5 @@ class BalanceSeeder extends Seeder
                 'reserved' => 500000,
             ]
         );
-
-        // Admin balance (system)
-        Balance::updateOrCreate(
-            ['user_id' => null, 'currency' => 'TZS'],
-            [
-                'available' => 0,
-                'pending' => 0,
-                'reserved' => 0,
-            ]
-        );
     }
 }
