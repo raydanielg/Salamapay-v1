@@ -165,12 +165,20 @@
 
 {{-- Recent Activity Table --}}
 <div class="bg-white rounded-xl border overflow-hidden">
-    <div class="flex items-center justify-between border-b px-5 py-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b px-5 py-4 gap-3">
         <div>
             <h3 class="text-sm font-semibold text-gray-900">Recent activity</h3>
             <p class="text-xs text-gray-400">Latest transactions across all channels</p>
         </div>
-        <a href="#" class="text-xs font-medium text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors">View all</a>
+        <div class="flex items-center gap-2">
+            <div class="flex items-center bg-gray-100 rounded-lg p-0.5" id="tx-filters">
+                <button data-days="3" class="tx-filter-btn px-2.5 py-1 text-[11px] font-semibold rounded-md bg-emerald-600 text-white shadow-sm transition-all">3D</button>
+                <button data-days="7" class="tx-filter-btn px-2.5 py-1 text-[11px] font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all">7D</button>
+                <button data-days="30" class="tx-filter-btn px-2.5 py-1 text-[11px] font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all">30D</button>
+                <button data-days="90" class="tx-filter-btn px-2.5 py-1 text-[11px] font-semibold rounded-md text-gray-600 hover:text-gray-900 transition-all">90D</button>
+            </div>
+            <a href="#" class="text-xs font-medium text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors">View all</a>
+        </div>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
@@ -186,7 +194,7 @@
             </thead>
             <tbody>
                 @forelse($recentTransactions as $tx)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors tx-row" data-timestamp="{{ $tx->processed_at?->timestamp }}">
                     <td class="px-5 py-3 font-mono text-xs text-gray-500">{{ $tx->tx_id }}</td>
                     <td class="px-5 py-3">
                         <div class="font-medium text-gray-900">{{ $tx->customer_name }}</div>
@@ -243,6 +251,73 @@
         </a>
     </div>
 </div>
+
+<script>
+(function() {
+    const rows = Array.from(document.querySelectorAll('.tx-row'));
+    const now = Math.floor(Date.now() / 1000);
+    const MIN_ROWS = 5;
+
+    function getTimestamp(r) {
+        return parseInt(r.dataset.timestamp || '0', 10);
+    }
+
+    function sortByTime(a, b) {
+        return getTimestamp(b) - getTimestamp(a);
+    }
+
+    function applyFilter(days) {
+        const cutoff = now - (days * 86400);
+        let visible = [];
+        let hidden = [];
+
+        rows.forEach(r => {
+            const ts = getTimestamp(r);
+            if (ts >= cutoff) {
+                visible.push(r);
+            } else {
+                hidden.push(r);
+            }
+        });
+
+        // Ensure at least MIN_ROWS are shown
+        if (visible.length < MIN_ROWS && rows.length >= MIN_ROWS) {
+            hidden.sort(sortByTime);
+            const need = MIN_ROWS - visible.length;
+            for (let i = 0; i < need && i < hidden.length; i++) {
+                visible.push(hidden[i]);
+            }
+        }
+
+        const visibleSet = new Set(visible);
+        rows.forEach(r => {
+            if (visibleSet.has(r)) {
+                r.style.display = '';
+            } else {
+                r.style.display = 'none';
+            }
+        });
+    }
+
+    document.querySelectorAll('.tx-filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active styles
+            document.querySelectorAll('.tx-filter-btn').forEach(b => {
+                b.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+            this.classList.remove('text-gray-600');
+
+            const days = parseInt(this.dataset.days, 10);
+            applyFilter(days);
+        });
+    });
+
+    // Default: 3D
+    applyFilter(3);
+})();
+</script>
 
 <div class="h-16 lg:hidden"></div>
 
