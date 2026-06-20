@@ -216,6 +216,9 @@ function doSearch() {
         document.getElementById('salesTableBody').innerHTML = html;
         const pag = document.getElementById('salesPagination');
         if (pag) pag.style.display = 'none';
+        // Update stats from visible rows
+        const currentRange = new URL(window.location.href).searchParams.get('range') || 'all';
+        updateStatsFromRange(currentRange);
     });
 }
 
