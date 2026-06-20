@@ -204,12 +204,34 @@
                             @error('phone')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                         </div>
 
-                        {{-- Contact Information --}}
+                        {{-- Customer Details --}}
                         <div>
-                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Contact Information</p>
-                            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
-                                <input type="text" name="customer_name" value="{{ old('customer_name') }}" required placeholder="Full name" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
-                                <input type="email" name="customer_email" value="{{ old('customer_email') }}" required placeholder="Email address" class="w-full px-4 py-3 text-sm outline-none border-0 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Customer Details</p>
+                            <div class="space-y-3">
+                                {{-- Name --}}
+                                <div class="relative">
+                                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    </div>
+                                    <input type="text" name="customer_name" value="{{ old('customer_name') }}" required placeholder="Your full name" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70">
+                                </div>
+                                {{-- Email (conditional on profile require_email) --}}
+                                @if($link->profile && $link->profile->require_email)
+                                <div class="relative">
+                                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                                    </div>
+                                    <input type="email" name="customer_email" value="{{ old('customer_email') }}" required placeholder="Your email address" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70">
+                                </div>
+                                @error('customer_email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                                @elseif(!$link->profile || $link->profile->require_email === false)
+                                <div class="relative">
+                                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg>
+                                    </div>
+                                    <input type="email" name="customer_email" value="{{ old('customer_email') }}" placeholder="Email address (optional)" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70">
+                                </div>
+                                @endif
                             </div>
                         </div>
 
