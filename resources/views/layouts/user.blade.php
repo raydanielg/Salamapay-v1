@@ -336,6 +336,7 @@
         })();
     </script>
     @include('components.sweet-alert')
+    @include('components.chat-widget')
     @stack('scripts')
 </body>
 </html>
