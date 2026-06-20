@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('reference', 30)->unique();
-            $table->foreignId('bank_account_id')->nullable()->constrained('bank_accounts')->nullOnDelete();
+            $table->unsignedBigInteger('bank_account_id')->nullable();
             $table->decimal('amount', 12, 2);
             $table->string('currency', 3)->default('TZS');
             $table->decimal('fee', 12, 2)->default(0);
