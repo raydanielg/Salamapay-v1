@@ -414,6 +414,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/sales', [App\Http\Controllers\User\SaleController::class, 'index'])->name('user.sales');
     Route::delete('/sales/{transaction}', [App\Http\Controllers\User\SaleController::class, 'destroy'])->name('user.sales.destroy');
     Route::get('/pos', [App\Http\Controllers\User\PosController::class, 'index'])->name('user.pos');
+    Route::post('/pos/store', [App\Http\Controllers\User\PosController::class, 'store'])->name('user.pos.store');
 
     // Products
     Route::get('/products', [App\Http\Controllers\User\ProductController::class, 'index'])->name('user.products');
