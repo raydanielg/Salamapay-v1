@@ -298,6 +298,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/documentation/{id}', [App\Http\Controllers\Admin\DocumentationController::class, 'destroy'])->name('admin.documentation.destroy');
     Route::get('/documentation/{id}/export.md', [App\Http\Controllers\Admin\DocumentationController::class, 'exportMarkdown'])->name('admin.documentation.export');
     Route::get('/documentation/export-all.md', [App\Http\Controllers\Admin\DocumentationController::class, 'exportAllMarkdown'])->name('admin.documentation.export-all');
+
+    // Website Templates
+    Route::get('/templates', [App\Http\Controllers\Admin\TemplateController::class, 'index'])->name('admin.templates');
+    Route::post('/templates', [App\Http\Controllers\Admin\TemplateController::class, 'store'])->name('admin.templates.store');
+    Route::put('/templates/{id}', [App\Http\Controllers\Admin\TemplateController::class, 'update'])->name('admin.templates.update');
+    Route::delete('/templates/{id}', [App\Http\Controllers\Admin\TemplateController::class, 'destroy'])->name('admin.templates.destroy');
+    Route::get('/templates/{id}/users', [App\Http\Controllers\Admin\TemplateController::class, 'users'])->name('admin.templates.users');
 });
 
 // User/Merchant Dashboard Routes
@@ -402,4 +409,10 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings');
     Route::put('/settings/account', [App\Http\Controllers\User\SettingsController::class, 'updateAccount'])->name('user.settings.account');
     Route::put('/settings/password', [App\Http\Controllers\User\SettingsController::class, 'updatePassword'])->name('user.settings.password');
+
+    // Website Builder / Templates
+    Route::get('/website-builder', [App\Http\Controllers\User\TemplateBuilderController::class, 'index'])->name('user.templates');
+    Route::get('/website-builder/{profileId}/customize', [App\Http\Controllers\User\TemplateBuilderController::class, 'customize'])->name('user.templates.customize');
+    Route::put('/website-builder/{profileId}', [App\Http\Controllers\User\TemplateBuilderController::class, 'update'])->name('user.templates.update');
+    Route::get('/website-builder/{profileId}/preview', [App\Http\Controllers\User\TemplateBuilderController::class, 'preview'])->name('user.templates.preview');
 });
