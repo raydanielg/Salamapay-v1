@@ -66,7 +66,7 @@
                 <p class="animate-fade-up delay-3 text-lg md:text-xl text-emerald-100/80 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
                     <span data-en="SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place." data-sw="SalamaPay ni daraja kati ya mteja anayelipa na biashara inayopokea pesa. Lipa kwa M-Pesa, Airtel Money, benki au kadi - kila kitu kimoja.">SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place.</span>
                 </p>
-                <div class="animate-fade-up delay-4 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mb-10">
+                <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-3 justify-center lg:justify-start mb-10">
                     <a href="{{ route('register') }}" class="group inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-md shadow-lg shadow-gold-500/30 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-0.5">
                         <span data-en="Get Started" data-sw="Anza Sasa">Get Started</span>
                         <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
