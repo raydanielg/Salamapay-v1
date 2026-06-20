@@ -203,24 +203,7 @@
                             </div>
                         </div>
 
-                        {{-- Mobile Money Providers --}}
-                        <div id="mobileProviders" class="{{ $isCard ? 'hidden' : '' }}">
-                            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Select Provider</p>
-                            <div class="flex items-center gap-2">
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isMpesa ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'mpesa')" style="{{ $isMpesa ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
-                                    <span class="text-xs font-semibold">M-Pesa</span>
-                                    <input type="radio" name="payment_method" value="mpesa" class="hidden" {{ $isMpesa ? 'checked' : '' }}>
-                                </label>
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isTigo ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'tigopesa')" style="{{ $isTigo ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
-                                    <span class="text-xs font-semibold">Tigo Pesa</span>
-                                    <input type="radio" name="payment_method" value="tigopesa" class="hidden" {{ $isTigo ? 'checked' : '' }}>
-                                </label>
-                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ $isAirtel ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'airtelmoney')" style="{{ $isAirtel ? 'border-color:'.$brandColor.'; background:'.$brandColor.'1A; color:'.$brandColor : '' }}">
-                                    <span class="text-xs font-semibold">Airtel Money</span>
-                                    <input type="radio" name="payment_method" value="airtelmoney" class="hidden" {{ $isAirtel ? 'checked' : '' }}>
-                                </label>
-                            </div>
-                        </div>
+                        <input type="hidden" name="payment_method" id="paymentMethodHidden" value="{{ $isCard ? 'card' : 'mobile_money' }}">
 
                         {{-- Card Details --}}
                         <div id="cardDetails" class="{{ $isCard ? '' : 'hidden' }}">
@@ -381,36 +364,15 @@
         const cardDetails = document.getElementById('cardDetails');
         const billingInfo = document.getElementById('billingInfo');
 
+        const hiddenMethod = document.getElementById('paymentMethodHidden');
         if (type === 'mobile') {
-            mobileProviders?.classList.remove('hidden');
             cardDetails?.classList.add('hidden');
             billingInfo?.classList.add('hidden');
-            // Ensure first provider is selected
-            const firstProvider = document.querySelector('input[name="payment_method"]');
-            if (firstProvider) firstProvider.checked = true;
-            // Reset and select first provider
-            document.querySelectorAll('.provider-chip').forEach(b => {
-                b.classList.remove('active');
-                b.classList.add('border-gray-200');
-                b.style.borderColor = '';
-                b.style.backgroundColor = '';
-                b.style.color = '';
-            });
-            const firstBtn = document.querySelector('.provider-chip');
-            if (firstBtn) {
-                firstBtn.classList.add('active');
-                firstBtn.classList.remove('border-gray-200');
-                firstBtn.style.borderColor = brandColor;
-                firstBtn.style.backgroundColor = brandColor + '1A';
-                firstBtn.style.color = brandColor;
-            }
+            if (hiddenMethod) hiddenMethod.value = 'mobile_money';
         } else {
-            mobileProviders?.classList.add('hidden');
             cardDetails?.classList.remove('hidden');
             billingInfo?.classList.remove('hidden');
-            // Set card as payment method
-            const cardRadio = document.querySelector('input[name="payment_method"][value="card"]');
-            if (cardRadio) cardRadio.checked = true;
+            if (hiddenMethod) hiddenMethod.value = 'card';
         }
     }
 
