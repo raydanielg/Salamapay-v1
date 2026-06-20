@@ -149,6 +149,20 @@
                         {{ $link->expires_at ? $link->expires_at->format('d M Y, H:i') : 'Never' }}
                     </p>
                 </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Profile</label>
+                    <div class="flex items-center gap-2">
+                        @if($link->profile)
+                            <span class="w-3 h-3 rounded-full" style="background-color: {{ $link->profile->color }}"></span>
+                            <span class="text-sm font-bold text-gray-900">{{ $link->profile->name }}</span>
+                            @if($link->profile->is_default)
+                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Default</span>
+                            @endif
+                        @else
+                            <span class="text-sm text-gray-400">No profile selected</span>
+                        @endif
+                    </div>
+                </div>
                 <div class="sm:col-span-2">
                     <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Link URL</label>
                     <div class="flex items-center gap-2 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
@@ -158,6 +172,20 @@
                         </button>
                     </div>
                 </div>
+                @if(!empty($link->custom_fields))
+                <div class="sm:col-span-2">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1.5">Custom Fields</label>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($link->custom_fields as $field)
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">
+                            {{ $field['label'] }}
+                            @if($field['required'])<span class="text-red-500">*</span>@endif
+                            <span class="text-blue-400 text-[10px]">({{ $field['type'] }})</span>
+                        </span>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 
