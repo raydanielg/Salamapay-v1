@@ -249,7 +249,7 @@ function renderCart() {
                 <span class="text-xs font-bold text-gray-900 w-4 text-center">${item.qty}</span>
                 <button onclick="updateQty(${item.id},1)" class="qty-btn w-6 h-6 rounded-md bg-white border flex items-center justify-center text-gray-500 hover:text-emerald-600 hover:border-emerald-300">+</button>
             </div>
-            <p class="text-[11px] font-bold text-gray-900 w-[70px] text-right">TSh ${(item.price*item.qty).toLocaleString()}</p>
+            <p class="text-[11px] font-bold text-gray-900 w-[70px] text-right">${currencySymbol} ${(item.price*item.qty).toLocaleString()}</p>
             <button onclick="removeItem(${item.id})" class="qty-btn w-6 h-6 rounded-md flex items-center justify-center text-gray-300 hover:text-red-500">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
@@ -263,15 +263,15 @@ function calculateTotals() {
     let discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
     if (discountType === 'percent') discount = subtotal * (discount / 100);
     const taxable = Math.max(0, subtotal - discount);
-    const tax = Math.round(taxable * 0.18);
+    const tax = Math.round(taxable * taxRate);
     const total = taxable + tax;
     const paid = parseFloat(document.getElementById('amountPaid')?.value) || 0;
     const change = Math.max(0, paid - total);
 
-    document.getElementById('subtotalDisplay').textContent = 'TSh ' + subtotal.toLocaleString();
-    document.getElementById('taxDisplay').textContent = 'TSh ' + tax.toLocaleString();
-    document.getElementById('totalDisplay').textContent = 'TSh ' + total.toLocaleString();
-    document.getElementById('changeDisplay').textContent = 'TSh ' + change.toLocaleString();
+    document.getElementById('subtotalDisplay').textContent = currencySymbol + ' ' + subtotal.toLocaleString();
+    document.getElementById('taxDisplay').textContent = currencySymbol + ' ' + tax.toLocaleString();
+    document.getElementById('totalDisplay').textContent = currencySymbol + ' ' + total.toLocaleString();
+    document.getElementById('changeDisplay').textContent = currencySymbol + ' ' + change.toLocaleString();
 }
 
 function updateCustomerType() {
@@ -296,7 +296,7 @@ function processPayment() {
     if (total <= 0) { alert('Cart is empty. Add products first.'); return; }
     const paid = parseFloat(document.getElementById('amountPaid')?.value) || 0;
     if (paid < total) { alert('Amount received is less than total.'); return; }
-    alert('Payment of TSh ' + total.toLocaleString() + ' processed successfully!');
+    alert('Payment of ' + currencySymbol + ' ' + total.toLocaleString() + ' processed successfully!');
     // Here you would save sale, then optionally print or send receipt
     cart = []; renderCart(); calculateTotals();
     document.getElementById('discountInput').value = '';
