@@ -73,7 +73,7 @@ class ToolsSettingsController extends Controller
         $validated['pos_enabled'] = $request->boolean('pos_enabled');
         $validated['auto_receipt'] = $request->boolean('auto_receipt');
 
-        // Handle product categories and units in settings JSON
+        // Handle product and service settings in JSON
         $settings = $user->settings ?? [];
         if ($request->has('product_categories')) {
             $settings['product_categories'] = json_encode(array_filter($request->product_categories));
@@ -83,6 +83,12 @@ class ToolsSettingsController extends Controller
         }
         if ($request->has('low_stock_threshold')) {
             $settings['low_stock_threshold'] = $request->low_stock_threshold;
+        }
+        if ($request->has('service_categories')) {
+            $settings['service_categories'] = json_encode(array_filter($request->service_categories));
+        }
+        if ($request->has('service_durations')) {
+            $settings['service_durations'] = json_encode(array_filter($request->service_durations));
         }
         $validated['settings'] = $settings;
 
