@@ -64,25 +64,30 @@
 
                 {{-- Phone with Tanzania Flag --}}
                 <div>
-                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1.5">Phone</label>
+                    <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
                     {{-- Hidden: sends 255-prefixed value to server --}}
                     <input type="hidden" name="phone" id="phone-hidden" value="{{ old('phone') }}">
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
-                            <div class="flex items-center gap-1 bg-gray-50 border-r border-gray-200 px-2 py-1.5 rounded-l-md -ml-0.5 h-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-0">
+                            <div class="flex items-center gap-1.5 bg-gray-50 border-r border-gray-200 px-3 rounded-l-lg h-full">
                                 <img src="https://flagcdn.com/w40/tz.png" alt="Tanzania" class="w-5 h-3.5 object-cover rounded-sm shadow-sm">
-                                <span class="text-xs font-bold text-gray-700">+255</span>
+                                <span class="text-xs font-bold text-gray-700 select-none">+255</span>
                             </div>
                         </div>
-                        {{-- Visible: only last 9 digits, no name attr so it's NOT submitted --}}
-                        <input id="phone-display" type="tel" required
-                            class="w-full pl-[90px] pr-4 py-2.5 rounded-lg border @error('phone') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
+                        <input id="phone-display" type="tel" inputmode="numeric" autocomplete="tel"
+                            class="w-full pl-[92px] pr-4 py-2.5 rounded-lg border @error('phone') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm font-mono tracking-wide"
                             placeholder="7XX XXX XXX" maxlength="9"
                             value="{{ old('phone') ? preg_replace('/^255/', '', old('phone')) : '' }}">
                     </div>
-                    <p class="mt-1 text-xs text-gray-400">Enter number without +255 prefix</p>
+                    <p class="mt-1.5 text-[11px] text-gray-400 flex items-center gap-1">
+                        <svg class="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Enter 9 digits starting with 7 or 6
+                    </p>
                     @error('phone')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            {{ $message }}
+                        </p>
                     @enderror
                 </div>
 
