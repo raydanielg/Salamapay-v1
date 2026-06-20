@@ -55,9 +55,9 @@
     <div class="relative z-10 max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-20 lg:py-28 xl:py-36">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {{-- Image Column -- mobile: order 1 (top), desktop: order 2 (right) --}}
-            <div class="flex items-start justify-center relative order-1 lg:order-2 pt-4 lg:pt-0">
-                <div class="relative animate-float w-[340px] h-[420px] sm:w-[460px] sm:h-[560px] md:w-[560px] md:h-[680px] lg:w-[560px] lg:h-[660px] xl:w-[720px] xl:h-[860px] 2xl:w-[820px] 2xl:h-[980px]">
-                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Happy user" class="absolute inset-0 w-full h-full object-contain object-top" style="-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);">
+            <div class="flex items-start justify-center relative order-1 lg:order-2 pt-4 lg:pt-0 -mb-8 lg:-mb-16">
+                <div class="relative animate-float w-[380px] h-[480px] sm:w-[520px] sm:h-[640px] md:w-[620px] md:h-[760px] lg:w-[600px] lg:h-[740px] xl:w-[780px] xl:h-[960px] 2xl:w-[880px] 2xl:h-[1080px]">
+                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Happy user" class="absolute inset-0 w-full h-full object-contain object-top" style="-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%);">
                 </div>
             </div>
             {{-- Text Column -- mobile: order 2 (bottom), desktop: order 1 (left) --}}
