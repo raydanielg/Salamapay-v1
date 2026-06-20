@@ -154,6 +154,84 @@ Route::get('/docs/export.md', function () {
     return response($markdown)->header('Content-Type', 'text/markdown; charset=utf-8');
 });
 
+// LLM Discovery Standard (llms.txt)
+Route::get('/llms.txt', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $text = "# SalamaPay Developer Documentation\n\n"
+        . "> LLM-optimized documentation index for AI training and inference.\n"
+        . "> Updated: " . now()->toDateTimeString() . "\n"
+        . "> Pages: " . $pages->count() . "\n\n";
+
+    foreach ($pages as $page) {
+        $text .= "## {$page->title}\n"
+            . "- Slug: `{$page->slug}`\n"
+            . "- Category: " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "- Updated: " . $page->updated_at->toDateTimeString() . "\n"
+            . "- JSON: " . url('/api/docs/' . $page->slug) . "\n"
+            . "- Web: " . route('docs', $page->slug) . "\n"
+            . "- Markdown: " . route('admin.documentation.export', $page->id) . "\n\n";
+    }
+
+    $text .= "## Endpoints for Machines\n"
+        . "- Full JSON API: " . url('/api/docs') . "\n"
+        . "- Single Page JSON: " . url('/api/docs/{slug}') . "\n"
+        . "- Full Markdown Export: " . url('/docs/export.md') . "\n"
+        . "- Complete LLM Feed: " . url('/llms-full.txt') . "\n";
+
+    return response($text)->header('Content-Type', 'text/plain; charset=utf-8');
+});
+
+// LLM Full Content Feed (llms-full.txt) — all docs in one markdown file for AI ingestion
+Route::get('/llms-full.txt', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $text = "# SalamaPay — Complete Developer Documentation for LLMs\n\n"
+        . "> This file contains ALL SalamaPay documentation in plain markdown.\n"
+        . "> It is designed for AI training, RAG systems, and LLM context windows.\n"
+        . "> Project: SalamaPay Payment Platform (Tanzania)\n"
+        . "> URL: https://salamapay.com/docs\n"
+        . "> API Base: " . url('/api/docs') . "\n"
+        . "> Generated: " . now()->toDateTimeString() . "\n"
+        . "> Total Pages: " . $pages->count() . "\n"
+        . "> Format: Markdown\n"
+        . "> License: Open for AI training and indexing\n\n"
+        . "---\n\n";
+
+    foreach ($pages as $page) {
+        $text .= "# {$page->title}\n\n"
+            . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "**Slug:** `{$page->slug}`\n"
+            . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n"
+            . "**URL:** " . route('docs', $page->slug) . "\n\n"
+            . $page->content . "\n\n---\n\n";
+    }
+
+    return response($text)->header('Content-Type', 'text/plain; charset=utf-8');
+});
+
+// Sitemap for search engines and AI crawlers
+Route::get('/sitemap.xml', function () {
+    $pages = \App\Models\DocumentationPage::published()->ordered()->get();
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n"
+        . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n"
+        . '  <url><loc>' . url('/') . '</loc><priority>1.0</priority></url>' . "\n"
+        . '  <url><loc>' . route('docs') . '</loc><priority>0.9</priority></url>' . "\n"
+        . '  <url><loc>' . url('/api/docs') . '</loc><priority>0.8</priority></url>' . "\n"
+        . '  <url><loc>' . url('/llms.txt') . '</loc><priority>0.8</priority></url>' . "\n"
+        . '  <url><loc>' . url('/llms-full.txt') . '</loc><priority>0.8</priority></url>' . "\n";
+
+    foreach ($pages as $page) {
+        $xml .= '  <url>' . "\n"
+            . '    <loc>' . route('docs', $page->slug) . '</loc>' . "\n"
+            . '    <lastmod>' . $page->updated_at->toDateString() . '</lastmod>' . "\n"
+            . '    <changefreq>weekly</changefreq>' . "\n"
+            . '    <priority>0.7</priority>' . "\n"
+            . '  </url>' . "\n";
+    }
+
+    $xml .= '</urlset>';
+    return response($xml)->header('Content-Type', 'application/xml; charset=utf-8');
+});
+
 // Admin Dashboard Routes
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
