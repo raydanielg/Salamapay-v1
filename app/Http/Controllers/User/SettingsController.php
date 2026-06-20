@@ -29,10 +29,11 @@ class SettingsController extends Controller
             'phone' => 'required|string|max:20',
             'business_name' => 'nullable|string|max:255',
             'business_type' => 'nullable|string|max:100',
+            'business_tin' => 'nullable|string|max:50',
         ]);
 
         $user = User::find(auth()->id());
-        $user->update($request->only(['first_name', 'last_name', 'phone', 'business_name', 'business_type']));
+        $user->update($request->only(['first_name', 'last_name', 'phone', 'business_name', 'business_type', 'business_tin']));
 
         return back()->with('success', 'Account settings updated');
     }
