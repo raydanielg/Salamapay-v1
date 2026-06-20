@@ -5,6 +5,73 @@
 
 @section('content')
 
+{{-- Skeleton Loading Overlay --}}
+<div id="skeletonLoader" class="fixed inset-0 z-50 bg-gray-50" style="transition: opacity 0.4s ease;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+        {{-- Header skeleton --}}
+        <div class="mb-6 flex justify-between">
+            <div>
+                <div class="skeleton skeleton-text-lg w-48 mb-2 rounded-lg"></div>
+                <div class="skeleton skeleton-text w-64 rounded-lg"></div>
+            </div>
+            <div class="flex gap-2">
+                <div class="skeleton w-20 h-8 rounded-lg"></div>
+                <div class="skeleton w-28 h-8 rounded-lg"></div>
+            </div>
+        </div>
+        {{-- Stats skeleton --}}
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 mb-6">
+            @for($i=0; $i<4; $i++)
+            <div class="bg-white rounded-xl border p-5">
+                <div class="flex justify-between mb-3">
+                    <div class="skeleton skeleton-text w-20 rounded-lg"></div>
+                    <div class="skeleton w-7 h-7 rounded-lg"></div>
+                </div>
+                <div class="skeleton skeleton-text-lg w-32 mb-2 rounded-lg"></div>
+                <div class="skeleton skeleton-text w-16 rounded-lg"></div>
+            </div>
+            @endfor
+        </div>
+        {{-- Charts skeleton --}}
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 mb-6">
+            <div class="lg:col-span-2 bg-white rounded-xl border p-5">
+                <div class="skeleton skeleton-text w-24 mb-4 rounded-lg"></div>
+                <div class="skeleton w-full h-48 rounded-lg"></div>
+            </div>
+            <div class="bg-white rounded-xl border p-5">
+                <div class="skeleton skeleton-text w-24 mb-4 rounded-lg"></div>
+                <div class="skeleton w-full h-48 rounded-lg"></div>
+            </div>
+        </div>
+        {{-- Table skeleton --}}
+        <div class="bg-white rounded-xl border overflow-hidden">
+            <div class="p-4 border-b">
+                <div class="skeleton skeleton-text w-32 rounded-lg"></div>
+            </div>
+            <div class="p-4 space-y-3">
+                @for($i=0; $i<5; $i++)
+                <div class="flex gap-3">
+                    <div class="skeleton skeleton-text w-24 rounded-lg"></div>
+                    <div class="skeleton skeleton-text w-32 rounded-lg"></div>
+                    <div class="skeleton skeleton-text w-20 rounded-lg"></div>
+                    <div class="skeleton skeleton-text w-16 rounded-lg"></div>
+                </div>
+                @endfor
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    const loader = document.getElementById('skeletonLoader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(function() { loader.style.display = 'none'; }, 400);
+    }
+});
+</script>
+
 @php
     $fmt = function($n) {
         return number_format($n, 0);
