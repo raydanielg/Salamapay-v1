@@ -92,6 +92,11 @@ class SaleController extends Controller
             abort(403, 'Unauthorized');
         }
         $transaction->delete();
+
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Sale deleted successfully.']);
+        }
+
         return redirect()->route('user.sales')->with('success', 'Sale deleted successfully.');
     }
 }

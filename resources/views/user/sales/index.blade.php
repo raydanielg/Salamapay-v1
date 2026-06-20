@@ -123,9 +123,6 @@
 </div>
 </div>
 
-{{-- Delete Sale Form --}}
-<form id="deleteSaleForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
-
 {{-- A4 Receipt Modal --}}
 <style>
 @media print {
