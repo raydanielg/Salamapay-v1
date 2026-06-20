@@ -71,7 +71,19 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'role' => 'user',
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
         ]);
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered($request, $user)
+    {
+        return redirect($this->redirectPath());
     }
 }

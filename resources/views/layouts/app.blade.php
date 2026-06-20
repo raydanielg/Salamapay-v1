@@ -204,6 +204,12 @@
 
         function rebindForms() {
             document.querySelectorAll('form[method="POST"]').forEach(function(form) {
+                const action = form.getAttribute('action') || form.action || '';
+                const url = new URL(action, window.location.href);
+                // Skip auth forms - let them do normal full-page submissions so Laravel redirects work
+                if (url.pathname.match(/\/(login|register|logout|password|email|verification)/)) {
+                    return;
+                }
                 form.removeEventListener('submit', handleAjaxSubmit);
                 form.addEventListener('submit', handleAjaxSubmit);
             });
@@ -234,14 +240,21 @@
                 body: formData,
                 headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'text/html' },
                 credentials: 'same-origin',
-                redirect: 'manual'
+                redirect: 'follow'
             })
-            .then(r => r.text())
+            .then(r => {
+                if (r.redirected) {
+                    // Laravel sent a redirect (e.g. to dashboard) - follow it fully
+                    window.location.href = r.url;
+                    return null;
+                }
+                return r.text();
+            })
             .then(html => {
+                if (html === null) return; // Already handling redirect above
                 hideLoader();
                 if (btn) { btn.disabled = false; btn.innerHTML = originalHTML; }
 
-                // Check if response is a redirect (Laravel returns redirect as new page)
                 if (html.trim().startsWith('<!DOCTYPE') || html.trim().startsWith('<!doctype')) {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
@@ -260,10 +273,7 @@
                             document.querySelector('meta[name="csrf-token"]').content = token;
                         }
                     } else {
-                        // Redirect happened, extract redirect URL
-                        const match = html.match(/window\.location\.href\s*=\s*['"]([^'"]+)['"]/);
-                        if (match) window.location.href = match[1];
-                        else window.location.reload();
+                        window.location.reload();
                     }
                 } else {
                     window.location.reload();
