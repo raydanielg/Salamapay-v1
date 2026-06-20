@@ -85,4 +85,13 @@ class SaleController extends Controller
 
         return view('user.sales.index', compact('sales', 'stats'));
     }
+
+    public function destroy(Transaction $transaction)
+    {
+        if ($transaction->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
+        $transaction->delete();
+        return redirect()->route('user.sales')->with('success', 'Sale deleted successfully.');
+    }
 }
