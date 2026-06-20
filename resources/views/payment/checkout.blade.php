@@ -363,13 +363,11 @@
 
         const mobileProviders = document.getElementById('mobileProviders');
         const cardDetails = document.getElementById('cardDetails');
-        const mobilePhone = document.getElementById('mobilePhone');
         const billingInfo = document.getElementById('billingInfo');
 
         if (type === 'mobile') {
             mobileProviders?.classList.remove('hidden');
             cardDetails?.classList.add('hidden');
-            mobilePhone?.classList.remove('hidden');
             billingInfo?.classList.add('hidden');
             // Ensure first provider is selected
             const firstProvider = document.querySelector('input[name="payment_method"]');
@@ -384,7 +382,6 @@
         } else {
             mobileProviders?.classList.add('hidden');
             cardDetails?.classList.remove('hidden');
-            mobilePhone?.classList.add('hidden');
             billingInfo?.classList.remove('hidden');
             // Set card as payment method
             const cardRadio = document.querySelector('input[name="payment_method"][value="card"]');
