@@ -166,56 +166,6 @@ window.addEventListener('load', function() {
     </div>
 </div>
 
-{{-- API Key Quick View --}}
-@php
-    $apiKey = \App\Models\ApiKey::where('user_id', auth()->id())->where('is_active', true)->latest()->first();
-@endphp
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-    <div class="lg:col-span-2 card-sm bg-white rounded-xl border p-4 sm:p-5">
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-900">API Key</h3>
-                    <p class="text-[10px] text-gray-400">Quick access for integration</p>
-                </div>
-            </div>
-            <a href="{{ route('user.api') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Manage</a>
-        </div>
-        @if($apiKey)
-        <div class="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-            <code id="apiKeyDisplay" class="text-xs font-mono text-gray-700 flex-1 api-key-hidden">{{ $apiKey->key }}</code>
-            <button onclick="toggleApiKey()" class="p-1.5 rounded-md hover:bg-gray-200 transition-colors" title="Show/Hide">
-                <svg id="eyeIcon" class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </button>
-            <button onclick="copyApiKey()" class="p-1.5 rounded-md hover:bg-gray-200 transition-colors" title="Copy">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-            </button>
-        </div>
-        @else
-        <div class="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100">
-            <span class="text-xs text-gray-400">No active API key</span>
-            <a href="{{ route('user.api') }}" class="text-xs font-medium text-emerald-600 hover:text-emerald-700">Create one</a>
-        </div>
-        @endif
-    </div>
-
-    <div class="card-sm bg-gradient-to-br from-gold-50 to-white rounded-xl border border-gold-100 p-4 sm:p-5">
-        <div class="flex items-center gap-2 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-gold-100 flex items-center justify-center">
-                <svg class="w-4 h-4 text-gold-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-            </div>
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900">Weekly Revenue</h3>
-            </div>
-        </div>
-        <div class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $fmtTzFull($weeklyRevenue) }}</div>
-        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $weeklyRevenueChange }}% from last week</div>
-    </div>
-</div>
-
 @php
     $revMax = max($revenueDays) ?: 1;
     $revSvgPoints = [];
