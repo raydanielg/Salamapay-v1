@@ -294,5 +294,73 @@
         </div>
     </section>
 
+    <footer class="border-t {{ $dark ? 'border-gray-700 bg-gray-800/30' : 'border-gray-100 bg-gray-50' }} py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2.5">
+                    @if(($settings['show_logo'] ?? true) && $profile->logo)
+                    <img src="{{ asset('storage/'.$profile->logo) }}" class="h-6 w-auto object-contain">
+                    @else
+                    <div class="w-6 h-6 rounded-md flex items-center justify-center text-white font-bold text-[10px]" style="background: {{ $primary }};">{{ strtoupper(substr($profile->business_name ?? 'B', 0, 1)) }}</div>
+                    @endif
+                    <span class="text-xs font-semibold">{{ $profile->business_name ?? 'Business' }}</span>
+                </div>
+                <p class="text-[11px] text-gray-400">{{ $settings['footer_text'] ?? 'All rights reserved. Powered by SalamaPay.' }}</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const brandColor = '{{ $primary }}';
+    function selectMethod(type) {
+        document.querySelectorAll('.pm-card').forEach(c => {
+            c.style.borderColor = '';
+            c.style.backgroundColor = '';
+            const iconBox = c.querySelector('.w-10');
+            if (iconBox) { iconBox.style.backgroundColor = ''; }
+            const iconSvg = c.querySelector('svg');
+            if (iconSvg) { iconSvg.classList.remove('text-white'); iconSvg.classList.add('text-gray-400'); }
+        });
+        const activeCard = document.querySelector('.pm-card[onclick*="' + type + '"]');
+        if (activeCard) {
+            activeCard.style.borderColor = brandColor;
+            activeCard.style.backgroundColor = brandColor + '0D';
+            const iconBox = activeCard.querySelector('.w-10');
+            if (iconBox) { iconBox.style.backgroundColor = brandColor; }
+            const iconSvg = activeCard.querySelector('svg');
+            if (iconSvg) { iconSvg.classList.remove('text-gray-400'); iconSvg.classList.add('text-white'); }
+        }
+        const cardDetails = document.getElementById('cardDetails');
+        const billingInfo = document.getElementById('billingInfo');
+        const hiddenMethod = document.getElementById('paymentMethodHidden');
+        if (type === 'mobile') {
+            cardDetails?.classList.add('hidden');
+            billingInfo?.classList.add('hidden');
+            if (hiddenMethod) hiddenMethod.value = 'mobile_money';
+        } else {
+            cardDetails?.classList.remove('hidden');
+            billingInfo?.classList.remove('hidden');
+            if (hiddenMethod) hiddenMethod.value = 'card';
+        }
+    }
+    const phoneDisplay = document.getElementById('phoneDisplay');
+    const phoneHidden = document.getElementById('phoneHidden');
+    if (phoneDisplay && phoneHidden) {
+        phoneDisplay.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 9);
+            phoneHidden.value = '255' + this.value;
+        });
+    }
+    document.querySelector('input[name="card_number"]')?.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substring(0, 19);
+    });
+    document.querySelector('input[name="card_expiry"]')?.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2').substring(0, 5);
+    });
+    document.querySelector('input[name="card_cvv"]')?.addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '').substring(0, 4);
+    });
+    </script>
+
 </body>
 </html>
