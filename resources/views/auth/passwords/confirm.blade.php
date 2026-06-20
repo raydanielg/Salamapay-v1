@@ -8,7 +8,7 @@
         {{-- Header --}}
         <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 px-8 py-8 text-center">
             <div class="w-16 h-16 mx-auto bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4">
-                <img src="{{ asset('icons/login.png') }}" alt="Confirm" class="w-10 h-10 object-contain">
+                <img src="{{ asset('login.png') }}" alt="Confirm" class="w-10 h-10 object-contain">
             </div>
             <h2 class="text-2xl font-extrabold text-white">Confirm Password</h2>
             <p class="text-emerald-100 text-sm mt-1">Secure area - please verify</p>
