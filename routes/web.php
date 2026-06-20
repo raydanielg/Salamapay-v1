@@ -409,6 +409,14 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // Reports
     Route::get('/reports', [App\Http\Controllers\User\ReportController::class, 'index'])->name('user.reports');
 
+    // Business Tools
+    Route::get('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'index'])->name('user.invoices');
+    Route::get('/sales', [App\Http\Controllers\User\SaleController::class, 'index'])->name('user.sales');
+    Route::get('/pos', [App\Http\Controllers\User\PosController::class, 'index'])->name('user.pos');
+    Route::get('/products', [App\Http\Controllers\User\ProductController::class, 'index'])->name('user.products');
+    Route::get('/services', [App\Http\Controllers\User\ServiceController::class, 'index'])->name('user.services');
+    Route::get('/tools/settings', [App\Http\Controllers\User\ToolsSettingsController::class, 'index'])->name('user.tools.settings');
+
     // Settings
     Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings');
     Route::put('/settings/account', [App\Http\Controllers\User\SettingsController::class, 'updateAccount'])->name('user.settings.account');
