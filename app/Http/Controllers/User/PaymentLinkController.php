@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\PaymentLink;
+use App\Models\PaymentProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -32,7 +33,8 @@ class PaymentLinkController extends Controller
 
     public function create()
     {
-        return view('user.payment-links.create');
+        $profiles = PaymentProfile::where('user_id', auth()->id())->orderBy('is_default', 'desc')->orderBy('name')->get();
+        return view('user.payment-links.create', compact('profiles'));
     }
 
     public function store(Request $request)
@@ -40,10 +42,12 @@ class PaymentLinkController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:500',
+            'profile_id' => 'nullable|exists:payment_profiles,id',
             'amount' => 'nullable|numeric|min:100',
             'currency' => 'required|string|max:3',
             'slug' => 'nullable|string|max:100|unique:payment_links,slug',
             'expires_at' => 'nullable|date|after:now',
+            'custom_fields' => 'nullable|string|max:2000',
         ]);
 
         $slug = $request->slug ?: Str::slug($request->title) . '-' . Str::random(4);
@@ -56,10 +60,27 @@ class PaymentLinkController extends Controller
             $counter++;
         }
 
+        // Parse custom fields from JSON string
+        $customFields = null;
+        if ($request->filled('custom_fields')) {
+            $customFields = json_decode($request->custom_fields, true);
+        }
+
+        // Validate profile ownership
+        $profileId = $request->profile_id;
+        if ($profileId) {
+            $validProfile = PaymentProfile::where('id', $profileId)->where('user_id', auth()->id())->exists();
+            if (!$validProfile) {
+                $profileId = null;
+            }
+        }
+
         PaymentLink::create([
             'user_id' => auth()->id(),
+            'profile_id' => $profileId,
             'title' => $request->title,
             'description' => $request->description,
+            'custom_fields' => $customFields,
             'amount' => $request->amount,
             'currency' => $request->currency ?? 'TZS',
             'slug' => $slug,
@@ -89,7 +110,7 @@ class PaymentLinkController extends Controller
 
     public function show($id)
     {
-        $link = PaymentLink::where('user_id', auth()->id())->findOrFail($id);
+        $link = PaymentLink::with('profile')->where('user_id', auth()->id())->findOrFail($id);
         return view('user.payment-links.show', compact('link'));
     }
 
