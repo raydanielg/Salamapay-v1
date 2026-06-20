@@ -140,8 +140,7 @@
     #printableArea th:last-child,
     #printableArea td:last-child { display: none !important; }
     /* Ensure action buttons never show in print */
-    #printableArea button,
-    #printableArea .group-hover\:opacity-100 { opacity: 0 !important; display: none !important; }
+    #printableArea button { display: none !important; }
 }
 </style>
 <div id="receiptModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
