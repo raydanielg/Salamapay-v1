@@ -413,8 +413,19 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'index'])->name('user.invoices');
     Route::get('/sales', [App\Http\Controllers\User\SaleController::class, 'index'])->name('user.sales');
     Route::get('/pos', [App\Http\Controllers\User\PosController::class, 'index'])->name('user.pos');
+
+    // Products
     Route::get('/products', [App\Http\Controllers\User\ProductController::class, 'index'])->name('user.products');
+    Route::post('/products', [App\Http\Controllers\User\ProductController::class, 'store'])->name('user.products.store');
+    Route::put('/products/{product}', [App\Http\Controllers\User\ProductController::class, 'update'])->name('user.products.update');
+    Route::delete('/products/{product}', [App\Http\Controllers\User\ProductController::class, 'destroy'])->name('user.products.destroy');
+
+    // Services
     Route::get('/services', [App\Http\Controllers\User\ServiceController::class, 'index'])->name('user.services');
+    Route::post('/services', [App\Http\Controllers\User\ServiceController::class, 'store'])->name('user.services.store');
+    Route::put('/services/{service}', [App\Http\Controllers\User\ServiceController::class, 'update'])->name('user.services.update');
+    Route::delete('/services/{service}', [App\Http\Controllers\User\ServiceController::class, 'destroy'])->name('user.services.destroy');
+
     Route::get('/tools/settings', [App\Http\Controllers\User\ToolsSettingsController::class, 'index'])->name('user.tools.settings');
 
     // Settings
