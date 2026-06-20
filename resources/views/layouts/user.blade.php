@@ -61,14 +61,15 @@
 
             {{-- Payments --}}
             <div class="sidebar-group">
-                <button onclick="toggleMenu('menu-payments')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs('user.payments*') ? 'active' : '' }}">
+                <button onclick="toggleMenu('menu-payments')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs('user.payments*') || request()->routeIs('user.payment-links*') ? 'active' : '' }}">
                     <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                     <span>Payments</span>
                     <svg class="w-4 h-4 ml-auto transition-transform" id="arrow-payments" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <div id="menu-payments" class="sidebar-submenu pl-11 space-y-0.5 {{ request()->routeIs('user.payments*') ? 'open' : '' }}">
+                <div id="menu-payments" class="sidebar-submenu pl-11 space-y-0.5 {{ request()->routeIs('user.payments*') || request()->routeIs('user.payment-links*') ? 'open' : '' }}">
                     <a href="{{ route('user.payments.create') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.payments.create') ? 'text-white font-medium' : '' }}">New Payment</a>
                     <a href="{{ route('user.payments') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.payments') ? 'text-white font-medium' : '' }}">All Payments</a>
+                    <a href="{{ route('user.payment-links') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.payment-links*') ? 'text-white font-medium' : '' }}">Payment Links</a>
                 </div>
             </div>
 
