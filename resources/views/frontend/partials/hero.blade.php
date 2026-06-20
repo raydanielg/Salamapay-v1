@@ -1,4 +1,4 @@
-﻿<section class="relative min-h-[90vh] flex items-center overflow-hidden pt-[68px]" id="hero">
+﻿<section class="relative min-h-[92vh] flex items-center overflow-hidden pt-20 lg:pt-[88px]" id="hero">
     <div class="absolute inset-0">
         {{-- Base gradient --}}
         <div class="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700"></div>
