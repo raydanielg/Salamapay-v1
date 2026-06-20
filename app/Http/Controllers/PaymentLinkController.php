@@ -33,7 +33,7 @@ class PaymentLinkController extends Controller
         $rules = [
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
-            'payment_method' => 'required|in:mpesa,tigopesa,airtelmoney,card,bank',
+            'payment_method' => 'required|in:mpesa,tigopesa,airtelmoney,mobile_money,card,bank',
         ];
 
         if ($link->amount) {
@@ -43,7 +43,7 @@ class PaymentLinkController extends Controller
         }
 
         // Phone required for mobile money
-        if (in_array($request->payment_method, ['mpesa', 'tigopesa', 'airtelmoney'])) {
+        if (in_array($request->payment_method, ['mpesa', 'tigopesa', 'airtelmoney', 'mobile_money'])) {
             $rules['phone'] = 'required|string|regex:/^255[0-9]{9}$/';
         }
 
@@ -63,6 +63,7 @@ class PaymentLinkController extends Controller
                 'mpesa' => 'M-Pesa',
                 'tigopesa' => 'Tigo Pesa',
                 'airtelmoney' => 'Airtel Money',
+                'mobile_money' => 'Mobile Money',
                 'card' => 'Card',
                 'bank' => 'Bank Transfer',
                 default => 'Unknown',

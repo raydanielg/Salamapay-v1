@@ -159,9 +159,6 @@
                     $brandColor = $link->profile->color ?? '#024938';
                     $isMobile = old('payment_method') !== 'card';
                     $isCard = old('payment_method') === 'card';
-                    $isMpesa = old('payment_method') === 'mpesa' || !old('payment_method');
-                    $isTigo = old('payment_method') === 'tigopesa';
-                    $isAirtel = old('payment_method') === 'airtelmoney';
                     @endphp
 
                     <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
@@ -360,7 +357,6 @@
             if (iconSvg) { iconSvg.classList.remove('text-gray-400'); iconSvg.classList.add('text-white'); }
         }
 
-        const mobileProviders = document.getElementById('mobileProviders');
         const cardDetails = document.getElementById('cardDetails');
         const billingInfo = document.getElementById('billingInfo');
 
