@@ -139,6 +139,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/documentation/{id}/edit', [App\Http\Controllers\Admin\DocumentationController::class, 'edit'])->name('admin.documentation.edit');
     Route::put('/documentation/{id}', [App\Http\Controllers\Admin\DocumentationController::class, 'update'])->name('admin.documentation.update');
     Route::delete('/documentation/{id}', [App\Http\Controllers\Admin\DocumentationController::class, 'destroy'])->name('admin.documentation.destroy');
+    Route::get('/documentation/{id}/export.md', [App\Http\Controllers\Admin\DocumentationController::class, 'exportMarkdown'])->name('admin.documentation.export');
+    Route::get('/documentation/export-all.md', [App\Http\Controllers\Admin\DocumentationController::class, 'exportAllMarkdown'])->name('admin.documentation.export-all');
 });
 
 // User/Merchant Dashboard Routes
