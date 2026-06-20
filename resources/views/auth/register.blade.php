@@ -152,26 +152,44 @@
     const form         = document.getElementById('registerForm');
 
     if (phoneDisplay && phoneHidden) {
-        // Only allow digits in display input
-        phoneDisplay.addEventListener('input', function() {
-            let val = this.value.replace(/\D/g, '');
+        // Sync hidden field with 255 prefix on EVERY input
+        function syncPhone() {
+            let raw = phoneDisplay.value.replace(/\D/g, '');
             // Must start with 7 or 6
-            if (val.length > 0 && !/^[67]/.test(val)) {
-                val = val.substring(1);
+            if (raw.length > 0 && !/^[67]/.test(raw)) {
+                raw = raw.substring(1);
             }
-            if (val.length > 9) val = val.substring(0, 9);
-            this.value = val;
-        });
+            if (raw.length > 9) raw = raw.substring(0, 9);
+            phoneDisplay.value = raw;
+            // Always update hidden field
+            if (/^[67]/.test(raw) && raw.length === 9) {
+                phoneHidden.value = '255' + raw;
+                phoneDisplay.classList.remove('border-red-300', 'ring-2', 'ring-red-100');
+            } else {
+                phoneHidden.value = '';
+            }
+        }
 
-        // On submit: put 255 + display value into hidden input
+        phoneDisplay.addEventListener('input', syncPhone);
+        phoneDisplay.addEventListener('paste', function(e) {
+            setTimeout(syncPhone, 0);
+        });
+        phoneDisplay.addEventListener('blur', syncPhone);
+
+        // Double-check on submit
         if (form) {
-            form.addEventListener('submit', function() {
-                const raw = phoneDisplay.value.replace(/\D/g, '');
-                if (/^[67]/.test(raw) && raw.length === 9) {
-                    phoneHidden.value = '255' + raw;
+            form.addEventListener('submit', function(e) {
+                syncPhone();
+                if (!phoneHidden.value || phoneHidden.value.length !== 12) {
+                    e.preventDefault();
+                    phoneDisplay.focus();
+                    phoneDisplay.classList.add('border-red-300', 'ring-2', 'ring-red-100');
                 }
             });
         }
+
+        // Initial sync (for browser autofill / old values)
+        syncPhone();
     }
 })();
 </script>
