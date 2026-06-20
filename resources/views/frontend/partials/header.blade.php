@@ -1,6 +1,6 @@
 <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
     <nav class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 lg:px-8 2xl:px-12">
-        <div class="flex items-center justify-between h-[72px] lg:h-20 xl:h-24">
+        <div class="flex items-center justify-between h-[80px] lg:h-[88px] xl:h-[108px] 2xl:h-[118px]">
             <a href="/" class="flex items-center flex-shrink-0">
                 <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-[68px] lg:h-[80px] xl:h-[100px] 2xl:h-[110px] w-auto object-contain">
             </a>
