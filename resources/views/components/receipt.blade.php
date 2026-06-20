@@ -25,14 +25,9 @@
 
     {{-- Merchant Info --}}
     <div class="px-6 py-4 border-b border-gray-100">
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-bold text-sm">
-                {{ strtoupper(substr($merchantName ?? ($transaction->user?->business_name ?? $transaction->user?->first_name ?? 'M'), 0, 1)) }}
-            </div>
-            <div>
-                <p class="text-sm font-bold text-gray-900">{{ $merchantName ?? ($transaction->user?->business_name ?? ($transaction->user?->first_name . ' ' . $transaction->user?->last_name) ?? 'Merchant') }}</p>
-                <p class="text-[11px] text-gray-500">{{ $transaction->user?->email ?? 'support@salamapay.com' }}</p>
-            </div>
+        <div class="text-center">
+            <p class="text-sm font-bold text-gray-900">{{ $transaction->user?->business_name ?? 'Business' }}</p>
+            <p class="text-[11px] text-gray-500 mt-0.5">{{ $transaction->user?->email ?? 'support@salamapay.com' }}</p>
         </div>
     </div>
 
