@@ -53,8 +53,8 @@
         </div>
     </div>
     <div class="relative z-10 max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-20 lg:py-28 xl:py-36">
-        <div class="max-w-4xl xl:max-w-5xl mx-auto">
-            <div class="text-center lg:text-left">
+        <div class="max-w-4xl xl:max-w-5xl mx-auto text-center">
+            <div class="text-center">
                 <a href="#" class="animate-fade-up delay-1 inline-flex justify-between items-center py-1 pr-4 pl-1 xl:pr-5 xl:pl-1.5 mb-6 xl:mb-8 text-xs xl:text-sm text-emerald-100 bg-white/10 backdrop-blur-sm border border-emerald-400/30 rounded-full hover:bg-white/15 hover:border-emerald-400/50 transition-all">
                     <span class="text-[10px] xl:text-xs font-bold bg-emerald-500 rounded-full text-white px-3 py-1 mr-2 uppercase tracking-wide">New</span>
                     <span class="font-medium" data-en="SalamaPay v1 is live" data-sw="SalamaPay v1 imetoka">SalamaPay v1 is live</span>
@@ -63,10 +63,10 @@
                 <h1 class="animate-fade-up delay-2 text-[2rem] sm:text-[2.4rem] md:text-5xl lg:text-[3.4rem] xl:text-[4.5rem] 2xl:text-[5.5rem] font-extrabold text-white leading-[1.1] mb-6 xl:mb-8">
                     <span data-en="Pay With Ease," data-sw="Lipa kwa">Pay With Ease,</span> <span class="text-gold-300 inline-block" data-en="Business Receives Fast" data-sw="Urahisi">Business Receives Fast</span>
                 </h1>
-                <p class="animate-fade-up delay-3 text-lg sm:text-xl md:text-2xl xl:text-3xl text-emerald-100/80 max-w-xl xl:max-w-2xl mx-auto lg:mx-0 mb-8 xl:mb-10 leading-relaxed">
+                <p class="animate-fade-up delay-3 text-lg sm:text-xl md:text-2xl xl:text-3xl text-emerald-100/80 max-w-xl xl:max-w-2xl mx-auto mb-8 xl:mb-10 leading-relaxed">
                     <span data-en="SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place." data-sw="SalamaPay ni daraja kati ya mteja anayelipa na biashara inayopokea pesa. Lipa kwa M-Pesa, Airtel Money, benki au kadi - kila kitu kimoja.">SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place.</span>
                 </p>
-                <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-4 xl:gap-5 justify-center lg:justify-start mb-10 xl:mb-12">
+                <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-4 xl:gap-5 justify-center mb-10 xl:mb-12">
                     <a href="{{ route('register') }}" class="group inline-flex items-center gap-2 xl:gap-3 px-7 py-3.5 xl:px-10 xl:py-5 text-base xl:text-lg font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-0.5">
                         <span data-en="Get Started" data-sw="Anza Sasa">Get Started</span>
                         <svg class="w-5 h-5 xl:w-6 xl:h-6 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
@@ -76,7 +76,7 @@
                         <span data-en="How It Works" data-sw="Jinsi Inavyofanya Kazi">How It Works</span>
                     </a>
                 </div>
-                <div class="animate-fade-up delay-5 flex flex-wrap items-center gap-5 xl:gap-7 justify-center lg:justify-start text-emerald-200/80 text-sm xl:text-base">
+                <div class="animate-fade-up delay-5 flex flex-wrap items-center gap-5 xl:gap-7 justify-center text-emerald-200/80 text-sm xl:text-base">
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Online Payments Only</div>
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Bank-Level Security</div>
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Instant Transactions</div>
