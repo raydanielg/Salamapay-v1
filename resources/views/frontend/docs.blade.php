@@ -67,53 +67,24 @@
 
             {{-- Nav --}}
             <nav class="space-y-1">
+                @forelse($allPages as $category => $catPages)
                 <div class="mb-4">
                     <button class="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 rounded-lg hover:bg-gray-100 transition-colors group" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        Getting Started
+                        {{ ucfirst(str_replace('_', ' ', $category)) }}
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     <div class="ml-3 mt-1 space-y-1">
-                        <a href="{{ route('docs', 'introduction') }}" class="block px-3 py-1.5 text-sm {{ $page == 'introduction' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Introduction</a>
-                        <a href="{{ route('docs', 'quickstart') }}" class="block px-3 py-1.5 text-sm {{ $page == 'quickstart' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Quick Start</a>
-                        <a href="{{ route('docs', 'authentication') }}" class="block px-3 py-1.5 text-sm {{ $page == 'authentication' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Authentication</a>
+                        @foreach($catPages as $pg)
+                        <a href="{{ route('docs', $pg->slug) }}" class="block px-3 py-1.5 text-sm {{ $currentSlug == $pg->slug ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">{{ $pg->title }}</a>
+                        @endforeach
                     </div>
                 </div>
-
-                <div class="mb-4">
-                    <button class="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 rounded-lg hover:bg-gray-100 transition-colors group" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        Payments
-                        <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="ml-3 mt-1 space-y-1">
-                        <a href="{{ route('docs', 'collect-payments') }}" class="block px-3 py-1.5 text-sm {{ $page == 'collect-payments' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Collect Payments</a>
-                        <a href="{{ route('docs', 'payouts') }}" class="block px-3 py-1.5 text-sm {{ $page == 'payouts' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Payouts</a>
-                        <a href="{{ route('docs', 'webhooks') }}" class="block px-3 py-1.5 text-sm {{ $page == 'webhooks' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Webhooks</a>
-                    </div>
+                @empty
+                <div class="text-center py-8">
+                    <svg class="w-8 h-8 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <p class="text-xs text-gray-400">No docs yet</p>
                 </div>
-
-                <div class="mb-4">
-                    <button class="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 rounded-lg hover:bg-gray-100 transition-colors group" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        API Reference
-                        <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="ml-3 mt-1 space-y-1">
-                        <a href="{{ route('docs', 'api-overview') }}" class="block px-3 py-1.5 text-sm {{ $page == 'api-overview' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Overview</a>
-                        <a href="{{ route('docs', 'errors') }}" class="block px-3 py-1.5 text-sm {{ $page == 'errors' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Errors</a>
-                        <a href="{{ route('docs', 'pagination') }}" class="block px-3 py-1.5 text-sm {{ $page == 'pagination' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Pagination</a>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <button class="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold text-gray-900 rounded-lg hover:bg-gray-100 transition-colors group" onclick="this.nextElementSibling.classList.toggle('hidden')">
-                        SDKs
-                        <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="ml-3 mt-1 space-y-1 hidden">
-                        <a href="{{ route('docs', 'php-sdk') }}" class="block px-3 py-1.5 text-sm {{ $page == 'php-sdk' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">PHP</a>
-                        <a href="{{ route('docs', 'js-sdk') }}" class="block px-3 py-1.5 text-sm {{ $page == 'js-sdk' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">JavaScript</a>
-                        <a href="{{ route('docs', 'python-sdk') }}" class="block px-3 py-1.5 text-sm {{ $page == 'python-sdk' ? 'text-emerald-600 font-semibold bg-emerald-50' : 'text-gray-600 hover:text-emerald-600' }} rounded-lg transition-colors">Python</a>
-                    </div>
-                </div>
+                @endforelse
             </nav>
         </div>
     </aside>
