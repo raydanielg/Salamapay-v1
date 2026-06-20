@@ -165,55 +165,51 @@
 
 {{-- Recent Activity Table --}}
 <div class="bg-white rounded-xl border overflow-hidden">
-    <div class="px-4 lg:px-5 py-4 border-b flex items-center justify-between">
+    <div class="flex items-center justify-between border-b px-5 py-4">
         <div>
             <h3 class="text-sm font-semibold text-gray-900">Recent activity</h3>
-            <p class="text-[11px] text-gray-400 mt-0.5">Latest transactions across all channels</p>
+            <p class="text-xs text-gray-400">Latest transactions across all channels</p>
         </div>
-        <a href="#" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700">View all</a>
+        <a href="#" class="text-xs font-medium text-gray-500 hover:text-gray-700 px-2 py-1 rounded-md hover:bg-gray-100 transition-colors">View all</a>
     </div>
     <div class="overflow-x-auto">
-        <table class="w-full text-left">
+        <table class="w-full text-sm">
             <thead>
-                <tr class="border-b bg-gray-50/50">
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">ID</th>
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">Customer</th>
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">Amount</th>
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">Method</th>
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">Status</th>
-                    <th class="px-4 lg:px-5 py-2.5 text-[11px] font-semibold text-gray-500 uppercase">Date</th>
+                <tr class="text-left text-xs text-gray-500">
+                    <th class="px-5 py-3 font-medium">ID</th>
+                    <th class="px-5 py-3 font-medium">Customer</th>
+                    <th class="px-5 py-3 font-medium">Amount</th>
+                    <th class="px-5 py-3 font-medium">Method</th>
+                    <th class="px-5 py-3 font-medium">Status</th>
+                    <th class="px-5 py-3 font-medium">Date</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody>
                 @forelse($recentTransactions as $tx)
-                <tr class="hover:bg-gray-50/60 transition-colors">
-                    <td class="px-4 lg:px-5 py-3 text-xs font-mono font-medium text-gray-700">{{ $tx->tx_id }}</td>
-                    <td class="px-4 lg:px-5 py-3">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white {{ $tx->status === 'success' ? 'bg-emerald-500' : ($tx->status === 'pending' ? 'bg-amber-400' : 'bg-red-400') }}">
-                                {{ substr($tx->customer_name, 0, 1) }}
-                            </div>
-                            <div>
-                                <p class="text-xs font-semibold text-gray-800">{{ $tx->customer_name }}</p>
-                                <p class="text-[10px] text-gray-400">{{ $tx->customer_email }}</p>
-                            </div>
-                        </div>
+                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors">
+                    <td class="px-5 py-3 font-mono text-xs text-gray-500">{{ $tx->tx_id }}</td>
+                    <td class="px-5 py-3">
+                        <div class="font-medium text-gray-900">{{ $tx->customer_name }}</div>
+                        <div class="text-xs text-gray-500">{{ $tx->customer_email }}</div>
                     </td>
-                    <td class="px-4 lg:px-5 py-3 text-xs font-semibold text-gray-800">TSh {{ number_format($tx->amount) }}</td>
-                    <td class="px-4 lg:px-5 py-3 text-xs text-gray-600">{{ $tx->method }}</td>
-                    <td class="px-4 lg:px-5 py-3">
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold {{ $tx->status === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : ($tx->status === 'pending' ? 'bg-amber-50 text-amber-700 border border-amber-100' : 'bg-red-50 text-red-700 border border-red-100') }}">
-                            <span class="w-1 h-1 rounded-full {{ $tx->status === 'success' ? 'bg-emerald-500' : ($tx->status === 'pending' ? 'bg-amber-400' : 'bg-red-400') }}"></span>
-                            {{ ucfirst($tx->status) }}
-                        </span>
+                    <td class="px-5 py-3 font-medium text-gray-900">TSh {{ number_format($tx->amount) }}</td>
+                    <td class="px-5 py-3 text-gray-500">{{ $tx->method }}</td>
+                    <td class="px-5 py-3">
+                        @if($tx->status === 'success')
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">Success</span>
+                        @elseif($tx->status === 'pending')
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-100">Pending</span>
+                        @else
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-50 text-red-700 border border-red-100">Failed</span>
+                        @endif
                     </td>
-                    <td class="px-4 lg:px-5 py-3 text-xs text-gray-400">{{ $tx->processed_at?->format('M d, H:i') }}</td>
+                    <td class="px-5 py-3 text-gray-500">{{ $tx->processed_at?->format('M d, H:i') }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="px-4 py-10 text-center text-gray-400">
-                        <svg class="w-10 h-10 mx-auto mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        <p class="text-xs font-medium">No transactions yet</p>
+                    <td colspan="6" class="px-5 py-10 text-center text-gray-400">
+                        <p class="text-sm font-medium">No transactions yet</p>
+                        <p class="text-xs mt-1">Start accepting payments to see activity here.</p>
                     </td>
                 </tr>
                 @endforelse
