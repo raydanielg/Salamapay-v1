@@ -136,6 +136,12 @@
     #printableArea table { width: 100% !important; border-collapse: collapse; }
     #printableArea th, #printableArea td { border: 1px solid #ddd; padding: 8px; }
     #printableArea .opacity-0 { opacity: 1 !important; }
+    /* Hide Action column during print */
+    #printableArea th:last-child,
+    #printableArea td:last-child { display: none !important; }
+    /* Ensure action buttons never show in print */
+    #printableArea button,
+    #printableArea .group-hover\:opacity-100 { opacity: 0 !important; display: none !important; }
 }
 </style>
 <div id="receiptModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
