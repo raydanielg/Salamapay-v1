@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BalanceSeeder::class);
         $this->call(AdminLogSeeder::class);
         $this->call(DocumentationSeeder::class);
+        $this->call(NotificationSeeder::class);
     }
 }
