@@ -50,6 +50,8 @@ Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request
 
 Auth::routes();
 
+Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::class, 'showSuccess'])->name('register.success');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/pricing', function () {
