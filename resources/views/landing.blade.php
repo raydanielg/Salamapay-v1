@@ -53,14 +53,6 @@
 @include('frontend.partials.header')
 @include('frontend.partials.page-loader')
 @include('frontend.partials.hero')
-@include('frontend.partials.marquee')
-@include('frontend.partials.features')
-@include('frontend.partials.benefits')
-@include('frontend.partials.how-it-works')
-@include('frontend.partials.stats')
-@include('frontend.partials.payment-methods')
-@include('frontend.partials.cta')
-@include('frontend.partials.footer')
 
 <script>
 document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t){window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-80,behavior:'smooth'})}})});
