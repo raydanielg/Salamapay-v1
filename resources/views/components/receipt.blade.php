@@ -1,26 +1,17 @@
 <div class="receipt-card bg-white rounded-xl border-2 border-gray-100 shadow-sm overflow-hidden" id="receiptCard">
-    {{-- Receipt Header --}}
-    <div class="px-6 py-5 border-b border-dashed border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-        <div class="flex items-start justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-                <div>
-                    <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">SalamaPay</h2>
-                </div>
-            </div>
-            <div class="text-right">
-                @if($transaction->status === 'success')
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">PAID</span>
-                @elseif($transaction->status === 'pending')
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">PENDING</span>
-                @else
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-100">FAILED</span>
-                @endif
-                <p class="text-[10px] text-gray-400 mt-1">Ref: {{ $transaction->tx_id }}</p>
-            </div>
+    {{-- Top: SalamaPay + Status + Ref --}}
+    <div class="px-6 pt-6 pb-2 text-center">
+        <h2 class="text-xl font-black text-gray-900 tracking-tight">SalamaPay</h2>
+        <div class="mt-2 flex items-center justify-center gap-2">
+            @if($transaction->status === 'success')
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">PAID</span>
+            @elseif($transaction->status === 'pending')
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">PENDING</span>
+            @else
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-100">FAILED</span>
+            @endif
         </div>
+        <p class="text-[10px] text-gray-400 mt-1 font-mono">Ref: {{ $transaction->tx_id }}</p>
     </div>
 
     {{-- Merchant Info --}}
