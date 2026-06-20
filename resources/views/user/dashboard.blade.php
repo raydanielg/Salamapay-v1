@@ -97,8 +97,6 @@ window.addEventListener('load', function() {
     @keyframes spark { to { stroke-dashoffset: 0; } }
     .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: skeleton-shimmer 1.5s infinite; }
     @keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .api-key-hidden { filter: blur(4px); user-select: none; letter-spacing: 2px; }
-    .api-key-visible { filter: none; user-select: text; letter-spacing: normal; }
 </style>
 
 {{-- Welcome + Actions --}}
