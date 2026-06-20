@@ -85,72 +85,58 @@
 </div>
 
 {{-- Charts Row --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
     {{-- Revenue Chart --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
+    <div class="bg-white rounded-xl border p-4 lg:p-5">
+        <div class="flex items-center justify-between mb-4">
             <div>
-                <h3 class="text-lg font-bold text-gray-800">Revenue</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Last 7 days</p>
+                <h3 class="text-sm font-semibold text-gray-900">Revenue</h3>
+                <p class="text-xs text-gray-400">Last 7 days</p>
             </div>
             <div class="text-right">
-                <p class="text-xl font-extrabold text-gray-900">{{ $fn($weeklyRevenue) }}</p>
-                <p class="text-xs font-medium text-emerald-600">{{ $weeklyRevenueChange > 0 ? '+' . $weeklyRevenueChange : $weeklyRevenueChange }}%</p>
+                <p class="text-lg font-bold text-gray-900">{{ $fmtTz($weeklyRevenue) }}</p>
+                <p class="text-[10px] font-medium text-emerald-600">{{ $weeklyRevenueChange > 0 ? '+' . $weeklyRevenueChange : $weeklyRevenueChange }}%</p>
             </div>
         </div>
-        <div class="flex items-end gap-2 h-40">
+        <div class="flex items-end gap-[6px] h-32">
             @foreach($revenueDays as $i => $rev)
                 @php
                     $max = max($revenueDays) ?: 1;
                     $pct = ($rev / $max) * 100;
                     $isToday = $i === count($revenueDays) - 1;
                 @endphp
-                <div class="flex-1 flex flex-col items-center gap-2 group">
-                    <div class="w-full bg-gray-100 rounded-t-lg relative h-32 overflow-hidden">
-                        <div class="absolute bottom-0 left-0 right-0 rounded-t-lg transition-all duration-500 {{ $isToday ? 'bg-emerald-500' : 'bg-emerald-200 group-hover:bg-emerald-300' }}" style="height: {{ $pct }}%"></div>
+                <div class="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer">
+                    <div class="w-full bg-gray-50 rounded-t-md relative h-24 overflow-hidden">
+                        <div class="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-300 {{ $isToday ? 'bar-rev' : 'bar-rev-past' }}" style="height: {{ max($pct, 4) }}%"></div>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
+                    <span class="text-[10px] text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
                 </div>
             @endforeach
-        </div>
-        <div class="flex justify-between text-xs text-gray-400 mt-2">
-            <span>0</span>
-            <span>{{ $fn($max / 4) }}</span>
-            <span>{{ $fn($max / 2) }}</span>
-            <span>{{ $fn($max * 0.75) }}</span>
-            <span>{{ $fn($max) }}</span>
         </div>
     </div>
 
     {{-- Transaction Volume Chart --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-        <div class="flex items-center justify-between mb-6">
+    <div class="bg-white rounded-xl border p-4 lg:p-5">
+        <div class="flex items-center justify-between mb-4">
             <div>
-                <h3 class="text-lg font-bold text-gray-800">Transaction volume</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Last 7 days</p>
+                <h3 class="text-sm font-semibold text-gray-900">Transaction volume</h3>
+                <p class="text-xs text-gray-400">Last 7 days</p>
             </div>
         </div>
-        <div class="flex items-end gap-2 h-40">
+        <div class="flex items-end gap-[6px] h-32">
             @foreach($volumeDays as $i => $vol)
                 @php
                     $maxVol = max($volumeDays) ?: 1;
                     $pctVol = ($vol / $maxVol) * 100;
                     $isTodayVol = $i === count($volumeDays) - 1;
                 @endphp
-                <div class="flex-1 flex flex-col items-center gap-2 group">
-                    <div class="w-full bg-gray-100 rounded-t-lg relative h-32 overflow-hidden">
-                        <div class="absolute bottom-0 left-0 right-0 rounded-t-lg transition-all duration-500 {{ $isTodayVol ? 'bg-gold-400' : 'bg-gold-200 group-hover:bg-gold-300' }}" style="height: {{ $pctVol }}%"></div>
+                <div class="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer">
+                    <div class="w-full bg-gray-50 rounded-t-md relative h-24 overflow-hidden">
+                        <div class="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-300 {{ $isTodayVol ? 'bar-vol' : 'bar-vol-past' }}" style="height: {{ max($pctVol, 4) }}%"></div>
                     </div>
-                    <span class="text-xs text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
+                    <span class="text-[10px] text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
                 </div>
             @endforeach
-        </div>
-        <div class="flex justify-between text-xs text-gray-400 mt-2">
-            <span>0</span>
-            <span>{{ round($maxVol / 4) }}</span>
-            <span>{{ round($maxVol / 2) }}</span>
-            <span>{{ round($maxVol * 0.75) }}</span>
-            <span>{{ round($maxVol) }}</span>
         </div>
     </div>
 </div>
