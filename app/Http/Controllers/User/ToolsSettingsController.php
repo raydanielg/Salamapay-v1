@@ -65,14 +65,31 @@ class ToolsSettingsController extends Controller
             'tax_rate' => 'required|numeric|min:0|max:100',
             'currency' => 'required|string|max:10',
             'receipt_footer' => 'nullable|string|max:255',
+            'product_categories' => 'nullable|array',
+            'product_units' => 'nullable|array',
+            'low_stock_threshold' => 'nullable|integer|min:1|max:100',
         ]);
 
         $validated['pos_enabled'] = $request->boolean('pos_enabled');
         $validated['auto_receipt'] = $request->boolean('auto_receipt');
 
+        // Handle product categories and units in settings JSON
+        $settings = $user->settings ?? [];
+        if ($request->has('product_categories')) {
+            $settings['product_categories'] = json_encode(array_filter($request->product_categories));
+        }
+        if ($request->has('product_units')) {
+            $settings['product_units'] = json_encode(array_filter($request->product_units));
+        }
+        if ($request->has('low_stock_threshold')) {
+            $settings['low_stock_threshold'] = $request->low_stock_threshold;
+        }
+        $validated['settings'] = $settings;
+
         $user->update($validated);
 
-        return redirect()->route('user.tools.settings')
-            ->with('success', 'Tools settings updated successfully.');
+        $redirectTo = $request->header('referer', route('user.tools.settings'));
+        return redirect()->to($redirectTo)
+            ->with('success', 'Settings updated successfully.');
     }
 }
