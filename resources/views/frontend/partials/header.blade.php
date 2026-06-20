@@ -2,7 +2,7 @@
     <nav class="max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 lg:px-8 2xl:px-12">
         <div class="flex items-center justify-between h-[72px] lg:h-20 xl:h-24">
             <a href="/" class="flex items-center flex-shrink-0">
-                <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-[60px] lg:h-[72px] xl:h-[88px] w-auto object-contain">
+                <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-[68px] lg:h-[80px] xl:h-[100px] 2xl:h-[110px] w-auto object-contain">
             </a>
             <div class="hidden md:flex items-center space-x-1">
                 <a href="/" class="group flex items-center gap-1.5 px-3 py-2 xl:px-4 xl:py-2.5 text-[15px] xl:text-base font-semibold text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors">
