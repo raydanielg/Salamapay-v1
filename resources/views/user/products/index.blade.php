@@ -233,10 +233,102 @@
     </div>
 </div>
 
+{{-- Product Settings Modal --}}
+<div id="productSettingsModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeProductSettingsModal()"></div>
+    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-fade">
+        <div class="px-5 py-4 border-b flex items-center justify-between">
+            <h3 class="text-sm font-bold text-gray-900">Product Settings</h3>
+            <button onclick="closeProductSettingsModal()" class="p-1 rounded-lg hover:bg-gray-100 transition-colors"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <form method="POST" action="{{ route('user.tools.update') }}" class="p-5 space-y-5">
+            @csrf
+            @method('PUT')
+
+            {{-- Categories --}}
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Product Categories</label>
+                <div id="categoriesList" class="space-y-2 mb-2">
+                    @php
+                        $cats = json_decode(auth()->user()->settings['product_categories'] ?? '[]', true) ?: ['Drinks','Snacks','Electronics','Clothing','Food'];
+                    @endphp
+                    @foreach($cats as $cat)
+                    <div class="flex items-center gap-2 cat-row">
+                        <input type="text" name="product_categories[]" value="{{ $cat }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                        <button type="button" onclick="this.closest('.cat-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                    </div>
+                    @endforeach
+                </div>
+                <button type="button" onclick="addCategoryRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Category
+                </button>
+            </div>
+
+            {{-- Units --}}
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Units of Measurement</label>
+                <div id="unitsList" class="space-y-2 mb-2">
+                    @php
+                        $units = json_decode(auth()->user()->settings['product_units'] ?? '[]', true) ?: ['Piece','Kg','Litre','Pack','Box'];
+                    @endphp
+                    @foreach($units as $unit)
+                    <div class="flex items-center gap-2 unit-row">
+                        <input type="text" name="product_units[]" value="{{ $unit }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                        <button type="button" onclick="this.closest('.unit-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                    </div>
+                    @endforeach
+                </div>
+                <button type="button" onclick="addUnitRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Unit
+                </button>
+            </div>
+
+            {{-- Low Stock Threshold --}}
+            <div>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Low Stock Alert Threshold</label>
+                <div class="flex items-center gap-3">
+                    <input type="number" name="low_stock_threshold" value="{{ auth()->user()->settings['low_stock_threshold'] ?? 5 }}" min="1" max="100" class="w-24 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                    <span class="text-xs text-gray-400">items or less triggers alert</span>
+                </div>
+            </div>
+
+            <div class="pt-1 flex gap-2">
+                <button type="button" onclick="closeProductSettingsModal()" class="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Settings</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- Delete Form --}}
 <form id="deleteProductForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
 <script>
+function openProductSettingsModal() {
+    const m = document.getElementById('productSettingsModal');
+    m.classList.remove('hidden'); m.classList.add('flex');
+}
+function closeProductSettingsModal() {
+    const m = document.getElementById('productSettingsModal');
+    m.classList.add('hidden'); m.classList.remove('flex');
+}
+function addCategoryRow() {
+    const list = document.getElementById('categoriesList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 cat-row';
+    div.innerHTML = '<input type="text" name="product_categories[]" placeholder="Category name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.cat-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+function addUnitRow() {
+    const list = document.getElementById('unitsList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 unit-row';
+    div.innerHTML = '<input type="text" name="product_units[]" placeholder="Unit name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.unit-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+
 function openProductModal() {
     document.getElementById('productForm').action = '{{ route('user.products.store') }}';
     document.getElementById('methodField').innerHTML = '';

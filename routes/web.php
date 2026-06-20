@@ -427,6 +427,8 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::delete('/services/{service}', [App\Http\Controllers\User\ServiceController::class, 'destroy'])->name('user.services.destroy');
 
     Route::get('/tools/settings', [App\Http\Controllers\User\ToolsSettingsController::class, 'index'])->name('user.tools.settings');
+    Route::put('/tools/settings/business', [App\Http\Controllers\User\ToolsSettingsController::class, 'updateBusiness'])->name('user.tools.business.update');
+    Route::put('/tools/settings/tools', [App\Http\Controllers\User\ToolsSettingsController::class, 'updateTools'])->name('user.tools.update');
 
     // Settings
     Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings');
