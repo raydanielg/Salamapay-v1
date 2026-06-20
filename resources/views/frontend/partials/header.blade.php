@@ -1,10 +1,10 @@
 <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
     <nav class="max-w-screen-xl mx-auto px-4 lg:px-8">
-        <div class="flex items-center justify-between h-16 lg:h-[68px]">
+        <div class="flex items-center justify-between h-[72px] lg:h-20">
             <a href="/" class="flex items-center flex-shrink-0">
-                <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-14 w-auto object-contain">
+                <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-[60px] lg:h-[72px] w-auto object-contain">
             </a>
-            <div class="hidden md:flex items-center space-x-0.5">
+            <div class="hidden md:flex items-center space-x-1">
                 <a href="/" class="group flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     <span>Home</span>
