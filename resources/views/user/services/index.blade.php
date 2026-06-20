@@ -181,55 +181,157 @@
     <div class="px-5 py-3 border-t">{{ $services->links() }}</div>
     @endif
 </div>
+</div>
 
-{{-- Service Modal --}}
-<div id="serviceModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeServiceModal()"></div>
-    <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade">
-        <div class="px-5 py-4 border-b flex items-center justify-between">
-            <h3 class="text-sm font-bold text-gray-900" id="svcModalTitle">Add Service</h3>
-            <button onclick="closeServiceModal()" class="p-1 rounded-lg hover:bg-gray-100 transition-colors"><svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+{{-- Slide-in Service Drawer --}}
+<style>
+#serviceDrawer { transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+#serviceDrawer.overlay-open { transform: translateX(0); }
+#serviceDrawer.overlay-closed { transform: translateX(100%); }
+.drawer-backdrop { transition: opacity 0.3s ease; }
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+.drawer-backdrop.closed { opacity: 0; pointer-events: none; }
+@media print {
+    body * { visibility: hidden; }
+    #printableArea, #printableArea * { visibility: visible; }
+    #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+    #printableArea .overflow-x-auto { overflow: visible !important; }
+    #printableArea table { width: 100% !important; border-collapse: collapse; }
+    #printableArea th, #printableArea td { border: 1px solid #ddd; padding: 8px; }
+    #printableArea .opacity-0 { opacity: 1 !important; }
+}
+</style>
+
+<div id="drawerBackdrop" class="drawer-backdrop closed fixed inset-0 bg-black/40 backdrop-blur-sm z-[50]" onclick="closeServiceDrawer()"></div>
+<div id="serviceDrawer" class="fixed inset-y-0 right-0 z-[55] w-full max-w-lg bg-white shadow-2xl flex flex-col overlay-closed">
+    {{-- Drawer Header --}}
+    <div class="px-6 py-4 border-b flex items-center justify-between bg-white shrink-0">
+        <div>
+            <h3 class="text-base font-black text-gray-900" id="svcDrawerTitle">Add Service</h3>
+            <p class="text-[10px] text-gray-400">Manage service details, variants & settings</p>
         </div>
-        <form id="serviceForm" method="POST" action="{{ route('user.services.store') }}" class="p-5 space-y-3.5">
-            @csrf
-            <div id="svcMethodField"></div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Service Name</label>
-                <input type="text" name="name" id="svcName" required class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Web Development">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
+        <button onclick="closeServiceDrawer()" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+
+    {{-- Tabs --}}
+    <div class="flex border-b bg-gray-50/50 shrink-0">
+        <button onclick="switchDrawerTab('service')" id="tabService" class="flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors">Service</button>
+        <button onclick="switchDrawerTab('settings')" id="tabSettings" class="flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors">Settings</button>
+    </div>
+
+    {{-- Drawer Content --}}
+    <div class="flex-1 overflow-y-auto">
+        {{-- Tab: Service Form --}}
+        <div id="panelService" class="p-6 space-y-4">
+            <form id="serviceForm" method="POST" action="{{ route('user.services.store') }}">
+                @csrf
+                <div id="svcMethodField"></div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price (TSh)</label>
-                    <input type="number" name="price" id="svcPrice" required min="0" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Service Name</label>
+                    <input type="text" name="name" id="svcName" required class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Web Development">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Price (TSh)</label>
+                        <input type="number" name="price" id="svcPrice" required min="0" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="0">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Duration</label>
+                        <input type="text" name="duration" id="svcDuration" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. 2 Weeks">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Category</label>
+                        <input type="text" name="category" id="svcCategory" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Design">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
+                        <select name="status" id="svcStatus" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 transition-all">
+                            <option value="active">Active</option>
+                            <option value="paused">Paused</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Duration</label>
-                    <input type="text" name="duration" id="svcDuration" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. 2 Weeks">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
+                    <textarea name="description" id="svcDesc" rows="3" class="w-full px-3 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none" placeholder="Describe the service in detail..."></textarea>
                 </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
+
+                {{-- Sub-services / Variants --}}
+                <div class="pt-2 border-t border-gray-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider">Service Variants / Sub-types</label>
+                        <span class="text-[10px] text-gray-400">Optional packages or tiers</span>
+                    </div>
+                    <div id="variantsList" class="space-y-2 mb-2">
+                        {{-- Variants added dynamically --}}
+                    </div>
+                    <button type="button" onclick="addVariantRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 mt-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Variant (Package / Tier)
+                    </button>
+                </div>
+
+                <div class="pt-4 flex gap-3 sticky bottom-0 bg-white pb-2">
+                    <button type="button" onclick="closeServiceDrawer()" class="flex-1 py-3 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Service</button>
+                </div>
+            </form>
+        </div>
+
+        {{-- Tab: Settings --}}
+        <div id="panelSettings" class="p-6 space-y-5 hidden">
+            <form method="POST" action="{{ route('user.tools.update') }}">
+                @csrf
+                @method('PUT')
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Category</label>
-                    <input type="text" name="category" id="svcCategory" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all" placeholder="e.g. Design">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Service Categories</label>
+                    <div id="drawerServiceCategories" class="space-y-2 mb-2">
+                        @php
+                            $svcCats = json_decode(auth()->user()->settings['service_categories'] ?? '[]', true) ?: ['Consulting','Design','Development','Marketing','Cleaning','Repair'];
+                        @endphp
+                        @foreach($svcCats as $cat)
+                        <div class="flex items-center gap-2 svc-cat-row">
+                            <input type="text" name="service_categories[]" value="{{ $cat }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                            <button type="button" onclick="this.closest('.svc-cat-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                        </div>
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addServiceCategoryRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Category
+                    </button>
                 </div>
+
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status</label>
-                    <select name="status" id="svcStatus" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 transition-all">
-                        <option value="active">Active</option>
-                        <option value="paused">Paused</option>
-                        <option value="archived">Archived</option>
-                    </select>
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2">Default Durations</label>
+                    <div id="drawerDurationsList" class="space-y-2 mb-2">
+                        @php
+                            $durations = json_decode(auth()->user()->settings['service_durations'] ?? '[]', true) ?: ['30 Minutes','1 Hour','2 Hours','1 Day','1 Week'];
+                        @endphp
+                        @foreach($durations as $dur)
+                        <div class="flex items-center gap-2 dur-row">
+                            <input type="text" name="service_durations[]" value="{{ $dur }}" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
+                            <button type="button" onclick="this.closest('.dur-row').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+                        </div>
+                        @endforeach
+                    </div>
+                    <button type="button" onclick="addDurationRow()" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Duration
+                    </button>
                 </div>
-            </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Description</label>
-                <textarea name="description" id="svcDesc" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all resize-none" placeholder="Optional description..."></textarea>
-            </div>
-            <div class="pt-1 flex gap-2">
-                <button type="button" onclick="closeServiceModal()" class="flex-1 py-2.5 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Service</button>
-            </div>
-        </form>
+
+                <div class="pt-4 flex gap-3 sticky bottom-0 bg-white pb-2">
+                    <button type="button" onclick="closeServiceDrawer()" class="flex-1 py-3 border rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-700 transition-colors">Save Settings</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
