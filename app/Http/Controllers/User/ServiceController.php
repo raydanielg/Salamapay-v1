@@ -54,6 +54,24 @@ class ServiceController extends Controller
         ]);
 
         $validated['user_id'] = auth()->id();
+
+        if ($request->has('variant_names')) {
+            $variants = [];
+            $names = $request->input('variant_names', []);
+            $prices = $request->input('variant_prices', []);
+            $durations = $request->input('variant_durations', []);
+            foreach ($names as $i => $name) {
+                if (!empty($name)) {
+                    $variants[] = [
+                        'name' => $name,
+                        'price' => $prices[$i] ?? 0,
+                        'duration' => $durations[$i] ?? '',
+                    ];
+                }
+            }
+            $validated['variants'] = $variants;
+        }
+
         Service::create($validated);
 
         return redirect()->route('user.services')->with('success', 'Service created successfully.');
@@ -73,6 +91,23 @@ class ServiceController extends Controller
             'category' => 'nullable|string|max:100',
             'status' => 'required|in:active,paused,archived',
         ]);
+
+        if ($request->has('variant_names')) {
+            $variants = [];
+            $names = $request->input('variant_names', []);
+            $prices = $request->input('variant_prices', []);
+            $durations = $request->input('variant_durations', []);
+            foreach ($names as $i => $name) {
+                if (!empty($name)) {
+                    $variants[] = [
+                        'name' => $name,
+                        'price' => $prices[$i] ?? 0,
+                        'duration' => $durations[$i] ?? '',
+                    ];
+                }
+            }
+            $validated['variants'] = $variants;
+        }
 
         $service->update($validated);
 
