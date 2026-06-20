@@ -339,32 +339,187 @@
 <form id="deleteServiceForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
 
 <script>
-function openServiceModal() {
+let searchTimeout;
+
+// AJAX Search & Filter
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('input[name="search"]');
+    const statusSelect = document.querySelector('select[name="status"]');
+    const categorySelect = document.querySelector('select[name="category"]');
+
+    function doSearch() {
+        const params = new URLSearchParams();
+        if (searchInput && searchInput.value) params.append('search', searchInput.value);
+        if (statusSelect && statusSelect.value && statusSelect.value !== 'all') params.append('status', statusSelect.value);
+        if (categorySelect && categorySelect.value && categorySelect.value !== 'all') params.append('category', categorySelect.value);
+
+        fetch('{{ route('user.services') }}?' + params.toString(), {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newBody = doc.querySelector('tbody');
+            const newPagination = doc.querySelector('.px-5.py-3.border-t');
+            if (newBody) document.querySelector('tbody').innerHTML = newBody.innerHTML;
+            const pagContainer = document.querySelector('.px-5.py-3.border-t');
+            if (pagContainer && newPagination) pagContainer.innerHTML = newPagination.innerHTML;
+            else if (pagContainer) pagContainer.style.display = 'none';
+        });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', function() { clearTimeout(searchTimeout); searchTimeout = setTimeout(doSearch, 300); });
+    if (statusSelect) statusSelect.addEventListener('change', function(e) { e.preventDefault(); doSearch(); });
+    if (categorySelect) categorySelect.addEventListener('change', function(e) { e.preventDefault(); doSearch(); });
+});
+
+// Drawer Tabs
+function switchDrawerTab(tab) {
+    document.getElementById('panelService').classList.toggle('hidden', tab !== 'service');
+    document.getElementById('panelSettings').classList.toggle('hidden', tab !== 'settings');
+    const ts = document.getElementById('tabService');
+    const tset = document.getElementById('tabSettings');
+    if (tab === 'service') {
+        ts.className = 'flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors';
+        tset.className = 'flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors';
+    } else {
+        ts.className = 'flex-1 py-3 text-xs font-bold text-gray-400 hover:text-gray-600 transition-colors';
+        tset.className = 'flex-1 py-3 text-xs font-bold text-emerald-600 border-b-2 border-emerald-600 bg-white transition-colors';
+    }
+}
+
+// Drawer Open/Close
+function openServiceDrawer() {
     document.getElementById('serviceForm').action = '{{ route('user.services.store') }}';
     document.getElementById('svcMethodField').innerHTML = '';
-    document.getElementById('svcModalTitle').textContent = 'Add Service';
-    ['svcName','svcPrice','svcDuration','svcCategory','svcDesc'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('svcDrawerTitle').textContent = 'Add Service';
+    ['svcName','svcPrice','svcDuration','svcCategory','svcDesc'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     document.getElementById('svcStatus').value = 'active';
-    const m = document.getElementById('serviceModal');
-    m.classList.remove('hidden'); m.classList.add('flex');
+    document.getElementById('variantsList').innerHTML = '';
+    switchDrawerTab('service');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('serviceDrawer');
+    backdrop.classList.remove('closed'); backdrop.classList.add('open');
+    drawer.classList.remove('overlay-closed'); drawer.classList.add('overlay-open');
 }
-function openEditServiceModal(id, name, description, price, duration, category, status) {
+function openEditServiceDrawer(id, name, description, price, duration, category, status, variants) {
     document.getElementById('serviceForm').action = '{{ url('services') }}/' + id;
     document.getElementById('svcMethodField').innerHTML = '@method('PUT')';
-    document.getElementById('svcModalTitle').textContent = 'Edit Service';
+    document.getElementById('svcDrawerTitle').textContent = 'Edit Service';
     document.getElementById('svcName').value = name;
     document.getElementById('svcDesc').value = description;
     document.getElementById('svcPrice').value = price;
     document.getElementById('svcDuration').value = duration;
     document.getElementById('svcCategory').value = category;
     document.getElementById('svcStatus').value = status;
-    const m = document.getElementById('serviceModal');
-    m.classList.remove('hidden'); m.classList.add('flex');
+    // Render variants
+    const vList = document.getElementById('variantsList');
+    vList.innerHTML = '';
+    if (variants && variants.length) {
+        variants.forEach(v => addVariantRow(v.name, v.price, v.duration));
+    }
+    switchDrawerTab('service');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('serviceDrawer');
+    backdrop.classList.remove('closed'); backdrop.classList.add('open');
+    drawer.classList.remove('overlay-closed'); drawer.classList.add('overlay-open');
 }
-function closeServiceModal() {
-    const m = document.getElementById('serviceModal');
-    m.classList.add('hidden'); m.classList.remove('flex');
+function closeServiceDrawer() {
+    const backdrop = document.getElementById('drawerBackdrop');
+    const drawer = document.getElementById('serviceDrawer');
+    backdrop.classList.remove('open'); backdrop.classList.add('closed');
+    drawer.classList.remove('overlay-open'); drawer.classList.add('overlay-closed');
 }
+
+// Variants
+function addVariantRow(name, price, duration) {
+    const list = document.getElementById('variantsList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 variant-row bg-gray-50 rounded-lg p-2';
+    div.innerHTML = `
+        <input type="text" name="variant_names[]" value="${name||''}" placeholder="Variant name" class="flex-1 px-2 py-1.5 border rounded text-xs outline-none focus:border-emerald-500">
+        <input type="number" name="variant_prices[]" value="${price||''}" placeholder="Price" class="w-20 px-2 py-1.5 border rounded text-xs outline-none focus:border-emerald-500">
+        <input type="text" name="variant_durations[]" value="${duration||''}" placeholder="Duration" class="w-24 px-2 py-1.5 border rounded text-xs outline-none focus:border-emerald-500">
+        <button type="button" onclick="this.closest('.variant-row').remove()" class="p-1 text-gray-400 hover:text-red-500"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+    `;
+    list.appendChild(div);
+}
+
+// Settings rows
+function addServiceCategoryRow() {
+    const list = document.getElementById('drawerServiceCategories');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 svc-cat-row';
+    div.innerHTML = '<input type="text" name="service_categories[]" placeholder="Category name" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.svc-cat-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+function addDurationRow() {
+    const list = document.getElementById('drawerDurationsList');
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-2 dur-row';
+    div.innerHTML = '<input type="text" name="service_durations[]" placeholder="Duration e.g. 1 Hour" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"><button type="button" onclick="this.closest(\'.dur-row\').remove()" class="p-2 text-gray-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>';
+    list.appendChild(div);
+}
+
+// Export functions
+function toggleExportDropdown() {
+    document.getElementById('exportDropdown').classList.toggle('hidden');
+}
+document.addEventListener('click', function(e) {
+    const c = document.getElementById('exportDropdownContainer');
+    if (c && !c.contains(e.target)) document.getElementById('exportDropdown').classList.add('hidden');
+});
+function printServices() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    window.print();
+}
+function exportCSV() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    const rows = document.querySelectorAll('tbody tr');
+    let csv = 'Service,Price,Duration,Status,Category,Bookings\n';
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            const name = cells[0].innerText.replace(/\n/g, ' ').replace(/,/g, ' ').trim();
+            const price = cells[1].innerText.replace(/[^0-9]/g, '').trim();
+            const duration = cells[2].innerText.trim();
+            const status = cells[3].innerText.trim();
+            const bookings = cells[4].innerText.trim();
+            csv += '"' + name + '","' + price + '","' + duration + '","' + status + '","' + bookings + '"\n';
+        }
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'services_{{ now()->format('Y-m-d') }}.csv';
+    link.click();
+}
+function exportPDF() {
+    document.getElementById('exportDropdown').classList.add('hidden');
+    const rows = document.querySelectorAll('tbody tr');
+    let html = `<html><head><title>Services Report</title><style>body{font-family:Arial,sans-serif;padding:40px;}h1{color:#059669;font-size:24px;margin-bottom:8px;}.subtitle{color:#6b7280;font-size:12px;margin-bottom:24px;}table{width:100%;border-collapse:collapse;margin-top:16px;}th{background:#059669;color:white;padding:10px;text-align:left;font-size:11px;text-transform:uppercase;}td{padding:10px;border-bottom:1px solid #e5e7eb;font-size:11px;}tr:nth-child(even){background:#f9fafb;}.footer{margin-top:30px;font-size:10px;color:#9ca3af;border-top:1px solid #e5e7eb;padding-top:12px;}.badge{padding:2px 8px;border-radius:999px;font-size:10px;font-weight:bold;}.badge-green{background:#d1fae5;color:#065f46;}.badge-amber{background:#fef3c7;color:#92400e;}.badge-gray{background:#f3f4f6;color:#4b5563;}</style></head><body><h1>Services Catalog</h1><div class="subtitle">Generated on {{ now()->format('F d, Y H:i') }} | {{ $stats['total'] }} services</div><table><thead><tr><th>Service</th><th>Price</th><th>Duration</th><th>Status</th><th>Bookings</th></tr></thead><tbody>`;
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) {
+            const name = cells[0].innerText.replace(/\n/g, ' ').trim();
+            const price = cells[1].innerText.trim();
+            const duration = cells[2].innerText.trim();
+            const status = cells[3].innerText.trim();
+            const bookings = cells[4].innerText.trim();
+            let bc = 'badge-gray';
+            if (status === 'Active') bc = 'badge-green';
+            if (status === 'Paused') bc = 'badge-amber';
+            html += '<tr><td>' + name + '</td><td>' + price + '</td><td>' + duration + '</td><td><span class="badge ' + bc + '">' + status + '</span></td><td>' + bookings + '</td></tr>';
+        }
+    });
+    html += `</tbody></table><div class="footer"><strong>{{ $user->business_name ?? auth()->user()->first_name }}</strong> | Services Report<br>Printed on {{ now()->format('F d, Y H:i') }}</div></body></html>`;
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    setTimeout(() => win.print(), 500);
+}
+
 function deleteService(id, name) {
     saConfirm({
         title: 'Delete Service?',
