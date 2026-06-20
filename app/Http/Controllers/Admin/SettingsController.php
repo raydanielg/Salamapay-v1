@@ -13,8 +13,13 @@ class SettingsController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->get('action') === 'seed') {
+            Artisan::call('db:seed', ['--class' => 'SystemSettingSeeder', '--force' => true]);
+            return back()->with('success', 'Settings reset to defaults');
+        }
+
         $settings = SystemSetting::orderBy('group')->orderBy('key')->get()->groupBy('group');
         return view('admin.settings.index', compact('settings'));
     }

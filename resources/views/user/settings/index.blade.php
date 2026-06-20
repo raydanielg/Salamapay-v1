@@ -37,9 +37,25 @@
                         <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" required>
                     </div>
                 </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Business Name</label>
+                        <input type="text" name="business_name" value="{{ old('business_name', $user->business_name ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. My Business">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Business Type</label>
+                        <select name="business_type" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
+                            <option value="">Select type</option>
+                            <option value="sole_proprietorship" {{ old('business_type', $user->business_type) === 'sole_proprietorship' ? 'selected' : '' }}>Sole Proprietorship</option>
+                            <option value="partnership" {{ old('business_type', $user->business_type) === 'partnership' ? 'selected' : '' }}>Partnership</option>
+                            <option value="limited_company" {{ old('business_type', $user->business_type) === 'limited_company' ? 'selected' : '' }}>Limited Company</option>
+                            <option value="ngo" {{ old('business_type', $user->business_type) === 'ngo' ? 'selected' : '' }}>NGO</option>
+                        </select>
+                    </div>
+                </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Business Name</label>
-                    <input type="text" name="business_name" value="{{ old('business_name', $user->business_name ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. My Business">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Business TIN (Tax ID)</label>
+                    <input type="text" name="business_tin" value="{{ old('business_tin', $user->business_tin ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. 123-456-789">
                 </div>
                 <div class="pt-2">
                     <button type="submit" class="px-5 py-2 text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">Save Account</button>
