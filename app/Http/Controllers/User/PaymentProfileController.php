@@ -25,7 +25,7 @@ class PaymentProfileController extends Controller
             });
         }
 
-        $profiles = $query->orderBy('name')->get();
+        $profiles = $query->with('paymentLinks')->orderBy('name')->get();
         return view('user.payment-profiles.index', compact('profiles'));
     }
 
