@@ -266,6 +266,65 @@
             menu.classList.toggle('open');
             if (arrow) arrow.classList.toggle('rotate-180');
         }
+
+        // Notification dropdown
+        function toggleNotifications() {
+            const dd = document.getElementById('notifDropdown');
+            dd.classList.toggle('hidden');
+        }
+        function markAllRead() {
+            const badge = document.getElementById('notifBadge');
+            if (badge) badge.style.display = 'none';
+            const dots = document.querySelectorAll('#notifList .bg-gold-400');
+            dots.forEach(d => d.style.display = 'none');
+        }
+        // Close notification when clicking outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('notifContainer');
+            if (container && !container.contains(e.target)) {
+                document.getElementById('notifDropdown')?.classList.add('hidden');
+            }
+        });
+
+        // Global search: filter transactions table on dashboard
+        (function() {
+            const searchInput = document.getElementById('globalSearch');
+            if (!searchInput) return;
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const q = this.value.toLowerCase().trim();
+                searchTimeout = setTimeout(function() {
+                    const rows = document.querySelectorAll('.tx-row');
+                    rows.forEach(function(row) {
+                        const text = (row.dataset.searchText || row.innerText).toLowerCase();
+                        if (!q || text.includes(q)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    // Show/hide no results row if exists
+                    const tbody = document.querySelector('table tbody');
+                    if (tbody) {
+                        const visible = Array.from(rows).filter(r => r.style.display !== 'none');
+                        let noRes = document.getElementById('searchNoResults');
+                        if (visible.length === 0 && rows.length > 0) {
+                            if (!noRes) {
+                                noRes = document.createElement('tr');
+                                noRes.id = 'searchNoResults';
+                                noRes.innerHTML = '<td colspan="6" class="px-5 py-8 text-center text-gray-400"><p class="text-sm font-medium">No transactions match your search</p></td>';
+                                tbody.appendChild(noRes);
+                            } else {
+                                noRes.style.display = '';
+                            }
+                        } else if (noRes) {
+                            noRes.style.display = 'none';
+                        }
+                    }
+                }, 200);
+            });
+        })();
     </script>
     @stack('scripts')
 </body>
