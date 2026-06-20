@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Blog - SalamaPay</title>
     <meta name="description" content="SalamaPay blog - News, insights, and updates about digital payments in Africa.">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -85,11 +86,41 @@
     </div>
 </section>
 
-<section class="py-16 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Ready to grow your business?</h2>
-        <p class="text-lg text-gray-500 mb-8">Join thousands of businesses using SalamaPay.</p>
-        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-8 py-3 text-sm font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-lg transition-all">Get Started Free</a>
+<section class="py-16 bg-gradient-to-br from-emerald-50 via-white to-gold-50">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-lg p-8 md:p-10 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Stay in the loop</h3>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto">Get the latest fintech insights, payment tips, and SalamaPay updates delivered straight to your inbox. No spam, ever.</p>
+
+            <form id="newsletterForm" class="max-w-md mx-auto">
+                @csrf
+                <input type="hidden" name="source" value="blog_list">
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input
+                        type="email"
+                        name="email"
+                        id="newsletterEmail"
+                        placeholder="Enter your email"
+                        required
+                        class="flex-1 px-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                    >
+                    <button
+                        type="submit"
+                        id="newsletterBtn"
+                        class="px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 rounded-xl shadow-lg shadow-emerald-500/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    >
+                        <span id="btnText">Subscribe</span>
+                        <svg id="btnSpinner" class="w-4 h-4 hidden animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </button>
+                </div>
+                <p id="newsletterMessage" class="mt-3 text-sm min-h-[20px]"></p>
+            </form>
+
+            <p class="text-xs text-gray-400 mt-4">Join 2,000+ subscribers. Unsubscribe anytime.</p>
+        </div>
     </div>
 </section>
 
@@ -98,6 +129,72 @@
         <p class="text-gray-400 text-sm">&copy; {{ date('Y') }} SalamaPay. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const email = document.getElementById('newsletterEmail');
+    const btn = document.getElementById('newsletterBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const msg = document.getElementById('newsletterMessage');
+
+    msg.className = 'mt-3 text-sm min-h-[20px]';
+    msg.textContent = '';
+    email.style.borderColor = '';
+
+    if (!email.value || !email.value.includes('@')) {
+        email.style.borderColor = '#f87171';
+        msg.textContent = 'Please enter a valid email address.';
+        msg.className = 'mt-3 text-sm min-h-[20px] text-red-600 font-medium';
+        return;
+    }
+
+    btn.disabled = true;
+    btnText.textContent = 'Subscribing...';
+    btnSpinner.classList.remove('hidden');
+    btn.classList.add('opacity-75');
+
+    fetch('{{ route("newsletter.subscribe") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            email: email.value,
+            source: form.querySelector('[name="source"]').value
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        btn.disabled = false;
+        btnText.textContent = 'Subscribe';
+        btnSpinner.classList.add('hidden');
+        btn.classList.remove('opacity-75');
+
+        if (data.success) {
+            msg.textContent = data.message;
+            msg.className = 'mt-3 text-sm min-h-[20px] text-emerald-600 font-medium';
+            msg.style.animation = 'pop 0.4s ease';
+            email.value = '';
+            btnText.textContent = 'Subscribed!';
+        } else {
+            throw new Error(data.message || 'Something went wrong.');
+        }
+    })
+    .catch(err => {
+        btn.disabled = false;
+        btnText.textContent = 'Subscribe';
+        btnSpinner.classList.add('hidden');
+        btn.classList.remove('opacity-75');
+        msg.textContent = err.message || 'Network error. Please try again.';
+        msg.className = 'mt-3 text-sm min-h-[20px] text-red-600 font-medium';
+        email.style.borderColor = '#f87171';
+    });
+});
+</script>
 
 </body>
 </html>
