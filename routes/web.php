@@ -52,6 +52,8 @@ Auth::routes();
 
 Route::get('/register/success', [App\Http\Controllers\Auth\RegisterController::class, 'showSuccess'])->name('register.success');
 
+Route::get('/receipt/{txId}', [App\Http\Controllers\ReceiptController::class, 'show'])->name('receipt.public');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/pricing', function () {
