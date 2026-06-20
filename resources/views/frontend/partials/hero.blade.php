@@ -53,17 +53,24 @@
         </div>
     </div>
     <div class="relative z-10 max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-20 lg:py-28 xl:py-36">
-        <div class="grid lg:grid-cols-2 gap-12 xl:gap-16 items-center">
-            <div class="text-center lg:text-left">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+            {{-- Image Column -- mobile: order 1 (top), desktop: order 2 (right) --}}
+            <div class="flex items-center justify-center relative order-1 lg:order-2">
+                <div class="relative animate-float w-[300px] h-[350px] sm:w-[400px] sm:h-[460px] md:w-[500px] md:h-[580px] lg:w-[520px] lg:h-[600px] xl:w-[680px] xl:h-[790px] 2xl:w-[760px] 2xl:h-[890px]">
+                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Happy user" class="absolute inset-0 w-full h-full object-contain object-bottom" style="-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%);">
+                </div>
+            </div>
+            {{-- Text Column -- mobile: order 2 (bottom), desktop: order 1 (left) --}}
+            <div class="text-center lg:text-left order-2 lg:order-1">
                 <a href="#" class="animate-fade-up delay-1 inline-flex justify-between items-center py-1 pr-4 pl-1 xl:pr-5 xl:pl-1.5 mb-6 xl:mb-8 text-xs xl:text-sm text-emerald-100 bg-white/10 backdrop-blur-sm border border-emerald-400/30 rounded-full hover:bg-white/15 hover:border-emerald-400/50 transition-all">
                     <span class="text-[10px] xl:text-xs font-bold bg-emerald-500 rounded-full text-white px-3 py-1 mr-2 uppercase tracking-wide">New</span>
                     <span class="font-medium" data-en="SalamaPay v1 is live" data-sw="SalamaPay v1 imetoka">SalamaPay v1 is live</span>
                     <svg class="ml-1.5 w-3.5 h-3.5 xl:w-4 xl:h-4 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 </a>
-                <h1 class="animate-fade-up delay-2 text-[2.8rem] md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] 2xl:text-[6.5rem] font-extrabold text-white leading-[1.1] mb-6 xl:mb-8">
+                <h1 class="animate-fade-up delay-2 text-[2.5rem] sm:text-[2.8rem] md:text-6xl lg:text-[4.2rem] xl:text-[5.5rem] 2xl:text-[6.5rem] font-extrabold text-white leading-[1.1] mb-6 xl:mb-8">
                     <span data-en="Pay With Ease," data-sw="Lipa kwa">Pay With Ease,</span><br><span class="text-gold-300" data-en="Business Receives Fast" data-sw="Urahisi">Business Receives Fast</span>
                 </h1>
-                <p class="animate-fade-up delay-3 text-xl md:text-2xl xl:text-3xl text-emerald-100/80 max-w-xl xl:max-w-2xl mx-auto lg:mx-0 mb-8 xl:mb-10 leading-relaxed">
+                <p class="animate-fade-up delay-3 text-lg sm:text-xl md:text-2xl xl:text-3xl text-emerald-100/80 max-w-xl xl:max-w-2xl mx-auto lg:mx-0 mb-8 xl:mb-10 leading-relaxed">
                     <span data-en="SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place." data-sw="SalamaPay ni daraja kati ya mteja anayelipa na biashara inayopokea pesa. Lipa kwa M-Pesa, Airtel Money, benki au kadi - kila kitu kimoja.">SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place.</span>
                 </p>
                 <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-4 xl:gap-5 justify-center lg:justify-start mb-10 xl:mb-12">
@@ -80,11 +87,6 @@
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Online Payments Only</div>
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Bank-Level Security</div>
                     <div class="flex items-center gap-1.5"><svg class="w-5 h-5 xl:w-6 xl:h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Instant Transactions</div>
-                </div>
-            </div>
-            <div class="hidden lg:flex items-center justify-center relative">
-                <div class="relative animate-float w-[620px] h-[720px] xl:w-[720px] xl:h-[840px] 2xl:w-[800px] 2xl:h-[940px]">
-                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Happy user" class="absolute inset-0 w-full h-full object-contain object-bottom" style="-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 95%);">
                 </div>
             </div>
         </div>
