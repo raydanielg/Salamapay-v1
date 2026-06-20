@@ -39,4 +39,39 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function paymentLinks()
+    {
+        return $this->hasMany(PaymentLink::class);
+    }
+
+    public function settlements()
+    {
+        return $this->hasMany(Settlement::class);
+    }
+
+    public function bankAccounts()
+    {
+        return $this->hasMany(BankAccount::class);
+    }
+
+    public function balance()
+    {
+        return $this->hasOne(Balance::class);
+    }
+
+    public function apiKeys()
+    {
+        return $this->hasMany(ApiKey::class);
+    }
+
+    public function webhooks()
+    {
+        return $this->hasMany(Webhook::class);
+    }
 }
