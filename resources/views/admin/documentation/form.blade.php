@@ -111,4 +111,23 @@
         @endif
     </div>
 </div>
+
+<script>
+function copyFormMd() {
+    const title = document.querySelector('input[name="title"]').value || 'Untitled';
+    const slug = document.querySelector('input[name="slug"]').value || '';
+    const category = document.querySelector('select[name="category"]')?.value || 'general';
+    const content = document.getElementById('docContent').value;
+    const md = '# ' + title + '\n\n'
+        + '**Category:** ' + category + '\n'
+        + '**Slug:** `' + slug + '`\n'
+        + '**Updated:** ' + new Date().toISOString() + '\n\n---\n\n'
+        + content + '\n';
+    navigator.clipboard.writeText(md).then(() => {
+        alert('Markdown copied to clipboard!');
+    }).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = md; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Markdown copied!');
+    });
+}
+</script>
 @endsection
