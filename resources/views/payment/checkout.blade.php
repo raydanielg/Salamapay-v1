@@ -56,55 +56,74 @@
     @endif
 
     <main class="flex flex-1 flex-col lg:flex-row">
-        {{-- Left: Amount & Merchant Info --}}
-        <div class="lg:col-span-2 space-y-4 animate-slide-up animate-delay-1">
-            {{-- Amount Card --}}
-            <div class="bg-white rounded-2xl border p-5">
-                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">Amount to Pay</p>
-                @if($link->amount)
-                <p class="text-3xl font-extrabold text-gray-900 tracking-tight">TZS {{ number_format($link->amount) }}</p>
-                <p class="text-xs text-gray-400 mt-1">Fixed amount set by merchant</p>
-                @else
-                <p class="text-sm text-gray-500 mb-2">Enter the amount you want to pay</p>
-                @endif
-            </div>
+        {{-- Left Column: Amount & Merchant Info --}}
+        <div class="w-full lg:w-1/2 lg:flex lg:items-start lg:justify-end">
+            <div class="w-full max-w-lg px-5 pt-5 pb-6 md:px-6 md:pt-6 lg:h-full lg:px-10 lg:pt-8 lg:pb-10">
+                <div class="flex h-full flex-col">
 
-            {{-- Merchant Info --}}
-            <div class="bg-white rounded-2xl border p-5">
-                <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mb-3">Merchant</p>
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                        {{ strtoupper(substr($link->merchantName(), 0, 1)) }}
+                    {{-- Amount Section --}}
+                    <div class="anim-fade-up">
+                        <p class="text-sm text-gray-500 mb-1">Pay</p>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">TZS</span>
+                            @if($link->amount)
+                                <input type="text" readonly value="{{ number_format($link->amount) }}" class="tabular w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 text-base font-semibold text-gray-900 bg-gray-50 outline-none">
+                            @else
+                                <input type="number" name="amount" id="amountInput" min="100" value="{{ old('amount') }}" placeholder="1,000" class="tabular w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 text-base font-semibold text-gray-900 bg-white outline-none input-field transition-all" required>
+                            @endif
+                        </div>
+                        <p class="text-gray-400 mt-1.5 text-xs">Between TSh 1,000 and TSh 500,000</p>
                     </div>
-                    <div class="min-w-0">
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ $link->merchantName() }}</p>
-                        <p class="text-xs text-gray-500 truncate">{{ $merchant->email ?? $link->user->email }}</p>
-                    </div>
-                </div>
-                @if($link->profile && $link->profile->description)
-                <div class="mt-3 pt-3 border-t">
-                    <p class="text-xs text-gray-600 leading-relaxed">{{ $link->profile->description }}</p>
-                </div>
-                @endif
-                @if($link->profile && ($link->profile->business_type || $link->profile->phone))
-                <div class="mt-3 pt-3 border-t space-y-1.5 text-xs text-gray-500">
-                    @if($link->profile->business_type)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>Type: <span class="text-gray-700 font-medium">{{ $link->profile->business_type }}</span></p>@endif
-                    @if($link->profile->phone)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Phone: <span class="text-gray-700 font-medium">{{ $link->profile->phone }}</span></p>@endif
-                    @if($link->profile->business_tin)<p class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>TIN: <span class="text-gray-700 font-medium">{{ $link->profile->business_tin }}</span></p>@endif
-                </div>
-                @elseif($merchant->business_name)
-                <div class="mt-3 pt-3 border-t space-y-1 text-xs text-gray-500">
-                    @if($merchant->business_type)<p>Type: <span class="text-gray-700">{{ $merchant->business_type }}</span></p>@endif
-                    @if($merchant->phone)<p>Phone: <span class="text-gray-700">{{ $merchant->phone }}</span></p>@endif
-                </div>
-                @endif
-            </div>
 
-            {{-- Security Badge --}}
-            <div class="bg-emerald-900 rounded-2xl p-4 text-white text-center">
-                <svg class="w-6 h-6 mx-auto mb-1 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <p class="text-xs font-medium">Secure payment powered by SalamaPay</p>
-                <p class="text-[10px] text-emerald-300 mt-0.5">SSL encrypted & PCI compliant</p>
+                    {{-- Title --}}
+                    <div class="mt-5 md:mt-8 anim-fade-up delay-1">
+                        <h3 class="text-xl tracking-tight md:text-2xl font-medium leading-relaxed text-gray-900">{{ $link->title }}</h3>
+                        @if($link->description)
+                            <p class="text-sm text-gray-500 mt-1.5 leading-relaxed">{{ $link->description }}</p>
+                        @endif
+                    </div>
+
+                    {{-- Profile Info --}}
+                    @if($link->profile && $link->profile->description)
+                    <div class="mt-4 anim-fade-up delay-1">
+                        <div class="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="w-2 h-2 rounded-full" style="background: {{ $link->profile->color ?? '#024938' }}"></span>
+                                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">About {{ $link->profile->business_name }}</span>
+                            </div>
+                            <p class="text-sm text-gray-600 leading-relaxed">{{ $link->profile->description }}</p>
+                            @if($link->profile->business_type || $link->profile->phone)
+                            <div class="mt-3 pt-3 border-t border-gray-200/60 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                                @if($link->profile->business_type)<span>Type: <span class="font-medium text-gray-700">{{ $link->profile->business_type }}</span></span>@endif
+                                @if($link->profile->phone)<span>Phone: <span class="font-medium text-gray-700">{{ $link->profile->phone }}</span></span>@endif
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
+                    {{-- Custom Fields Preview --}}
+                    @if(!empty($link->custom_fields))
+                    <div class="mt-4 anim-fade-up delay-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Additional Info Required</p>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($link->custom_fields as $field)
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-50 border border-gray-200 text-xs text-gray-600">
+                                {{ $field['label'] }}
+                                @if($field['required'])<span class="text-red-400 text-[10px]">*</span>@endif
+                            </span>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    {{-- Bottom: Secured by --}}
+                    <div class="mt-auto hidden items-center justify-between pt-6 lg:flex anim-fade-up delay-2">
+                        <div class="text-right w-full">
+                            <p class="text-gray-400 text-xs">Secured by <span class="font-semibold text-gray-600">SalamaPay</span></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
