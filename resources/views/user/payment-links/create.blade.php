@@ -38,6 +38,17 @@
                     <input type="text" name="title" value="{{ old('title') }}" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="e.g. Monthly Subscription" required>
                 </div>
                 <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Profile</label>
+                    <select name="profile_id" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none bg-white transition-all">
+                        @forelse($profiles as $p)
+                            <option value="{{ $p->id }}" {{ $p->is_default ? 'selected' : '' }}>{{ $p->name }} — {{ $p->business_name }}</option>
+                        @empty
+                            <option value="" disabled selected>No profiles yet</option>
+                        @endforelse
+                    </select>
+                    <p class="text-[10px] text-gray-400 mt-1">Select which business profile to show on the public page</p>
+                </div>
+                <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1.5">Description (optional)</label>
                     <textarea name="description" rows="3" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none resize-none transition-all" placeholder="What is this payment for?">{{ old('description') }}</textarea>
                 </div>
@@ -72,6 +83,76 @@
                         <p class="text-[10px] text-gray-400 mt-1">Leave empty for no expiry</p>
                     </div>
                 </div>
+                {{-- Custom Fields Builder --}}
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-2">Custom Fields</label>
+                    <p class="text-[10px] text-gray-400 mb-2">Collect extra info from customers at checkout (name, phone, notes, etc.)</p>
+                    <div id="customFieldsContainer" class="space-y-2"></div>
+                    <button type="button" onclick="addCustomField()" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                        Add Custom Field
+                    </button>
+                    <input type="hidden" name="custom_fields" id="customFieldsJson" value="">
+                </div>
+
+                <script>
+                let customFields = [];
+                const fieldTypes = [
+                    { value: 'text', label: 'Text' },
+                    { value: 'email', label: 'Email' },
+                    { value: 'tel', label: 'Phone' },
+                    { value: 'textarea', label: 'Notes' },
+                    { value: 'number', label: 'Number' },
+                ];
+
+                function addCustomField(data = null) {
+                    const idx = customFields.length;
+                    const field = data || { label: '', type: 'text', required: false };
+                    customFields.push(field);
+                    renderFields();
+                }
+
+                function removeCustomField(idx) {
+                    customFields.splice(idx, 1);
+                    renderFields();
+                }
+
+                function updateField(idx, key, value) {
+                    customFields[idx][key] = value;
+                    if (key === 'label') {
+                        customFields[idx].name = value.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, '');
+                    }
+                    renderFields();
+                }
+
+                function renderFields() {
+                    const container = document.getElementById('customFieldsContainer');
+                    container.innerHTML = customFields.map((f, i) => `
+                        <div class="flex items-center gap-2 p-2 rounded-lg bg-gray-50 border border-gray-100">
+                            <input type="text" value="${f.label}" onchange="updateField(${i}, 'label', this.value)" placeholder="Field label" class="flex-1 min-w-0 px-2 py-1.5 rounded-md border border-gray-200 text-xs outline-none focus:border-emerald-500">
+                            <select onchange="updateField(${i}, 'type', this.value)" class="px-2 py-1.5 rounded-md border border-gray-200 text-xs outline-none focus:border-emerald-500 bg-white">
+                                ${fieldTypes.map(t => `<option value="${t.value}" ${f.type === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
+                            </select>
+                            <label class="flex items-center gap-1 text-[10px] text-gray-500 cursor-pointer shrink-0">
+                                <input type="checkbox" onchange="updateField(${i}, 'required', this.checked)" ${f.required ? 'checked' : ''} class="rounded">
+                                Req
+                            </label>
+                            <button type="button" onclick="removeCustomField(${i})" class="text-red-400 hover:text-red-600 transition-colors shrink-0 p-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    `).join('');
+                    document.getElementById('customFieldsJson').value = JSON.stringify(customFields);
+                }
+
+                // Pre-fill if old value exists
+                const oldCustomFields = @json(old('custom_fields'));
+                if (oldCustomFields && Array.isArray(oldCustomFields)) {
+                    customFields = oldCustomFields;
+                    renderFields();
+                }
+                </script>
+
                 <div class="pt-2 flex items-center gap-3">
                     <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5">Create Link</button>
                     <a href="{{ route('user.payment-links') }}" class="text-sm text-gray-500 hover:text-gray-700 font-medium px-3 py-2">Cancel</a>
