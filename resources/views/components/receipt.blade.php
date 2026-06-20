@@ -1,61 +1,66 @@
-<div class="receipt-card bg-white rounded-none border border-gray-300 shadow-sm overflow-hidden max-w-[280px] mx-auto" id="receiptCard" style="font-family:'Courier New',Courier,monospace;">
-    {{-- Merchant --}}
-    <div class="px-3 pt-3 pb-1 text-center border-b border-dashed border-gray-300">
-        <p class="text-[10px] font-bold text-gray-900 uppercase">{{ $transaction->user?->business_name ?? 'MERCHANT' }}</p>
-        <p class="text-[8px] text-gray-500">{{ $transaction->user?->email ?? 'support@salamapay.com' }}</p>
-    </div>
-
-    {{-- Title --}}
-    <div class="text-center py-1 border-b border-dotted border-gray-300">
-        <p class="text-[9px] text-gray-500 font-bold">*** PAYMENT RECEIPT ***</p>
-        <p class="text-[8px] text-gray-400 font-mono">{{ $transaction->processed_at?->format('Y-m-d H:i') ?? now()->format('Y-m-d H:i') }}</p>
-    </div>
-
-    {{-- Items --}}
-    <div class="px-3 py-1 text-[9px] space-y-0.5 border-b border-dotted border-gray-300">
-        <p class="text-gray-500">QTY  ITEM</p>
-        <div class="flex justify-between">
-            <span>1x Payment</span>
-            <span class="font-mono">{{ number_format($transaction->amount) }}</span>
-        </div>
-        <div class="border-t border-dotted border-gray-300 my-1"></div>
-        <div class="flex justify-between font-bold text-[10px]">
-            <span>TOTAL</span>
-            <span class="font-mono">{{ $transaction->currency }} {{ number_format($transaction->amount) }}</span>
+<div class="receipt-card bg-white rounded-xl border-2 border-gray-100 shadow-sm overflow-hidden" id="receiptCard">
+    {{-- Merchant Info --}}
+    <div class="px-6 py-4 border-b border-gray-100">
+        <div class="text-center">
+            <p class="text-sm font-bold text-gray-900">{{ $transaction->user?->business_name ?? 'Business' }}</p>
+            <p class="text-[11px] text-gray-500 mt-0.5">{{ $transaction->user?->email ?? 'support@salamapay.com' }}</p>
         </div>
     </div>
 
-    {{-- Payment Info --}}
-    <div class="px-3 py-1 text-[8px] space-y-0.5 border-b border-dotted border-gray-300">
-        <p class="text-gray-500">PAYMENT INFO</p>
-        <p>REF:  <span class="font-mono font-bold">{{ $transaction->tx_id }}</span></p>
-        <p>DATE: <span class="font-mono">{{ $transaction->processed_at?->format('d-m-Y') ?? 'N/A' }}</span></p>
-        <p>TIME: <span class="font-mono">{{ $transaction->processed_at?->format('H:i:s') ?? 'N/A' }}</span></p>
-        <p>METHOD: <span class="font-bold">{{ strtoupper($transaction->method) }}</span></p>
-        <p>STATUS: <span class="font-bold
-            @if($transaction->status === 'success') text-emerald-700
-            @elseif($transaction->status === 'pending') text-amber-700
-            @else text-red-700 @endif">
-            {{ strtoupper($transaction->status) }}
-        </span></p>
+    {{-- Amount Highlight --}}
+    <div class="px-6 py-5 bg-gray-50/50">
+        <div class="flex items-baseline justify-center gap-1">
+            <span class="text-sm text-gray-500 font-medium">{{ $transaction->currency }}</span>
+            <span class="text-3xl font-extrabold text-gray-900">{{ number_format($transaction->amount) }}</span>
+            <span class="text-sm text-gray-500">/=</span>
+        </div>
+        <p class="text-center text-[11px] text-gray-400 mt-1">Total amount paid</p>
     </div>
 
-    {{-- Customer --}}
-    <div class="px-3 py-1 text-[8px] border-b border-dotted border-gray-300">
-        <p class="text-gray-500">CUSTOMER</p>
-        <p class="font-bold">{{ $transaction->customer_name }}</p>
-        <p>{{ $transaction->customer_email }}</p>
-    </div>
-
-    {{-- Cut line --}}
-    <div class="px-3 py-1 text-center border-b-2 border-dashed border-gray-400">
-        <p class="text-[7px] text-gray-400">- - - - - - - - - - CUT HERE - - - - - - - - - -</p>
+    {{-- Details Grid --}}
+    <div class="px-6 py-4 space-y-3">
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Transaction ID</span>
+            <span class="text-xs font-mono font-semibold text-gray-900">{{ $transaction->tx_id }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Date & Time</span>
+            <span class="text-xs font-semibold text-gray-900">{{ $transaction->processed_at?->format('M d, Y H:i') ?? 'N/A' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Payment Method</span>
+            <span class="text-xs font-semibold text-gray-900">{{ $transaction->method }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Customer</span>
+            <span class="text-xs font-semibold text-gray-900">{{ $transaction->customer_name }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Email</span>
+            <span class="text-xs font-semibold text-gray-900">{{ $transaction->customer_email }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+            <span class="text-xs text-gray-500">Currency</span>
+            <span class="text-xs font-semibold text-gray-900">{{ $transaction->currency }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2">
+            <span class="text-xs text-gray-500">Status</span>
+            <span class="text-xs font-semibold
+                @if($transaction->status === 'success') text-emerald-700
+                @elseif($transaction->status === 'pending') text-amber-700
+                @else text-red-700 @endif">
+                {{ ucfirst($transaction->status) }}
+            </span>
+        </div>
     </div>
 
     {{-- Footer --}}
-    <div class="px-3 py-2 text-center">
-        <p class="text-[7px] text-gray-400 font-bold">Verified by SalamaPay</p>
-        <p class="text-[6px] text-gray-400">www.salamapay.com</p>
-        <p class="text-[7px] text-gray-400 mt-1">*** THANK YOU ***</p>
+    <div class="px-6 py-4 bg-gray-50 border-t border-dashed border-gray-200 text-center">
+        <div class="flex items-center justify-center gap-1.5 mb-1">
+            <svg class="w-3.5 h-3.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <p class="text-[10px] text-gray-500 font-medium">Verified by SalamaPay</p>
+        </div>
+        <p class="text-[9px] text-gray-400">This is an official receipt. Keep it for your records.</p>
+        <p class="text-[9px] text-gray-400 mt-0.5">www.salamapay.com</p>
     </div>
 </div>
