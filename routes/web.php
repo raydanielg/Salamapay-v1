@@ -8,6 +8,12 @@ Route::get('/', function () {
     return view('landing');
 });
 
+// Public Payment Link Routes
+Route::get('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, 'show'])->name('payment.link');
+Route::post('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, 'process'])->name('payment.process');
+Route::get('/pay/{slug}/success', [App\Http\Controllers\PaymentLinkController::class, 'success'])->name('payment.success');
+Route::get('/pay/{slug}/receipt', [App\Http\Controllers\PaymentLinkController::class, 'receipt'])->name('payment.receipt');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
