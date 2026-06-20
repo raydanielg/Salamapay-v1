@@ -46,7 +46,7 @@ Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request
         'success' => true,
         'message' => 'Thank you for subscribing! Check your inbox for confirmation.',
     ]);
-})->name('newsletter.subscribe');
+})->name('newsletter.subscribe')->middleware('throttle:newsletter');
 
 Auth::routes();
 
