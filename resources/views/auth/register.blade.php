@@ -65,6 +65,8 @@
                 {{-- Phone with Tanzania Flag --}}
                 <div>
                     <label for="phone" class="block text-sm font-semibold text-gray-700 mb-1.5">Phone</label>
+                    {{-- Hidden: sends 255-prefixed value to server --}}
+                    <input type="hidden" name="phone" id="phone-hidden" value="{{ old('phone') }}">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                             <div class="flex items-center gap-1 bg-gray-50 border-r border-gray-200 px-2 py-1.5 rounded-l-md -ml-0.5 h-full">
@@ -72,9 +74,11 @@
                                 <span class="text-xs font-bold text-gray-700">+255</span>
                             </div>
                         </div>
-                        <input id="phone" type="tel" name="phone" value="{{ old('phone') }}" required
+                        {{-- Visible: only last 9 digits, no name attr so it's NOT submitted --}}
+                        <input id="phone-display" type="tel" required
                             class="w-full pl-[90px] pr-4 py-2.5 rounded-lg border @error('phone') border-red-300 ring-2 ring-red-100 @else border-gray-200 @enderror focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm"
-                            placeholder="7XX XXX XXX" maxlength="9">
+                            placeholder="7XX XXX XXX" maxlength="9"
+                            value="{{ old('phone') ? preg_replace('/^255/', '', old('phone')) : '' }}">
                     </div>
                     <p class="mt-1 text-xs text-gray-400">Enter number without +255 prefix</p>
                     @error('phone')
