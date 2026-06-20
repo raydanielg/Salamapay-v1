@@ -349,9 +349,58 @@
     </main>
 
     <script>
-    function selectPm(el) {
-        document.querySelectorAll('.pm-option').forEach(opt => opt.classList.remove('active'));
-        el.classList.add('active');
+    // Payment method switching
+    function selectMethod(type) {
+        document.querySelectorAll('.pm-card').forEach(c => {
+            c.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+            c.classList.add('border-gray-200');
+        });
+        const activeCard = document.querySelector('.pm-card[onclick*="' + type + '"]');
+        if (activeCard) {
+            activeCard.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+            activeCard.classList.remove('border-gray-200');
+        }
+
+        const mobileProviders = document.getElementById('mobileProviders');
+        const cardDetails = document.getElementById('cardDetails');
+        const mobilePhone = document.getElementById('mobilePhone');
+        const billingInfo = document.getElementById('billingInfo');
+
+        if (type === 'mobile') {
+            mobileProviders?.classList.remove('hidden');
+            cardDetails?.classList.add('hidden');
+            mobilePhone?.classList.remove('hidden');
+            billingInfo?.classList.add('hidden');
+            // Ensure first provider is selected
+            const firstProvider = document.querySelector('input[name="payment_method"]');
+            if (firstProvider) firstProvider.checked = true;
+            // Reset provider styles
+            document.querySelectorAll('.provider-btn').forEach(b => {
+                b.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+                b.classList.add('border-gray-200');
+            });
+            const firstBtn = document.querySelector('.provider-btn');
+            if (firstBtn) firstBtn.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+        } else {
+            mobileProviders?.classList.add('hidden');
+            cardDetails?.classList.remove('hidden');
+            mobilePhone?.classList.add('hidden');
+            billingInfo?.classList.remove('hidden');
+            // Set card as payment method
+            const cardRadio = document.querySelector('input[name="payment_method"][value="card"]');
+            if (cardRadio) cardRadio.checked = true;
+        }
+    }
+
+    function selectProvider(el, val) {
+        document.querySelectorAll('.provider-btn').forEach(b => {
+            b.classList.remove('active', 'border-emerald-800', 'bg-emerald-50/30');
+            b.classList.add('border-gray-200');
+        });
+        el.classList.add('active', 'border-emerald-800', 'bg-emerald-50/30');
+        el.classList.remove('border-gray-200');
+        const radio = el.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
     }
 
     // Phone input sync
@@ -361,6 +410,26 @@
         phoneDisplay.addEventListener('input', function() {
             this.value = this.value.replace(/\D/g, '').substring(0, 9);
             phoneHidden.value = '255' + this.value;
+        });
+    }
+
+    // Card number formatting
+    const cardNumberInput = document.querySelector('input[name="card_number"]');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 16);
+            this.value = this.value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        });
+    }
+
+    // Card expiry formatting
+    const cardExpiryInput = document.querySelector('input[name="card_expiry"]');
+    if (cardExpiryInput) {
+        cardExpiryInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 4);
+            if (this.value.length >= 2) {
+                this.value = this.value.substring(0, 2) + '/' + this.value.substring(2);
+            }
         });
     }
 
