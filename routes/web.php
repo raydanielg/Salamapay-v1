@@ -14,6 +14,10 @@ Route::post('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, '
 Route::get('/pay/{slug}/success', [App\Http\Controllers\PaymentLinkController::class, 'success'])->name('payment.success');
 Route::get('/pay/{slug}/receipt', [App\Http\Controllers\PaymentLinkController::class, 'receipt'])->name('payment.receipt');
 
+// Support Chat Widget (Public)
+Route::post('/support/message', [App\Http\Controllers\SupportMessageController::class, 'store'])->name('support.message.store');
+Route::get('/support/history', [App\Http\Controllers\SupportMessageController::class, 'history'])->name('support.message.history');
+
 // Newsletter AJAX subscription
 Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request) {
     $validated = $request->validate([
