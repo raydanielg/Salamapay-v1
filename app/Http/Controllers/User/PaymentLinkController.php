@@ -17,7 +17,8 @@ class PaymentLinkController extends Controller
 
     public function index()
     {
-        $links = PaymentLink::where('user_id', auth()->id())
+        $links = PaymentLink::with('profile')
+            ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 

@@ -63,6 +63,22 @@
                         {{ $link->amount ? 'TZS '.number_format($link->amount) : 'Custom' }}
                     </td>
                     <td class="px-5 py-3">
+                        @if($link->profile)
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full shrink-0" style="background-color: {{ $link->profile->color }}"></span>
+                                <span class="text-xs font-medium text-gray-700 truncate max-w-[120px]">{{ $link->profile->name }}</span>
+                            </div>
+                            @if(!empty($link->custom_fields))
+                                <span class="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-50 text-blue-600 border border-blue-100">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                                    {{ count($link->custom_fields) }} fields
+                                </span>
+                            @endif
+                        @else
+                            <span class="text-xs text-gray-400">Default</span>
+                        @endif
+                    </td>
+                    <td class="px-5 py-3">
                         <code class="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-0.5 rounded">{{ $link->slug }}</code>
                         <button onclick="copyToClipboard('{{ url('/pay/'.$link->slug) }}')" class="ml-1 text-xs text-emerald-600 hover:text-emerald-700">Copy</button>
                     </td>
@@ -78,7 +94,6 @@
                     <td class="px-5 py-3 text-xs text-gray-500">
                         {{ $link->expires_at ? $link->expires_at->format('M d, Y H:i') : 'Never' }}
                     </td>
-                    <td class="px-5 py-3 text-xs font-medium text-gray-700">{{ $link->usage_count }}</td>
                     <td class="px-5 py-3 text-right">
                         <a href="{{ route('user.payment-links.show', $link->id) }}" class="text-xs text-emerald-600 hover:text-emerald-700 font-medium mr-2">Details</a>
                         <a href="{{ url('/pay/'.$link->slug) }}" target="_blank" class="text-xs text-gray-500 hover:text-gray-700 font-medium mr-2">View</a>
