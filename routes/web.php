@@ -199,6 +199,12 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/payments/create', [App\Http\Controllers\User\PaymentController::class, 'create'])->name('user.payments.create');
     Route::get('/payments/{id}', [App\Http\Controllers\User\PaymentController::class, 'show'])->name('user.payments.show');
 
+    // Payment Profiles
+    Route::get('/payment-profiles', [App\Http\Controllers\User\PaymentProfileController::class, 'index'])->name('user.payment-profiles');
+    Route::post('/payment-profiles', [App\Http\Controllers\User\PaymentProfileController::class, 'store'])->name('user.payment-profiles.store');
+    Route::put('/payment-profiles/{id}', [App\Http\Controllers\User\PaymentProfileController::class, 'update'])->name('user.payment-profiles.update');
+    Route::delete('/payment-profiles/{id}', [App\Http\Controllers\User\PaymentProfileController::class, 'destroy'])->name('user.payment-profiles.destroy');
+
     // Payment Links
     Route::get('/payment-links', [App\Http\Controllers\User\PaymentLinkController::class, 'index'])->name('user.payment-links');
     Route::get('/payment-links/create', [App\Http\Controllers\User\PaymentLinkController::class, 'create'])->name('user.payment-links.create');
