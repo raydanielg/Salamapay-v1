@@ -45,10 +45,10 @@
                 <tr class="text-left text-xs text-gray-500 bg-gray-50/50">
                     <th class="px-5 py-3 font-medium">Title</th>
                     <th class="px-5 py-3 font-medium">Amount</th>
+                    <th class="px-5 py-3 font-medium">Profile</th>
                     <th class="px-5 py-3 font-medium">Slug</th>
                     <th class="px-5 py-3 font-medium">Status</th>
                     <th class="px-5 py-3 font-medium">Expiry</th>
-                    <th class="px-5 py-3 font-medium">Payments</th>
                     <th class="px-5 py-3 font-medium text-right">Action</th>
                 </tr>
             </thead>
