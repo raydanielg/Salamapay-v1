@@ -114,6 +114,20 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::put('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
     Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'store'])->name('admin.settings.store');
 
+    // KYC Verification
+    Route::get('/kyc', [App\Http\Controllers\Admin\KycController::class, 'index'])->name('admin.kyc');
+    Route::get('/kyc/{id}', [App\Http\Controllers\Admin\KycController::class, 'show'])->name('admin.kyc.show');
+    Route::post('/kyc/{id}/approve', [App\Http\Controllers\Admin\KycController::class, 'approve'])->name('admin.kyc.approve');
+    Route::post('/kyc/{id}/reject', [App\Http\Controllers\Admin\KycController::class, 'reject'])->name('admin.kyc.reject');
+
+    // Blog Management
+    Route::get('/blogs', [App\Http\Controllers\Admin\BlogManagementController::class, 'index'])->name('admin.blogs');
+    Route::get('/blogs/create', [App\Http\Controllers\Admin\BlogManagementController::class, 'create'])->name('admin.blogs.create');
+    Route::post('/blogs', [App\Http\Controllers\Admin\BlogManagementController::class, 'store'])->name('admin.blogs.store');
+    Route::get('/blogs/{id}/edit', [App\Http\Controllers\Admin\BlogManagementController::class, 'edit'])->name('admin.blogs.edit');
+    Route::put('/blogs/{id}', [App\Http\Controllers\Admin\BlogManagementController::class, 'update'])->name('admin.blogs.update');
+    Route::delete('/blogs/{id}', [App\Http\Controllers\Admin\BlogManagementController::class, 'destroy'])->name('admin.blogs.destroy');
+
     // Documentation
     Route::get('/documentation', [App\Http\Controllers\Admin\DocumentationController::class, 'index'])->name('admin.documentation');
     Route::get('/documentation/create', [App\Http\Controllers\Admin\DocumentationController::class, 'create'])->name('admin.documentation.create');
