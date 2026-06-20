@@ -16,67 +16,67 @@
 {{-- Stats Cards --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5 mb-8">
     {{-- Total Balance --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
-                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+        <div class="flex items-start justify-between mb-3 lg:mb-4">
+            <div class="w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-emerald-50 flex items-center justify-center">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+            <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 {{ $balanceChange > 0 ? '+' . $balanceChange : $balanceChange }}%
             </span>
         </div>
-        <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ $fn($totalBalance) }}</p>
-        <p class="text-sm text-gray-500 mt-1 font-medium">Total Balance</p>
-        <p class="text-xs text-gray-400 mt-0.5">vs last week</p>
+        <p class="text-lg lg:text-3xl font-extrabold text-gray-900 tracking-tight">{{ $fn($totalBalance) }}</p>
+        <p class="text-xs lg:text-sm text-gray-500 mt-1 font-medium">Total Balance</p>
+        <p class="hidden lg:block text-xs text-gray-400 mt-0.5">vs last week</p>
     </div>
 
     {{-- Total Transactions --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    <div class="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+        <div class="flex items-start justify-between mb-3 lg:mb-4">
+            <div class="w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-blue-50 flex items-center justify-center">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             </div>
-            <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+            <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 {{ $txChange > 0 ? '+' . $txChange : $txChange }}%
             </span>
         </div>
-        <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ number_format($totalTransactions) }}</p>
-        <p class="text-sm text-gray-500 mt-1 font-medium">Total Transactions</p>
-        <p class="text-xs text-gray-400 mt-0.5">vs last week</p>
+        <p class="text-lg lg:text-3xl font-extrabold text-gray-900 tracking-tight">{{ number_format($totalTransactions) }}</p>
+        <p class="text-xs lg:text-sm text-gray-500 mt-1 font-medium">Total Transactions</p>
+        <p class="hidden lg:block text-xs text-gray-400 mt-0.5">vs last week</p>
     </div>
 
     {{-- Active Payment Links --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-gold-50 flex items-center justify-center">
-                <svg class="w-6 h-6 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+    <div class="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+        <div class="flex items-start justify-between mb-3 lg:mb-4">
+            <div class="w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-gold-50 flex items-center justify-center">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
             </div>
-            <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+            <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 {{ $newPaymentLinks }} new
             </span>
         </div>
-        <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ $activePaymentLinks }}</p>
-        <p class="text-sm text-gray-500 mt-1 font-medium">Active Payment Links</p>
-        <p class="text-xs text-gray-400 mt-0.5">vs last week</p>
+        <p class="text-lg lg:text-3xl font-extrabold text-gray-900 tracking-tight">{{ $activePaymentLinks }}</p>
+        <p class="text-xs lg:text-sm text-gray-500 mt-1 font-medium">Payment Links</p>
+        <p class="hidden lg:block text-xs text-gray-400 mt-0.5">vs last week</p>
     </div>
 
     {{-- Revenue Today --}}
-    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
-                <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <div class="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100 shadow-sm hover:shadow-lg transition-all">
+        <div class="flex items-start justify-between mb-3 lg:mb-4">
+            <div class="w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-purple-50 flex items-center justify-center">
+                <svg class="w-4 h-4 lg:w-6 lg:h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+            <span class="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
                 {{ $todayChange > 0 ? '+' . $todayChange : $todayChange }}%
             </span>
         </div>
-        <p class="text-3xl font-extrabold text-gray-900 tracking-tight">{{ $fn($revenueToday) }}</p>
-        <p class="text-sm text-gray-500 mt-1 font-medium">Revenue Today</p>
-        <p class="text-xs text-gray-400 mt-0.5">vs yesterday</p>
+        <p class="text-lg lg:text-3xl font-extrabold text-gray-900 tracking-tight">{{ $fn($revenueToday) }}</p>
+        <p class="text-xs lg:text-sm text-gray-500 mt-1 font-medium">Revenue Today</p>
+        <p class="hidden lg:block text-xs text-gray-400 mt-0.5">vs yesterday</p>
     </div>
 </div>
 
