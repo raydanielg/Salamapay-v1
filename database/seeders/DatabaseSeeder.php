@@ -20,5 +20,11 @@ class DatabaseSeeder extends Seeder
         $this->call(TransactionSeeder::class);
         $this->call(PaymentLinkSeeder::class);
         $this->call(SystemSettingSeeder::class);
+        $this->call(SettlementSeeder::class);
+        $this->call(ApiKeySeeder::class);
+        $this->call(WebhookSeeder::class);
+        $this->call(BalanceSeeder::class);
+        $this->call(AdminLogSeeder::class);
+        $this->call(DocumentationSeeder::class);
     }
 }
