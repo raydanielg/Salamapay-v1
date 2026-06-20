@@ -272,7 +272,7 @@ window.addEventListener('load', function() {
             </thead>
             <tbody>
                 @forelse($recentTransactions as $tx)
-                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors tx-row" data-timestamp="{{ $tx->processed_at?->timestamp }}">
+                <tr class="border-t border-gray-100 hover:bg-gray-50/50 transition-colors tx-row" data-timestamp="{{ $tx->processed_at?->timestamp }}" data-search-text="{{ strtolower($tx->tx_id . ' ' . $tx->customer_name . ' ' . $tx->customer_email . ' ' . $tx->method . ' ' . $tx->status . ' ' . $tx->amount) }}">
                     <td class="px-5 py-3 font-mono text-xs text-gray-500">{{ $tx->tx_id }}</td>
                     <td class="px-5 py-3">
                         <div class="font-medium text-gray-900">{{ $tx->customer_name }}</div>
