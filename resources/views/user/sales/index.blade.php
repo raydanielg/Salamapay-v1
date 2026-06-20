@@ -310,9 +310,38 @@ function deleteSale(id, txId) {
         confirmText: 'Delete',
         confirmColor: 'red',
         onConfirm: function() {
-            const form = document.getElementById('deleteSaleForm');
-            form.action = '{{ url('sales') }}/' + id;
-            form.submit();
+            fetch('{{ url('sales') }}/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    // Find and animate-remove the row
+                    const rows = document.querySelectorAll('#salesTableBody tr');
+                    rows.forEach(row => {
+                        const rowData = row.dataset.sale ? JSON.parse(row.dataset.sale) : null;
+                        if (rowData && rowData.id === id) {
+                            row.style.transition = 'all 0.3s ease';
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(20px)';
+                            setTimeout(() => row.remove(), 300);
+                        }
+                    });
+                    // Show success toast
+                    if (typeof saAlert === 'function') {
+                        saAlert({ title: 'Deleted!', text: 'Sale deleted successfully.', icon: 'success' });
+                    }
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Failed to delete sale. Please try again.');
+            });
         }
     });
 }
