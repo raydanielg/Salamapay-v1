@@ -412,6 +412,7 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     // Business Tools
     Route::get('/invoices', [App\Http\Controllers\User\InvoiceController::class, 'index'])->name('user.invoices');
     Route::get('/sales', [App\Http\Controllers\User\SaleController::class, 'index'])->name('user.sales');
+    Route::delete('/sales/{transaction}', [App\Http\Controllers\User\SaleController::class, 'destroy'])->name('user.sales.destroy');
     Route::get('/pos', [App\Http\Controllers\User\PosController::class, 'index'])->name('user.pos');
 
     // Products
