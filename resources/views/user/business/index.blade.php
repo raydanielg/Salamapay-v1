@@ -49,9 +49,15 @@
                     <label class="block text-xs font-medium text-gray-700 mb-1">Business Address</label>
                     <textarea name="business_address" rows="3" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none resize-none">{{ old('business_address', $user->business_address ?? '') }}</textarea>
                 </div>
-                <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">TIN Number</label>
-                    <input type="text" name="business_tin" value="{{ old('business_tin', $user->business_tin ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. 123-456-789">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">TIN Number</label>
+                        <input type="text" name="business_tin" value="{{ old('business_tin', $user->business_tin ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. 123-456-789">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Registration Number</label>
+                        <input type="text" name="business_registration_number" value="{{ old('business_registration_number', $user->business_registration_number ?? '') }}" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. TZ1234567">
+                    </div>
                 </div>
                 <div class="pt-2">
                     <button type="submit" class="px-5 py-2 text-sm font-semibold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors shadow-sm">Save Changes</button>

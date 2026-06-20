@@ -30,12 +30,13 @@ class BusinessController extends Controller
             'business_type' => 'nullable|string|max:100',
             'business_address' => 'nullable|string',
             'business_tin' => 'nullable|string|max:50',
+            'business_registration_number' => 'nullable|string|max:50',
         ]);
 
         $user = User::find(auth()->id());
         $user->update($request->only([
             'first_name', 'last_name', 'phone',
-            'business_name', 'business_type', 'business_address', 'business_tin'
+            'business_name', 'business_type', 'business_address', 'business_tin', 'business_registration_number'
         ]));
 
         return back()->with('success', 'Business profile updated successfully');
