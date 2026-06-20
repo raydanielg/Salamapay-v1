@@ -5,30 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Pay {{ $link->merchantName() }} — SalamaPay</title>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
-    <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        emerald: { 50:'#e6f5f1',100:'#b3e0d4',200:'#80cbc0',300:'#4db5a8',400:'#1a9f8e',500:'#024938',600:'#023d30',700:'#013028',800:'#01241f',900:'#001816' },
-                        gold: { 50:'#fff5e0',100:'#ffe6b3',200:'#ffd680',300:'#ffc64d',400:'#ffb71a',500:'#f9ac00',600:'#d49700',700:'#b07c00',800:'#8c6100',900:'#684600' }
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        body { font-family: 'Nunito', sans-serif; }
-        .payment-card { transition: all 0.2s ease; }
-        .payment-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
-        .payment-card.selected { border-color: #024938; background: #e6f5f1; }
-        @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        .animate-slide-up { animation: slideUp 0.4s ease both; }
-        .animate-delay-1 { animation-delay: 0.05s; }
-        .animate-delay-2 { animation-delay: 0.1s; }
-        .animate-delay-3 { animation-delay: 0.15s; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .pm-option { transition: all 0.15s ease; cursor: pointer; }
+        .pm-option:hover { background: #f8fafc; }
+        .pm-option.active { border-color: #024938; background: #f0fdf4; }
+        .pm-option.active .pm-radio { border-color: #024938; background: #024938; }
+        .pm-radio { transition: all 0.15s ease; }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        .anim-fade-up { animation: fadeUp 0.35s ease both; }
+        .delay-1 { animation-delay: 0.05s; }
+        .delay-2 { animation-delay: 0.1s; }
+        .input-field:focus { border-color: #024938; box-shadow: 0 0 0 3px rgba(2,73,56,0.08); }
+        .tabular { font-variant-numeric: tabular-nums; }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
