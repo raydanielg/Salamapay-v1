@@ -241,6 +241,83 @@ window.addEventListener('load', function() {
     </div>
 </div>
 
+{{-- Login Activity & Security --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+    <div class="lg:col-span-2 bg-white rounded-xl border p-5">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-900">Login Activity</h3>
+                    <p class="text-[10px] text-gray-400">Recent sessions on your account</p>
+                </div>
+            </div>
+            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-md border border-emerald-100">Secure</span>
+        </div>
+        <div class="space-y-3">
+            {{-- Current Session --}}
+            <div class="flex items-center gap-3 p-3 rounded-lg border border-emerald-200 bg-emerald-50/50">
+                <div class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">This device <span class="ml-1 px-1.5 py-0.5 bg-emerald-500 text-white text-[9px] font-bold rounded">Current</span></p>
+                    <p class="text-[11px] text-gray-500 mt-0.5">{{ request()->userAgent() ? \Illuminate\Support\Str::limit(request()->userAgent(), 40) : 'Unknown browser' }} &middot; {{ request()->ip() }}</p>
+                </div>
+                <span class="text-[10px] text-gray-400 shrink-0">Active now</span>
+            </div>
+            {{-- Last login info from user --}}
+            <div class="flex items-center gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
+                <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-semibold text-gray-900">Previous login</p>
+                    <p class="text-[11px] text-gray-500 mt-0.5">Account created {{ auth()->user()->created_at?->diffForHumans() ?? 'recently' }}</p>
+                </div>
+                <span class="text-[10px] text-gray-400 shrink-0">{{ auth()->user()->created_at?->format('M d, Y') }}</span>
+            </div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-gray-50 flex items-center justify-between">
+            <p class="text-[11px] text-gray-400">2FA is recommended for extra security</p>
+            <a href="{{ route('user.settings') }}" class="text-[11px] font-medium text-emerald-600 hover:text-emerald-700">Security settings</a>
+        </div>
+    </div>
+
+    {{-- Quick Stats Mini Card --}}
+    <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-5 text-white">
+        <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                <svg class="w-4 h-4 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <h3 class="text-sm font-semibold text-white">This Month</h3>
+        </div>
+        @php
+            $monthStart = now()->startOfMonth();
+            $monthRevenue = \App\Models\Transaction::where('user_id', auth()->id())->where('status', 'success')->whereDate('processed_at', '>=', $monthStart)->sum('amount');
+            $monthTxs = \App\Models\Transaction::where('user_id', auth()->id())->whereDate('processed_at', '>=', $monthStart)->count();
+        @endphp
+        <div class="space-y-4">
+            <div>
+                <p class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">Revenue</p>
+                <p class="text-2xl font-bold text-white mt-1">{{ $fmtTz($monthRevenue) }}</p>
+            </div>
+            <div>
+                <p class="text-[10px] text-gray-400 uppercase tracking-wider font-medium">Transactions</p>
+                <p class="text-2xl font-bold text-white mt-1">{{ number_format($monthTxs) }}</p>
+            </div>
+            <div class="pt-3 border-t border-gray-700">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    <p class="text-[11px] text-gray-300">Account active and healthy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- Recent Activity Table --}}
 <div class="bg-white rounded-xl border overflow-hidden">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b px-5 py-4 gap-3">
