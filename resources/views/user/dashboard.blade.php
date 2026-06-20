@@ -383,6 +383,66 @@
     // Default: 3D
     applyFilter(3);
 })();
+
+// Export table to CSV
+function exportTableToCSV(filename) {
+    const table = document.querySelector('table');
+    if (!table) return;
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const csv = rows.map(row => {
+        const cells = Array.from(row.querySelectorAll('th, td'));
+        return cells.map(cell => '"' + cell.innerText.replace(/"/g, '""') + '"').join(',');
+    }).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+}
+
+// Toggle API key visibility
+function toggleApiKey() {
+    const keyEl = document.getElementById('apiKeyDisplay');
+    const iconEl = document.getElementById('eyeIcon');
+    if (!keyEl || !iconEl) return;
+    if (keyEl.classList.contains('api-key-hidden')) {
+        keyEl.classList.remove('api-key-hidden');
+        keyEl.classList.add('api-key-visible');
+        iconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+    } else {
+        keyEl.classList.remove('api-key-visible');
+        keyEl.classList.add('api-key-hidden');
+        iconEl.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+    }
+}
+
+// Copy API key
+function copyApiKey() {
+    const keyEl = document.getElementById('apiKeyDisplay');
+    if (!keyEl) return;
+    // Temporarily show key to copy
+    const wasHidden = keyEl.classList.contains('api-key-hidden');
+    if (wasHidden) {
+        keyEl.classList.remove('api-key-hidden');
+        keyEl.classList.add('api-key-visible');
+    }
+    navigator.clipboard.writeText(keyEl.innerText).then(() => {
+        alert('API key copied!');
+    }).catch(() => {
+        // Fallback
+        const range = document.createRange();
+        range.selectNode(keyEl);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        alert('API key copied!');
+    });
+    if (wasHidden) {
+        keyEl.classList.remove('api-key-visible');
+        keyEl.classList.add('api-key-hidden');
+    }
+}
 </script>
 
 <div class="h-16 lg:hidden"></div>
