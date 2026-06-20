@@ -184,111 +184,92 @@
                             </div>
                         </div>
 
-                    {{-- Payment Method Selection --}}
-                    <p class="text-xs font-medium text-gray-700 mb-2">Select Payment Method</p>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-                        @foreach([
-                            ['id'=>'mpesa','label'=>'M-Pesa','icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
-                            ['id'=>'tigopesa','label'=>'Tigo Pesa','icon'=>'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                            ['id'=>'airtelmoney','label'=>'Airtel Money','icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
-                            ['id'=>'card','label'=>'Card','icon'=>'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z'],
-                            ['id'=>'bank','label'=>'Bank Transfer','icon'=>'M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z'],
-                        ] as $pm)
-                        <label class="payment-card cursor-pointer border border-gray-200 rounded-xl p-3 flex flex-col items-center gap-2 {{ old('payment_method') === $pm['id'] ? 'selected' : '' }}" onclick="selectMethod('{{ $pm['id'] }}')">
-                            <input type="radio" name="payment_method" value="{{ $pm['id'] }}" class="hidden" {{ old('payment_method') === $pm['id'] ? 'checked' : '' }}>
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $pm['icon'] }}"/></svg>
-                            <span class="text-[11px] font-medium text-gray-700">{{ $pm['label'] }}</span>
-                        </label>
-                        @endforeach
-                    </div>
-                    @error('payment_method')<p class="text-xs text-red-500 mb-2">{{ $message }}</p>@enderror
-
-                    {{-- Mobile Money Fields --}}
-                    <div id="mobileFields" class="mb-4 {{ old('payment_method') && in_array(old('payment_method'), ['mpesa','tigopesa','airtelmoney']) ? '' : 'hidden' }}">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Phone Number</label>
-                        <div class="flex items-center border border-gray-200 rounded-xl px-3 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-200">
-                            <span class="text-sm text-gray-500 pr-2 border-r border-gray-200 mr-2 py-2">+255</span>
-                            <input type="tel" id="phoneDisplay" maxlength="9" class="flex-1 py-2.5 text-sm outline-none bg-transparent" placeholder="712345678" value="{{ old('phone') ? substr(old('phone'), 3) : '' }}">
-                            <input type="hidden" name="phone" id="phoneHidden" value="{{ old('phone') }}">
-                        </div>
-                        @error('phone')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
-                    </div>
-
-                    {{-- Card Fields --}}
-                    <div id="cardFields" class="mb-4 space-y-3 {{ old('payment_method') === 'card' ? '' : 'hidden' }}">
+                        {{-- Custom Fields --}}
+                        @if(!empty($link->custom_fields))
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Card Number</label>
-                            <input type="text" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="1234 5678 9012 3456">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">Expiry</label>
-                                <input type="text" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="MM/YY">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">CVC</label>
-                                <input type="text" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="123">
+                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Additional Information</p>
+                            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                @foreach($link->custom_fields as $field)
+                                    @if($field['type'] === 'textarea')
+                                        <textarea name="custom_{{ $field['name'] }}" {{ $field['required'] ? 'required' : '' }} rows="2" placeholder="{{ $field['label'] }}" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors resize-none placeholder:text-gray-400/70">{{ old('custom_' . $field['name']) }}</textarea>
+                                    @else
+                                        <input type="{{ $field['type'] }}" name="custom_{{ $field['name'] }}" value="{{ old('custom_' . $field['name']) }}" {{ $field['required'] ? 'required' : '' }} placeholder="{{ $field['label'] }}" class="w-full px-4 py-3 text-sm outline-none border-0 {{ !$loop->last ? 'border-b border-gray-100' : '' }} focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
+                        @endif
+
+                        {{-- Billing Information --}}
+                        <div>
+                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Billing Information</p>
+                            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                <div class="grid grid-cols-2">
+                                    <input type="text" name="billing_first_name" placeholder="First Name" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-r border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                    <input type="text" name="billing_last_name" placeholder="Last Name" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                </div>
+                                <input type="text" name="billing_address" placeholder="Address" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                <input type="text" name="billing_city" placeholder="City" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                <div class="grid grid-cols-2">
+                                    <input type="text" name="billing_state" placeholder="State / Region" class="w-full px-4 py-3 text-sm outline-none border-0 border-r border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                    <input type="text" name="billing_postcode" placeholder="Postal Code" class="w-full px-4 py-3 text-sm outline-none border-0 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Submit --}}
+                        <div class="pt-2">
+                            <button type="submit" id="payBtn" class="w-full py-3 text-sm font-semibold bg-emerald-800 text-white rounded-lg hover:bg-emerald-900 transition-colors flex items-center justify-center gap-2 shadow-md shadow-emerald-900/10">
+                                Pay TSh {{ $link->amount ? number_format($link->amount) : '___' }}
+                            </button>
+                        </div>
+                    </form>
+
+                    {{-- Supported Providers --}}
+                    <div class="mt-6">
+                        <div class="flex flex-col items-center gap-2">
+                            <p class="text-gray-400 text-xs py-2">Supported payment providers</p>
+                            <div class="flex flex-wrap items-center justify-center gap-3">
+                                <span class="inline-flex items-center px-2 py-1 text-[10px] font-bold text-gray-500 bg-gray-100 rounded">M-Pesa</span>
+                                <span class="inline-flex items-center px-2 py-1 text-[10px] font-bold text-gray-500 bg-gray-100 rounded">Tigo Pesa</span>
+                                <span class="inline-flex items-center px-2 py-1 text-[10px] font-bold text-gray-500 bg-gray-100 rounded">Airtel Money</span>
+                                <span class="inline-flex items-center px-2 py-1 text-[10px] font-bold text-gray-500 bg-gray-100 rounded">Visa</span>
+                                <span class="inline-flex items-center px-2 py-1 text-[10px] font-bold text-gray-500 bg-gray-100 rounded">Mastercard</span>
+                            </div>
+                        </div>
                     </div>
 
-                    {{-- Bank Fields --}}
-                    <div id="bankFields" class="mb-4 space-y-3 {{ old('payment_method') === 'bank' ? '' : 'hidden' }}">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Bank Name</label>
-                            <select class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none bg-white">
-                                <option>CRDB Bank</option>
-                                <option>NBC Bank</option>
-                                <option>NMB Bank</option>
-                                <option>EXIM Bank</option>
-                                <option>Standard Chartered</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Account Number</label>
-                            <input type="text" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="Your account number">
-                        </div>
+                    <div class="text-center mt-6 mb-2 lg:hidden">
+                        <p class="text-gray-400 text-xs">Secured by <span class="font-semibold text-gray-600">SalamaPay</span></p>
                     </div>
-
-                    {{-- Submit --}}
-                    <button type="submit" id="payBtn" class="w-full py-3 text-sm font-bold bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200 flex items-center justify-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                        Pay Now — TZS {{ $link->amount ? number_format($link->amount) : '___' }}
-                    </button>
-                    <p class="text-center text-[10px] text-gray-400 mt-2">By paying, you agree to our terms of service</p>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<script>
-function selectMethod(id) {
-    document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-
-    document.getElementById('mobileFields').classList.add('hidden');
-    document.getElementById('cardFields').classList.add('hidden');
-    document.getElementById('bankFields').classList.add('hidden');
-
-    if (['mpesa','tigopesa','airtelmoney'].includes(id)) {
-        document.getElementById('mobileFields').classList.remove('hidden');
-    } else if (id === 'card') {
-        document.getElementById('cardFields').classList.remove('hidden');
-    } else if (id === 'bank') {
-        document.getElementById('bankFields').classList.remove('hidden');
+    <script>
+    function selectPm(el) {
+        document.querySelectorAll('.pm-option').forEach(opt => opt.classList.remove('active'));
+        el.classList.add('active');
     }
-}
 
-// Phone input sync
-const phoneDisplay = document.getElementById('phoneDisplay');
-const phoneHidden = document.getElementById('phoneHidden');
-if (phoneDisplay && phoneHidden) {
-    phoneDisplay.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').substring(0, 9);
-        phoneHidden.value = '255' + this.value;
-    });
-}
-</script>
+    // Phone input sync
+    const phoneDisplay = document.getElementById('phoneDisplay');
+    const phoneHidden = document.getElementById('phoneHidden');
+    if (phoneDisplay && phoneHidden) {
+        phoneDisplay.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 9);
+            phoneHidden.value = '255' + this.value;
+        });
+    }
+
+    // Amount sync for custom amount links
+    const amountInput = document.getElementById('amountInput');
+    if (amountInput) {
+        amountInput.addEventListener('input', function() {
+            document.getElementById('payBtn').innerHTML = 'Pay TSh ' + parseInt(this.value || 0).toLocaleString();
+        });
+    }
+    </script>
 </body>
 </html>
