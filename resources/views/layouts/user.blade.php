@@ -121,6 +121,23 @@
                 </div>
             </div>
 
+            {{-- Business Tools --}}
+            <div class="sidebar-group">
+                <button onclick="toggleMenu('menu-tools')" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs('user.invoices*') || request()->routeIs('user.sales*') || request()->routeIs('user.pos*') || request()->routeIs('user.products*') || request()->routeIs('user.services*') || request()->routeIs('user.tools.settings*') ? 'active' : '' }}">
+                    <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    <span>Business Tools</span>
+                    <svg class="w-4 h-4 ml-auto transition-transform" id="arrow-tools" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </button>
+                <div id="menu-tools" class="sidebar-submenu pl-11 space-y-0.5 {{ request()->routeIs('user.invoices*') || request()->routeIs('user.sales*') || request()->routeIs('user.pos*') || request()->routeIs('user.products*') || request()->routeIs('user.services*') || request()->routeIs('user.tools.settings*') ? 'open' : '' }}">
+                    <a href="{{ route('user.invoices') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.invoices*') ? 'text-white font-medium' : '' }}">Invoices</a>
+                    <a href="{{ route('user.sales') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.sales*') ? 'text-white font-medium' : '' }}">Sales</a>
+                    <a href="{{ route('user.pos') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.pos*') ? 'text-white font-medium' : '' }}">POS</a>
+                    <a href="{{ route('user.products') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.products*') ? 'text-white font-medium' : '' }}">Products</a>
+                    <a href="{{ route('user.services') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.services*') ? 'text-white font-medium' : '' }}">Services</a>
+                    <a href="{{ route('user.tools.settings') }}" class="block py-1.5 text-xs text-emerald-200/70 hover:text-white transition-colors {{ request()->routeIs('user.tools.settings*') ? 'text-white font-medium' : '' }}">Settings</a>
+                </div>
+            </div>
+
             {{-- Reports --}}
             <div class="sidebar-group">
                 <a href="{{ route('user.reports') }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs('user.reports') ? 'active' : '' }}">
