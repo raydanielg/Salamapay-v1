@@ -7,19 +7,8 @@
 @include('user.partials.alert')
 
 @php
-    $products = session('pos_products', [
-        ['id'=>1,'name'=>'Coca Cola 500ml','price'=>1500,'category'=>'Drinks'],
-        ['id'=>2,'name'=>'Sprite 500ml','price'=>1500,'category'=>'Drinks'],
-        ['id'=>3,'name'=>'Water 1L','price'=>1000,'category'=>'Drinks'],
-        ['id'=>4,'name'=>'Chips (Small)','price'=>3000,'category'=>'Snacks'],
-        ['id'=>5,'name'=>'Chips (Large)','price'=>5000,'category'=>'Snacks'],
-        ['id'=>6,'name'=>'Biscuits','price'=>2000,'category'=>'Snacks'],
-        ['id'=>7,'name'=>'Bread','price'=>1500,'category'=>'Bakery'],
-        ['id'=>8,'name'=>'Milk 1L','price'=>3000,'category'=>'Dairy'],
-    ]);
-    $categories = array_unique(array_column($products,'category'));
-    $cart = session('pos_cart', []);
-    $subtotal = collect($cart)->sum(function($i){ return $i['price']*$i['qty']; });
+    $currencySymbol = $settings['currency_symbol'] ?? 'TSh';
+    $taxRate = ($settings['tax_rate'] ?? 18) / 100;
 @endphp
 
 <style>
@@ -47,7 +36,7 @@
             <div class="flex gap-2 overflow-x-auto pb-1">
                 <button onclick="filterCategory('all')" class="cat-btn px-3 py-2 rounded-lg text-xs font-bold bg-emerald-600 text-white whitespace-nowrap transition-colors" data-cat="all">All</button>
                 @foreach($categories as $cat)
-                <button onclick="filterCategory('{{ $cat }}')" class="cat-btn px-3 py-2 rounded-lg text-xs font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap transition-colors" data-cat="{{ $cat }}">{{ $cat }}</button>
+                <button onclick="filterCategory('{{ $cat }}')" class="cat-btn px-3 py-2 rounded-lg text-xs font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 whitespace-nowrap transition-colors" data-cat="{{ $cat }}">{{ $cat ?? 'General' }}</button>
                 @endforeach
             </div>
         </div>
@@ -66,13 +55,13 @@
             @else
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3" id="productsGrid">
                 @foreach($products as $p)
-                <div class="pos-product-card bg-white rounded-xl border p-4 text-center group" data-name="{{ strtolower($p['name']) }}" data-category="{{ $p['category'] }}" onclick="addToCart({{ $p['id'] }}, '{{ $p['name'] }}', {{ $p['price'] }})">
+                <div class="pos-product-card bg-white rounded-xl border p-4 text-center group" data-name="{{ strtolower($p->name) }}" data-category="{{ $p->category ?? 'General' }}" onclick="addToCart({{ $p->id }}, '{{ addslashes($p->name) }}', {{ $p->price }})">
                     <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center mx-auto mb-2 group-hover:bg-emerald-200 transition-colors">
-                        <span class="text-lg font-black text-emerald-700">{{ strtoupper(substr($p['name'],0,1)) }}</span>
+                        <span class="text-lg font-black text-emerald-700">{{ strtoupper(substr($p->name,0,1)) }}</span>
                     </div>
-                    <p class="text-xs font-bold text-gray-900 leading-tight truncate">{{ $p['name'] }}</p>
-                    <p class="text-sm font-black text-emerald-700 mt-1">TSh {{ number_format($p['price']) }}</p>
-                    <p class="text-[9px] text-gray-400 mt-0.5">{{ $p['category'] }}</p>
+                    <p class="text-xs font-bold text-gray-900 leading-tight truncate">{{ $p->name }}</p>
+                    <p class="text-sm font-black text-emerald-700 mt-1">{{ $currencySymbol }} {{ number_format($p->price) }}</p>
+                    <p class="text-[9px] text-gray-400 mt-0.5">{{ $p->category ?? 'General' }} {{ $p->stock <= 5 ? '• '.$p->stock.' left' : '' }}</p>
                 </div>
                 @endforeach
             </div>
