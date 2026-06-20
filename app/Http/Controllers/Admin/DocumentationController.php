@@ -103,4 +103,42 @@ class DocumentationController extends Controller
         DocumentationPage::findOrFail($id)->delete();
         return back()->with('success', 'Documentation page deleted');
     }
+
+    public function exportMarkdown($id)
+    {
+        $page = DocumentationPage::findOrFail($id);
+        $markdown = "# {$page->title}\n\n"
+            . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . "\n"
+            . "**Slug:** `{$page->slug}`\n"
+            . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n\n"
+            . "---\n\n"
+            . $page->content . "\n";
+
+        return response($markdown)
+            ->header('Content-Type', 'text/markdown; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $page->slug . '.md"');
+    }
+
+    public function exportAllMarkdown()
+    {
+        $pages = DocumentationPage::orderBy('category')->orderBy('sort_order')->orderBy('title')->get();
+
+        $markdown = "# SalamaPay Documentation\n\n"
+            . "> Complete developer documentation export.\n"
+            . "> Generated: " . now()->toDateTimeString() . "\n"
+            . "> Total Pages: " . $pages->count() . "\n\n---\n\n";
+
+        foreach ($pages as $page) {
+            $markdown .= "# {$page->title}\n\n"
+                . "**Category:** " . ucfirst(str_replace('_', ' ', $page->category)) . " | "
+                . "**Slug:** `{$page->slug}` | "
+                . "**Status:** " . ($page->is_published ? 'Published' : 'Draft') . " | "
+                . "**Updated:** " . $page->updated_at->toDateTimeString() . "\n\n"
+                . $page->content . "\n\n---\n\n";
+        }
+
+        return response($markdown)
+            ->header('Content-Type', 'text/markdown; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="salamapay-docs.md"');
+    }
 }
