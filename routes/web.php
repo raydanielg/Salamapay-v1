@@ -48,7 +48,7 @@ Route::prefix('admin')->group(function () {
 });
 
 // User/Merchant Dashboard Routes
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/', function () {
         $userId = auth()->id();
         $today = now()->startOfDay();
@@ -99,4 +99,40 @@ Route::prefix('dashboard')->group(function () {
             'recentTransactions'
         ));
     })->name('user.dashboard');
+
+    // Payments
+    Route::get('/payments', [App\Http\Controllers\User\PaymentController::class, 'index'])->name('user.payments');
+    Route::get('/payments/create', [App\Http\Controllers\User\PaymentController::class, 'create'])->name('user.payments.create');
+    Route::get('/payments/{id}', [App\Http\Controllers\User\PaymentController::class, 'show'])->name('user.payments.show');
+
+    // Wallet
+    Route::get('/wallet', [App\Http\Controllers\User\WalletController::class, 'index'])->name('user.wallet');
+    Route::get('/wallet/withdraw', [App\Http\Controllers\User\WalletController::class, 'withdraw'])->name('user.wallet.withdraw');
+    Route::post('/wallet/withdraw', [App\Http\Controllers\User\WalletController::class, 'storeWithdrawal'])->name('user.wallet.withdraw.store');
+
+    // Settlements
+    Route::get('/settlements', [App\Http\Controllers\User\SettlementController::class, 'index'])->name('user.settlements');
+
+    // My Business
+    Route::get('/business', [App\Http\Controllers\User\BusinessController::class, 'index'])->name('user.business');
+    Route::put('/business', [App\Http\Controllers\User\BusinessController::class, 'update'])->name('user.business.update');
+    Route::get('/business/banks', [App\Http\Controllers\User\BusinessController::class, 'banks'])->name('user.business.banks');
+    Route::post('/business/banks', [App\Http\Controllers\User\BusinessController::class, 'storeBank'])->name('user.business.banks.store');
+    Route::delete('/business/banks/{id}', [App\Http\Controllers\User\BusinessController::class, 'destroyBank'])->name('user.business.banks.destroy');
+
+    // API Access
+    Route::get('/api', [App\Http\Controllers\User\ApiAccessController::class, 'index'])->name('user.api');
+    Route::post('/api', [App\Http\Controllers\User\ApiAccessController::class, 'storeKey'])->name('user.api.store');
+    Route::delete('/api/{id}', [App\Http\Controllers\User\ApiAccessController::class, 'revokeKey'])->name('user.api.revoke');
+    Route::get('/api/webhooks', [App\Http\Controllers\User\ApiAccessController::class, 'webhooks'])->name('user.api.webhooks');
+    Route::post('/api/webhooks', [App\Http\Controllers\User\ApiAccessController::class, 'storeWebhook'])->name('user.api.webhooks.store');
+    Route::delete('/api/webhooks/{id}', [App\Http\Controllers\User\ApiAccessController::class, 'destroyWebhook'])->name('user.api.webhooks.destroy');
+
+    // Reports
+    Route::get('/reports', [App\Http\Controllers\User\ReportController::class, 'index'])->name('user.reports');
+
+    // Settings
+    Route::get('/settings', [App\Http\Controllers\User\SettingsController::class, 'index'])->name('user.settings');
+    Route::put('/settings/account', [App\Http\Controllers\User\SettingsController::class, 'updateAccount'])->name('user.settings.account');
+    Route::put('/settings/password', [App\Http\Controllers\User\SettingsController::class, 'updatePassword'])->name('user.settings.password');
 });
