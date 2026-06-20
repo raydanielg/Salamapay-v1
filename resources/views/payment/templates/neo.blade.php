@@ -151,6 +151,37 @@
         </div>
     </section>
 
+    {{-- HOW IT WORKS --}}
+    <section class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/30' : 'bg-white' }}">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3" style="background: {{ $primary }}15; color: {{ $primary }};">How It Works</span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Simple 3-Step Process</h2>
+                <p class="text-sm {{ $dark ? 'text-gray-400' : 'text-gray-500' }} max-w-md mx-auto">Pay in under a minute</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+                {{-- Connector line --}}
+                <div class="hidden md:block absolute top-8 left-[16.67%] right-[16.67%] h-0.5 {{ $dark ? 'bg-gray-700' : 'bg-gray-200' }}"></div>
+
+                <div class="relative text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 relative z-10 shadow-lg" style="background: {{ $primary }};">1</div>
+                    <h3 class="text-base font-bold mb-2">Choose Method</h3>
+                    <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Select Mobile Money or Card payment option that suits you best.</p>
+                </div>
+                <div class="relative text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 relative z-10 shadow-lg" style="background: {{ $primary }};">2</div>
+                    <h3 class="text-base font-bold mb-2">Fill Details</h3>
+                    <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Enter your phone number, name, and any required information.</p>
+                </div>
+                <div class="relative text-center">
+                    <div class="w-16 h-16 mx-auto rounded-2xl flex items-center justify-center text-white font-bold text-lg mb-4 relative z-10 shadow-lg" style="background: {{ $accent }};">3</div>
+                    <h3 class="text-base font-bold mb-2">Confirm Payment</h3>
+                    <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Review and confirm. You will receive an instant confirmation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="testimonials" class="py-16 lg:py-20">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <div class="text-center mb-12">
