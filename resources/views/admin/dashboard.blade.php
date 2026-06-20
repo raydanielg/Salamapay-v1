@@ -13,20 +13,21 @@ $fmt = fn($n) => $n >= 1000000000 ? number_format($n/1000000000,2).'B' : ($n >= 
 {{-- Stats Cards --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
     @foreach([
-        ['label'=>'Total Merchants','value'=>number_format($stats['totalMerchants']),'change'=>'+'.$stats['newMerchantsThisWeek'].' this week','icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','color'=>'emerald'],
-        ['label'=>'Total Volume','value'=>'TZS '.$fmt($stats['totalVolume']),'change'=>'This week: TZS '.$fmt($stats['volumeThisWeek']),'icon'=>'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z','color'=>'gold'],
-        ['label'=>'Transactions','value'=>number_format($stats['totalTransactions']),'change'=>'+'.$stats['transactionsThisWeek'].' this week','icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','color'=>'blue'],
-        ['label'=>'Success Rate','value'=>$stats['successRate'].'%','change'=>$stats['pendingSettlements'].' pending settlements','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','color'=>'purple']
+        ['label'=>'Total Merchants','value'=>number_format($stats['totalMerchants']),'change'=>'+'.$stats['newMerchantsThisWeek'].' this week','icon'=>'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z','from'=>'emerald-600','to'=>'emerald-700','border'=>'emerald-500','text'=>'emerald-100','sub'=>'emerald-200'],
+        ['label'=>'Total Volume','value'=>'TZS '.$fmt($stats['totalVolume']),'change'=>'This week: TZS '.$fmt($stats['volumeThisWeek']),'icon'=>'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'amber-400','to'=>'amber-500','border'=>'amber-300','text'=>'amber-50','sub'=>'amber-100'],
+        ['label'=>'Transactions','value'=>number_format($stats['totalTransactions']),'change'=>'+'.$stats['transactionsThisWeek'].' this week','icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2','from'=>'sky-500','to'=>'sky-600','border'=>'sky-400','text'=>'sky-100','sub'=>'sky-200'],
+        ['label'=>'Success Rate','value'=>$stats['successRate'].'%','change'=>$stats['pendingSettlements'].' pending settlements','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z','from'=>'violet-500','to'=>'violet-600','border'=>'violet-400','text'=>'violet-100','sub'=>'violet-200']
     ] as $card)
-    <div class="bg-white rounded-xl border p-4 hover:shadow-md transition-shadow">
-        <div class="flex items-center justify-between mb-2">
-            <div class="w-8 h-8 rounded-lg bg-{{ $card['color'] }}-50 flex items-center justify-center">
-                <svg class="w-4 h-4 text-{{ $card['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
+    <div class="bg-gradient-to-br from-{{ $card['from'] }} to-{{ $card['to'] }} rounded-xl border border-{{ $card['border'] }} p-4 text-white relative overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full -mr-8 -mt-8"></div>
+        <div class="relative z-10">
+            <div class="flex items-start justify-between mb-2">
+                <span class="text-[10px] font-medium {{ $card['text'] }}">{{ $card['label'] }}</span>
+                <svg class="w-4 h-4 {{ $card['sub'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $card['icon'] }}"/></svg>
             </div>
+            <p class="text-xl font-bold tracking-tight text-white">{{ $card['value'] }}</p>
+            <p class="text-[10px] {{ $card['sub'] }} font-medium mt-1">{{ $card['change'] }}</p>
         </div>
-        <p class="text-xl font-bold text-gray-900 tracking-tight">{{ $card['value'] }}</p>
-        <p class="text-xs text-gray-500 mt-0.5">{{ $card['label'] }}</p>
-        <p class="text-[10px] text-emerald-600 font-medium mt-1">{{ $card['change'] }}</p>
     </div>
     @endforeach
 </div>
