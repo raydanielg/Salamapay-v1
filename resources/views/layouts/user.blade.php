@@ -134,6 +134,7 @@
                 <a href="{{ route('user.templates') }}" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-emerald-100 text-sm font-medium {{ request()->routeIs('user.templates*') ? 'active' : '' }}">
                     <svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
                     <span>Website Builder</span>
+                    <span class="ml-auto px-1.5 py-0.5 bg-amber-400/90 text-white text-[9px] font-extrabold uppercase tracking-wide rounded-md shadow-sm">New</span>
                 </a>
             </div>
 
