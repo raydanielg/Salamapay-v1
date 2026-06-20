@@ -11,21 +11,24 @@
     <meta name="doc-category" content="{{ $doc->category }}">
     <meta name="doc-updated" content="{{ $doc->updated_at->toIso8601String() }}">
     <link rel="alternate" type="application/json" href="{{ url('/api/docs/' . $doc->slug) }}" title="{{ $doc->title }} — JSON">
+    @php
+    $ld = [
+        '@context' => 'https://schema.org',
+        '@type' => 'TechArticle',
+        'headline' => $doc->title,
+        'description' => strip_tags(Illuminate\Support\Str::markdown($doc->content)),
+        'url' => route('docs', $doc->slug),
+        'dateModified' => $doc->updated_at->toIso8601String(),
+        'author' => ['@type' => 'Organization', 'name' => 'SalamaPay'],
+        'publisher' => ['@type' => 'Organization', 'name' => 'SalamaPay'],
+        'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => route('docs', $doc->slug)],
+        'isAccessibleForFree' => true,
+        'educationalLevel' => 'developer',
+        'genre' => ucfirst(str_replace('_', ' ', $doc->category)),
+    ];
+    @endphp
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "TechArticle",
-        "headline": "{{ $doc->title }}",
-        "description": "{{ strip_tags(Illuminate\Support\Str::markdown($doc->content)) }}",
-        "url": "{{ route('docs', $doc->slug) }}",
-        "dateModified": "{{ $doc->updated_at->toIso8601String() }}",
-        "author": {"@type": "Organization", "name": "SalamaPay"},
-        "publisher": {"@type": "Organization", "name": "SalamaPay"},
-        "mainEntityOfPage": {"@type": "WebPage", "@id": "{{ route('docs', $doc->slug) }}"},
-        "isAccessibleForFree": true,
-        "educationalLevel": "developer",
-        "genre": "{{ ucfirst(str_replace('_', ' ', $doc->category)) }}"
-    }
+{!! json_encode($ld, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
     </script>
     @endif
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
