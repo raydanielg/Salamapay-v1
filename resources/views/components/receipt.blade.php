@@ -1,19 +1,4 @@
 <div class="receipt-card bg-white rounded-xl border-2 border-gray-100 shadow-sm overflow-hidden" id="receiptCard">
-    {{-- Top: SalamaPay + Status + Ref --}}
-    <div class="px-6 pt-6 pb-2 text-center">
-        <h2 class="text-xl font-black text-gray-900 tracking-tight">SalamaPay</h2>
-        <div class="mt-2 flex items-center justify-center gap-2">
-            @if($transaction->status === 'success')
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">PAID</span>
-            @elseif($transaction->status === 'pending')
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">PENDING</span>
-            @else
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-100">FAILED</span>
-            @endif
-        </div>
-        <p class="text-[10px] text-gray-400 mt-1 font-mono">Ref: {{ $transaction->tx_id }}</p>
-    </div>
-
     {{-- Merchant Info --}}
     <div class="px-6 py-4 border-b border-gray-100">
         <div class="text-center">
