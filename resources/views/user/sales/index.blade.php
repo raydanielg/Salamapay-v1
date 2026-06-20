@@ -123,6 +123,9 @@
 </div>
 </div>
 
+{{-- Delete Sale Form --}}
+<form id="deleteSaleForm" method="POST" class="hidden">@csrf @method('DELETE')</form>
+
 {{-- A4 Receipt Modal --}}
 <style>
 @media print {
@@ -296,5 +299,20 @@ function viewSale(row) {
 }
 function closeReceipt() { const m = document.getElementById('receiptModal'); m.classList.add('hidden'); m.classList.remove('flex'); }
 function printReceipt() { window.print(); }
+
+function deleteSale(id, txId) {
+    saConfirm({
+        title: 'Delete Sale?',
+        text: 'Are you sure you want to delete sale "' + txId + '"? This cannot be undone.',
+        icon: 'danger',
+        confirmText: 'Delete',
+        confirmColor: 'red',
+        onConfirm: function() {
+            const form = document.getElementById('deleteSaleForm');
+            form.action = '{{ url('sales') }}/' + id;
+            form.submit();
+        }
+    });
+}
 </script>
 @endsection
