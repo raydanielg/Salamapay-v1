@@ -7,15 +7,15 @@
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
             <div class="group p-6 rounded-2xl bg-white border border-emerald-100 shadow-sm hover:shadow-xl hover:shadow-emerald-100/50 transition-all duration-300 hover:-translate-y-1 text-center">
-                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <div class="w-16 h-16 xl:w-20 xl:h-20 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 xl:w-10 xl:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 </div>
                 <h3 class="text-lg xl:text-xl font-bold text-slate-900 mb-2" data-en="M-Pesa" data-sw="M-Pesa">M-Pesa</h3>
                 <p class="text-sm xl:text-base text-slate-500" data-en="Pay directly via your M-Pesa quickly and securely." data-sw="Lipia moja kwa moja kupitia M-Pesa yako kwa haraka na usalama.">Pay directly via your M-Pesa quickly and securely.</p>
             </div>
             <div class="group p-6 rounded-2xl bg-white border border-gold-100 shadow-sm hover:shadow-xl hover:shadow-gold-100/50 transition-all duration-300 hover:-translate-y-1 text-center">
-                <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/30 group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <div class="w-16 h-16 xl:w-20 xl:h-20 mx-auto rounded-2xl bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center mb-4 shadow-lg shadow-gold-500/30 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 xl:w-10 xl:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                 </div>
                 <h3 class="text-lg xl:text-xl font-bold text-slate-900 mb-2" data-en="Airtel Money" data-sw="Airtel Money">Airtel Money</h3>
                 <p class="text-sm xl:text-base text-slate-500" data-en="Choose Airtel Money as your preferred online payment method." data-sw="Chagua Airtel Money kama njia yako bora ya malipo mtandaoni.">Choose Airtel Money as your preferred online payment method.</p>
