@@ -303,6 +303,14 @@ function closeReceipt() { const m = document.getElementById('receiptModal'); m.c
 function printReceipt() { window.print(); }
 
 function deleteSale(id, txId) {
+    // Find row data before confirming
+    let deletedRowData = null;
+    const rows = document.querySelectorAll('#salesTableBody tr');
+    rows.forEach(row => {
+        const rd = row.dataset.sale ? JSON.parse(row.dataset.sale) : null;
+        if (rd && rd.id === id) deletedRowData = rd;
+    });
+
     saConfirm({
         title: 'Delete Sale?',
         text: 'Are you sure you want to delete sale "' + txId + '"? This cannot be undone.',
@@ -321,11 +329,10 @@ function deleteSale(id, txId) {
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    // Find and animate-remove the row
-                    const rows = document.querySelectorAll('#salesTableBody tr');
+                    // Animate-remove the row
                     rows.forEach(row => {
-                        const rowData = row.dataset.sale ? JSON.parse(row.dataset.sale) : null;
-                        if (rowData && rowData.id === id) {
+                        const rd = row.dataset.sale ? JSON.parse(row.dataset.sale) : null;
+                        if (rd && rd.id === id) {
                             row.style.transition = 'all 0.3s ease';
                             row.style.opacity = '0';
                             row.style.transform = 'translateX(20px)';
@@ -333,8 +340,8 @@ function deleteSale(id, txId) {
                         }
                     });
                     // Update stats
-                    updateSaleStatsAfterDelete(rowData ? rowData.amount : 0, rowData ? rowData.source_type : 'other');
-                    // Show success toast
+                    updateSaleStatsAfterDelete(deletedRowData ? deletedRowData.amount : 0, deletedRowData ? deletedRowData.source_type : 'other');
+                    // Show success
                     if (typeof saAlert === 'function') {
                         saAlert({ title: 'Deleted!', text: 'Sale deleted successfully.', icon: 'success' });
                     }
@@ -346,6 +353,23 @@ function deleteSale(id, txId) {
             });
         }
     });
+}
+
+function updateSaleStatsAfterDelete(amount, sourceType) {
+    // Total sales count
+    const totalEl = document.querySelector('.grid > div:first-child p.text-2xl');
+    if (totalEl) { let n = parseInt(totalEl.textContent.replace(/,/g,'')); if (!isNaN(n)) totalEl.textContent = (n - 1).toLocaleString(); }
+    // Revenue
+    const revEl = document.querySelector('.grid > div:nth-child(2) p.text-2xl');
+    if (revEl) { let t = revEl.textContent.replace(/[^0-9]/g,''); let n = parseInt(t); if (!isNaN(n)) revEl.textContent = 'TSh ' + (n - amount).toLocaleString(); }
+    // Products vs Services
+    if (sourceType === 'product') {
+        const prodEl = document.querySelector('.grid > div:nth-child(4) p.text-xl');
+        if (prodEl) { let n = parseInt(prodEl.textContent); if (!isNaN(n)) prodEl.textContent = n - 1; }
+    } else if (sourceType === 'service') {
+        const svcEls = document.querySelectorAll('.grid > div:nth-child(4) p.text-xl');
+        if (svcEls[1]) { let n = parseInt(svcEls[1].textContent); if (!isNaN(n)) svcEls[1].textContent = n - 1; }
+    }
 }
 </script>
 @endsection
