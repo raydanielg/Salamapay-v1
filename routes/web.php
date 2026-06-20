@@ -14,6 +14,40 @@ Route::post('/pay/{slug}', [App\Http\Controllers\PaymentLinkController::class, '
 Route::get('/pay/{slug}/success', [App\Http\Controllers\PaymentLinkController::class, 'success'])->name('payment.success');
 Route::get('/pay/{slug}/receipt', [App\Http\Controllers\PaymentLinkController::class, 'receipt'])->name('payment.receipt');
 
+// Newsletter AJAX subscription
+Route::post('/newsletter/subscribe', function (\Illuminate\Http\Request $request) {
+    $validated = $request->validate([
+        'email' => 'required|email|max:255|unique:newsletter_subscribers,email',
+        'name' => 'nullable|string|max:100',
+        'source' => 'nullable|string|max:50',
+    ]);
+
+    $subscriber = \App\Models\NewsletterSubscriber::create([
+        'email' => $validated['email'],
+        'name' => $validated['name'] ?? null,
+        'source' => $validated['source'] ?? 'blog',
+        'ip_address' => $request->ip(),
+        'subscribed_at' => now(),
+    ]);
+
+    // Notify admin
+    $admin = \App\Models\User::where('role', 'admin')->first();
+    if ($admin) {
+        \Illuminate\Support\Facades\Mail::raw(
+            "New Newsletter Subscriber\n\nEmail: {$subscriber->email}\nName: " . ($subscriber->name ?? 'N/A') . "\nSource: {$subscriber->source}\nIP: {$subscriber->ip_address}\nTime: {$subscriber->subscribed_at}",
+            function ($message) use ($admin) {
+                $message->to($admin->email)
+                    ->subject('New Newsletter Subscription - SalamaPay');
+            }
+        );
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Thank you for subscribing! Check your inbox for confirmation.',
+    ]);
+})->name('newsletter.subscribe');
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
