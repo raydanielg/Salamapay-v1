@@ -24,33 +24,38 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-white min-h-screen flex flex-col">
 
-{{-- Top Bar --}}
-<div class="bg-emerald-900 h-1.5"></div>
-
-<div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
-    {{-- Header --}}
-    <div class="text-center mb-8 animate-slide-up">
-        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-100 mb-3">
-            <img src="{{ asset('salamapaylogo.png') }}" alt="SalamaPay" class="h-8 w-auto">
-        </div>
-        <h1 class="text-lg sm:text-xl font-bold text-gray-900">{{ $link->title }}</h1>
-        <p class="text-sm text-gray-500 mt-1 max-w-md mx-auto">{{ $link->description }}</p>
-        <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border text-xs text-gray-600">
-            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            Paying <span class="font-semibold text-gray-900">{{ $link->merchantName() }}</span>
+    {{-- Sticky Header --}}
+    <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div class="w-full lg:w-1/2 lg:flex lg:justify-end">
+            <div class="w-full max-w-lg px-5 py-4 md:px-6 md:py-5 lg:px-10 lg:py-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        @if($link->profile && $link->profile->logo)
+                            <img src="{{ $link->profile->logo }}" alt="{{ $link->merchantName() }}" class="h-8 w-auto object-contain">
+                        @else
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm" style="background: {{ $link->profile->color ?? '#024938' }}">
+                                {{ strtoupper(substr($link->merchantName(), 0, 1)) }}
+                            </div>
+                        @endif
+                        <p class="text-base font-semibold text-gray-900">{{ $link->merchantName() }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     @if(session('error'))
-    <div class="max-w-lg mx-auto mb-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 animate-slide-up">
-        <svg class="mt-0.5 h-5 w-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span>{{ session('error') }}</span>
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 max-w-md w-[90%]">
+        <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 shadow-lg anim-fade-up">
+            <svg class="mt-0.5 h-5 w-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>{{ session('error') }}</span>
+        </div>
     </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 max-w-4xl mx-auto">
+    <main class="flex flex-1 flex-col lg:flex-row">
         {{-- Left: Amount & Merchant Info --}}
         <div class="lg:col-span-2 space-y-4 animate-slide-up animate-delay-1">
             {{-- Amount Card --}}
