@@ -70,6 +70,14 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
     Route::put('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
     Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'store'])->name('admin.settings.store');
+
+    // Documentation
+    Route::get('/documentation', [App\Http\Controllers\Admin\DocumentationController::class, 'index'])->name('admin.documentation');
+    Route::get('/documentation/create', [App\Http\Controllers\Admin\DocumentationController::class, 'create'])->name('admin.documentation.create');
+    Route::post('/documentation', [App\Http\Controllers\Admin\DocumentationController::class, 'store'])->name('admin.documentation.store');
+    Route::get('/documentation/{id}/edit', [App\Http\Controllers\Admin\DocumentationController::class, 'edit'])->name('admin.documentation.edit');
+    Route::put('/documentation/{id}', [App\Http\Controllers\Admin\DocumentationController::class, 'update'])->name('admin.documentation.update');
+    Route::delete('/documentation/{id}', [App\Http\Controllers\Admin\DocumentationController::class, 'destroy'])->name('admin.documentation.destroy');
 });
 
 // User/Merchant Dashboard Routes
