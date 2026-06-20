@@ -196,9 +196,14 @@
                         {{-- Phone Number --}}
                         <div>
                             <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Phone number</p>
-                            <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden focus-within:border-emerald-800 focus-within:ring-1 focus-within:ring-emerald-800/20 transition-all">
-                                <span class="text-sm text-gray-500 px-3 py-2.5 border-r border-gray-200 bg-gray-50/50 font-medium">+255</span>
-                                <input type="tel" id="phoneDisplay" maxlength="9" class="flex-1 py-2.5 px-3 text-sm outline-none bg-transparent tabular" placeholder="712 345 678" value="{{ old('phone') ? substr(old('phone'), 3) : '' }}">
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                                </div>
+                                <div class="flex items-center pl-10 border border-gray-200 rounded-lg bg-white overflow-hidden focus-within:border-emerald-800 focus-within:ring-1 focus-within:ring-emerald-800/20 transition-all">
+                                    <span class="text-sm text-gray-500 px-2 py-2.5 border-r border-gray-200 bg-gray-50/50 font-medium">+255</span>
+                                    <input type="tel" id="phoneDisplay" maxlength="9" class="flex-1 py-2.5 px-3 text-sm outline-none bg-transparent tabular" placeholder="712 345 678" value="{{ old('phone') ? substr(old('phone'), 3) : '' }}">
+                                </div>
                                 <input type="hidden" name="phone" id="phoneHidden" value="{{ old('phone') }}">
                             </div>
                             @error('phone')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
