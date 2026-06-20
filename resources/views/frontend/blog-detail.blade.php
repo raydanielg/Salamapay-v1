@@ -30,6 +30,7 @@
 
     {{-- Canonical --}}
     <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -245,6 +246,91 @@ $relatedBlogs = \App\Models\Blog::where('id', '!=', $blog->id)->latest('publishe
         <p class="text-gray-400 text-sm">&copy; {{ date('Y') }} SalamaPay. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    // Copy link
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            document.getElementById('copy-icon').classList.add('hidden');
+            document.getElementById('check-icon').classList.remove('hidden');
+            setTimeout(function() {
+                document.getElementById('copy-icon').classList.remove('hidden');
+                document.getElementById('check-icon').classList.add('hidden');
+            }, 2000);
+        });
+    }
+
+    // Newsletter AJAX
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const email = document.getElementById('newsletterEmail');
+        const btn = document.getElementById('newsletterBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const msg = document.getElementById('newsletterMessage');
+
+        // Reset
+        msg.className = 'mt-3 text-sm min-h-[20px]';
+        msg.textContent = '';
+        email.classList.remove('animate-shake', 'border-red-400', 'ring-red-200');
+
+        // Validate
+        if (!email.value || !email.value.includes('@')) {
+            email.classList.add('animate-shake', 'border-red-400', 'ring-red-200');
+            msg.textContent = 'Please enter a valid email address.';
+            msg.className = 'mt-3 text-sm min-h-[20px] text-red-600 font-medium';
+            setTimeout(() => email.classList.remove('animate-shake'), 500);
+            return;
+        }
+
+        // Loading state
+        btn.disabled = true;
+        btnText.textContent = 'Subscribing...';
+        btnSpinner.classList.remove('hidden');
+        btn.classList.add('opacity-75');
+
+        fetch('{{ route("newsletter.subscribe") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                email: email.value,
+                source: form.querySelector('[name="source"]').value
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.disabled = false;
+            btnText.textContent = 'Subscribe';
+            btnSpinner.classList.add('hidden');
+            btn.classList.remove('opacity-75');
+
+            if (data.success) {
+                msg.textContent = data.message;
+                msg.className = 'mt-3 text-sm min-h-[20px] text-emerald-600 font-medium animate-pop';
+                email.value = '';
+                btnText.textContent = 'Subscribed!';
+                btn.classList.remove('from-emerald-500', 'to-emerald-600');
+                btn.classList.add('from-emerald-600', 'to-emerald-700');
+            } else {
+                throw new Error(data.message || 'Something went wrong.');
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            btnText.textContent = 'Subscribe';
+            btnSpinner.classList.add('hidden');
+            btn.classList.remove('opacity-75');
+            msg.textContent = err.message;
+            msg.className = 'mt-3 text-sm min-h-[20px] text-red-600 font-medium';
+            email.classList.add('animate-shake', 'border-red-400', 'ring-red-200');
+            setTimeout(() => email.classList.remove('animate-shake'), 500);
+        });
+    });
+</script>
 
 </body>
 </html>
