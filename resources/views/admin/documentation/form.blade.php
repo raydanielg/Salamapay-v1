@@ -89,13 +89,23 @@
             <div class="space-y-2 text-xs text-gray-600">
                 <p class="flex justify-between"><span>Created</span><span>{{ $page->created_at->format('M d, Y H:i') }}</span></p>
                 <p class="flex justify-between"><span>Updated</span><span>{{ $page->updated_at->format('M d, Y H:i') }}</span></p>
-                <p class="flex justify-between"><span>Views</span><span>{{ $page->slug }}</span></p>
+                <p class="flex justify-between"><span>Status</span><span>{{ $page->is_published ? 'Published' : 'Draft' }}</span></p>
             </div>
-            <div class="mt-3 pt-3 border-t">
+            <div class="mt-3 pt-3 border-t space-y-2">
                 <a href="{{ route('docs', $page->slug) }}" target="_blank" class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 hover:text-emerald-700">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     View Public Page
                 </a>
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('admin.documentation.export', $page->id) }}" class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Export .md
+                    </a>
+                    <button type="button" onclick="copyFormMd()" class="inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-700">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        Copy Markdown
+                    </button>
+                </div>
             </div>
         </div>
         @endif
