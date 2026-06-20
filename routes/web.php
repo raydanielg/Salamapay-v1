@@ -60,6 +60,10 @@ Route::get('/about', function () {
     return view('frontend.about');
 })->name('about');
 
+Route::get('/how-it-works', function () {
+    return view('frontend.how-it-works');
+})->name('how-it-works');
+
 Route::get('/blog', function () {
     return view('frontend.blog');
 })->name('blog');
