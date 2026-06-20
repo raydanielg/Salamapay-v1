@@ -216,6 +216,38 @@
         </div>
     </section>
 
+    {{-- FAQ / ACCORDION --}}
+    <section class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/30' : 'bg-white' }}">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3" style="background: {{ $primary }}15; color: {{ $primary }};">FAQ</span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Frequently Asked Questions</h2>
+                <p class="text-sm {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Everything you need to know before paying</p>
+            </div>
+            <div class="space-y-3" x-data="{ open: null }">
+                @php
+                $faqs = $settings['faqs'] ?? [
+                    ['q'=>'Is my payment information secure?','a'=>'Yes. All transactions are encrypted with bank-level SSL security. We never store your card details.'],
+                    ['q'=>'What payment methods are accepted?','a'=>'We accept all major Mobile Money providers (M-Pesa, Tigo Pesa, Airtel Money) as well as Visa and Mastercard.'],
+                    ['q'=>'How long does it take to confirm?','a'=>'Mobile Money payments are confirmed instantly. Card payments are processed within seconds.'],
+                    ['q'=>'Can I get a refund?','a'=>'Yes, refunds are available according to the merchant\'s refund policy. Contact the merchant directly for refund requests.'],
+                ];
+                @endphp
+                @foreach($faqs as $i => $faq)
+                <div class="rounded-xl border {{ $dark ? 'border-gray-700 bg-gray-800/30' : 'border-gray-200 bg-white' }} overflow-hidden">
+                    <button type="button" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.faq-icon').classList.toggle('rotate-180');" class="w-full flex items-center justify-between p-4 text-left">
+                        <span class="text-sm font-semibold pr-4">{{ $faq['q'] }}</span>
+                        <svg class="faq-icon w-4 h-4 shrink-0 transition-transform duration-200 {{ $dark ? 'text-gray-400' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="hidden px-4 pb-4">
+                        <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }} leading-relaxed">{{ $faq['a'] }}</p>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <section id="payment" class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/50' : 'bg-gray-50' }}">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="text-center mb-10">
