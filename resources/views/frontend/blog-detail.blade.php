@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $blog->title }} - SalamaPay Blog</title>
     <meta name="description" content="{{ $blog->excerpt }}">
+    <meta name="keywords" content="{{ $blog->category }}, digital payments, fintech, Tanzania, SalamaPay, mobile money, M-Pesa">
+    <meta name="author" content="{{ $blog->author }}">
+    <meta name="robots" content="index, follow">
+
+    {{-- Open Graph / Facebook --}}
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $blog->title }}">
+    <meta property="og:description" content="{{ $blog->excerpt }}">
+    <meta property="og:image" content="{{ $blog->image ? asset($blog->image) : asset('images/og-default.png') }}">
+    <meta property="og:site_name" content="SalamaPay Blog">
+    <meta property="article:published_time" content="{{ $blog->published_at->toIso8601String() }}">
+    <meta property="article:author" content="{{ $blog->author }}">
+    <meta property="article:section" content="{{ $blog->category }}">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $blog->title }}">
+    <meta name="twitter:description" content="{{ $blog->excerpt }}">
+    <meta name="twitter:image" content="{{ $blog->image ? asset($blog->image) : asset('images/og-default.png') }}">
+    <meta name="twitter:site" content="@SalamaPay">
+
+    {{-- Canonical --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('icons8-logo-32.png') }}">
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito:400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -25,12 +51,21 @@
     <style>
         html { scroll-behavior: smooth; }
         @keyframes fade-up { 0%{opacity:0;transform:translateY(30px)} 100%{opacity:1;transform:translateY(0)} }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 10%,30%,50%,70%,90%{transform:translateX(-4px)} 20%,40%,60%,80%{transform:translateX(4px)} }
+        @keyframes pop { 0%{transform:scale(0.8);opacity:0} 50%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+        @keyframes slide-in { 0%{transform:translateY(20px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+        @keyframes pulse-green { 0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0.4)} 50%{box-shadow:0 0 0 10px rgba(16,185,129,0)} }
         .animate-fade-up { animation: fade-up .8s ease-out both; }
+        .animate-shake { animation: shake 0.5s ease-in-out; }
+        .animate-pop { animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+        .animate-slide-in { animation: slide-in 0.5s ease-out both; }
         .delay-1 { animation-delay:.1s }
         .delay-2 { animation-delay:.3s }
+        .delay-3 { animation-delay:.5s }
         .docs-content h2 { font-size: 1.5rem; font-weight: 700; color: #111827; margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e5e7eb; }
         .docs-content h3 { font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-top: 2rem; margin-bottom: 0.75rem; }
         .docs-content p { color: #4b5563; line-height: 1.75; margin-bottom: 1.25rem; }
+        .docs-content strong, .docs-content b { color: #111827; font-weight: 700; }
         .docs-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; color: #4b5563; }
         .docs-content ul li { margin-bottom: 0.5rem; }
         .docs-content img { border-radius: 0.75rem; margin: 1.5rem 0; max-width: 100%; height: auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
@@ -38,6 +73,11 @@
         .docs-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
         .docs-content th { background: #f9fafb; padding: 0.75rem; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
         .docs-content td { padding: 0.75rem; border-bottom: 1px solid #e5e7eb; color: #4b5563; }
+        .share-btn { transition: all 0.2s cubic-bezier(0.4,0,0.2,1); }
+        .share-btn:hover { transform: translateY(-2px); }
+        .share-btn:active { transform: scale(0.95); }
+        .newsletter-success { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .newsletter-error { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
     </style>
 </head>
 <body class="font-['Nunito',sans-serif] antialiased bg-white text-slate-800">
