@@ -22,6 +22,9 @@ class PaymentProfile extends Model
         'logo',
         'description',
         'color',
+        'page_type',
+        'allow_custom_amount',
+        'products',
         'is_default',
     ];
 
@@ -29,6 +32,8 @@ class PaymentProfile extends Model
     {
         return [
             'is_default' => 'boolean',
+            'allow_custom_amount' => 'boolean',
+            'products' => 'array',
         ];
     }
 

@@ -13,9 +13,19 @@ class PaymentProfileController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $profiles = PaymentProfile::where('user_id', auth()->id())->orderBy('name')->get();
+        $query = PaymentProfile::where('user_id', auth()->id());
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('business_name', 'like', "%{$search}%");
+            });
+        }
+
+        $profiles = $query->orderBy('name')->get();
         return view('user.payment-profiles.index', compact('profiles'));
     }
 
@@ -30,12 +40,13 @@ class PaymentProfileController extends Controller
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string|max:500',
             'color' => 'nullable|string|max:7',
-            'is_default' => 'boolean',
+            'logo' => 'nullable|image|max:2048',
+            'page_type' => 'required|in:catalog,fixed',
+            'allow_custom_amount' => 'boolean',
+            'products' => 'nullable|array',
         ]);
 
-        $isFirst = !PaymentProfile::where('user_id', auth()->id())->exists();
-
-        PaymentProfile::create([
+        $data = [
             'user_id' => auth()->id(),
             'name' => $request->name,
             'business_name' => $request->business_name,
@@ -45,8 +56,22 @@ class PaymentProfileController extends Controller
             'email' => $request->email,
             'description' => $request->description,
             'color' => $request->color ?? '#024938',
-            'is_default' => $request->boolean('is_default', false) || $isFirst,
-        ]);
+            'page_type' => $request->page_type,
+            'allow_custom_amount' => $request->boolean('allow_custom_amount', false),
+            'products' => $request->products ?? null,
+            'is_default' => $request->boolean('is_default', false),
+        ];
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('profile-logos', 'public');
+        }
+
+        $isFirst = !PaymentProfile::where('user_id', auth()->id())->exists();
+        if ($isFirst) {
+            $data['is_default'] = true;
+        }
+
+        PaymentProfile::create($data);
 
         return redirect()->route('user.payment-profiles')->with('success', 'Profile created successfully');
     }
@@ -64,10 +89,24 @@ class PaymentProfileController extends Controller
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string|max:500',
             'color' => 'nullable|string|max:7',
+            'logo' => 'nullable|image|max:2048',
+            'page_type' => 'required|in:catalog,fixed',
+            'allow_custom_amount' => 'boolean',
+            'products' => 'nullable|array',
             'is_default' => 'boolean',
         ]);
 
-        $profile->update($request->only(['name', 'business_name', 'business_type', 'business_tin', 'phone', 'email', 'description', 'color', 'is_default']));
+        $data = $request->only([
+            'name', 'business_name', 'business_type', 'business_tin',
+            'phone', 'email', 'description', 'color', 'page_type',
+            'allow_custom_amount', 'products', 'is_default'
+        ]);
+
+        if ($request->hasFile('logo')) {
+            $data['logo'] = $request->file('logo')->store('profile-logos', 'public');
+        }
+
+        $profile->update($data);
 
         return back()->with('success', 'Profile updated');
     }
