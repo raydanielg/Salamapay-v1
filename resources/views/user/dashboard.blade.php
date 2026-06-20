@@ -44,45 +44,45 @@
 </div>
 
 {{-- Stats Cards --}}
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+<div class="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 mb-6">
     {{-- Total Balance --}}
-    <div class="card-sm bg-white rounded-xl border p-5">
+    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
         <div class="flex items-start justify-between">
-            <span class="text-xs font-medium text-gray-500">Total Balance</span>
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Total Balance</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($totalBalance) }}</div>
-        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $balanceChange }}% vs last week</div>
+        <div class="mt-2 sm:mt-3 text-lg sm:text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($totalBalance) }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $balanceChange }}% vs last week</div>
     </div>
 
     {{-- Total Transactions --}}
-    <div class="card-sm bg-white rounded-xl border p-5">
+    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
         <div class="flex items-start justify-between">
-            <span class="text-xs font-medium text-gray-500">Total Transactions</span>
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Total Transactions</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ number_format($totalTransactions) }}</div>
-        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $txChange }}% vs last week</div>
+        <div class="mt-2 sm:mt-3 text-lg sm:text-2xl font-semibold tracking-tight text-gray-900">{{ number_format($totalTransactions) }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $txChange }}% vs last week</div>
     </div>
 
     {{-- Active Payment Links --}}
-    <div class="card-sm bg-white rounded-xl border p-5">
+    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
         <div class="flex items-start justify-between">
-            <span class="text-xs font-medium text-gray-500">Active Payment Links</span>
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Active Payment Links</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
         </div>
-        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $activePaymentLinks }}</div>
-        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $newPaymentLinks }} new vs last week</div>
+        <div class="mt-2 sm:mt-3 text-lg sm:text-2xl font-semibold tracking-tight text-gray-900">{{ $activePaymentLinks }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $newPaymentLinks }} new vs last week</div>
     </div>
 
     {{-- Revenue Today --}}
-    <div class="card-sm bg-white rounded-xl border p-5">
+    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
         <div class="flex items-start justify-between">
-            <span class="text-xs font-medium text-gray-500">Revenue Today</span>
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Revenue Today</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($revenueToday) }}</div>
-        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $todayChange }}% vs last week</div>
+        <div class="mt-2 sm:mt-3 text-lg sm:text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($revenueToday) }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $todayChange }}% vs last week</div>
     </div>
 </div>
 
