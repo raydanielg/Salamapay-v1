@@ -51,5 +51,48 @@
         </div>
     </header>
 
+    <section id="hero" class="relative overflow-hidden">
+        <div class="hero-gradient">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="text-center lg:text-left">
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-5">{{ $settings['hero_title'] ?? 'Welcome to ' . ($profile->business_name ?? 'Our Business') }}</h1>
+                        <p class="text-sm sm:text-base {{ $dark ? 'text-gray-300' : 'text-gray-500' }} leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">{{ $settings['hero_text'] ?? ($profile->description ?? 'We provide the best services for you. Pay securely and conveniently.') }}</p>
+                        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                            <a href="#payment" class="px-6 py-3 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90 active:scale-95 shadow-lg" style="background: {{ $primary }};">{{ $settings['cta_text'] ?? 'Pay Now' }}</a>
+                            <a href="#features" class="px-6 py-3 text-sm font-bold rounded-xl border transition-all hover:bg-gray-50 {{ $dark ? 'border-gray-600 text-gray-300 hover:bg-gray-800' : 'border-gray-200 text-gray-600' }}">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl {{ $dark ? 'bg-gray-800' : 'bg-gray-100' }}">
+                            @if($profile->logo)
+                            <div class="w-full h-full flex items-center justify-center">
+                                <img src="{{ asset('storage/'.$profile->logo) }}" class="max-w-[60%] max-h-[60%] object-contain">
+                            </div>
+                            @else
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-gray-100">
+                                <div class="w-24 h-24 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-lg" style="background: {{ $primary }};">
+                                    {{ strtoupper(substr($profile->business_name ?? 'B', 0, 1)) }}
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 {{ $dark ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-100' }} border rounded-2xl p-4 shadow-xl">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xs" style="background: {{ $accent }};">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold">Trusted Payments</p>
+                                    <p class="text-[10px] text-gray-400">100% Secure</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>
