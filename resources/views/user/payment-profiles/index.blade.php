@@ -126,73 +126,194 @@
     @endforelse
 </div>
 
-{{-- Create Profile Form --}}
-<div id="createProfile" class="animate-slide-up bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm">
-    <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+{{-- Create Modal Overlay --}}
+<div id="createModal" class="modal-overlay fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-end">
+    <div class="modal-panel w-full max-w-xl bg-white h-full overflow-y-auto shadow-2xl">
+        <div class="sticky top-0 z-10 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+            <div>
+                <h3 class="text-base font-bold text-gray-900">Create New Profile</h3>
+                <p class="text-xs text-gray-400">Set up a business profile for your payment pages</p>
+            </div>
+            <button onclick="closeModal()" class="p-2 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
-        <div>
-            <h3 class="text-base font-bold text-gray-900">Create New Profile</h3>
-            <p class="text-xs text-gray-400">Add a new business profile for your payment pages</p>
-        </div>
-    </div>
-    <form action="{{ route('user.payment-profiles.store') }}" method="POST" class="space-y-5">
-        @csrf
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+        <form action="{{ route('user.payment-profiles.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+            @csrf
+
+            {{-- Logo Upload --}}
             <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Profile Name</label>
-                <input type="text" name="name" required class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="e.g. Main Store">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business Name</label>
-                <input type="text" name="business_name" required class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="e.g. SalamaPay Ltd">
-            </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business Type</label>
-                <select name="business_type" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none bg-white transition-all">
-                    <option value="">Select type</option>
-                    <option value="Sole Proprietorship">Sole Proprietorship</option>
-                    <option value="Partnership">Partnership</option>
-                    <option value="Limited Company">Limited Company</option>
-                    <option value="NGO">NGO</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Phone</label>
-                <input type="text" name="phone" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="+255...">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Email</label>
-                <input type="email" name="email" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="business@example.com">
-            </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business TIN</label>
-                <input type="text" name="business_tin" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all" placeholder="123-456-789">
-            </div>
-            <div>
-                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Brand Color</label>
-                <div class="flex items-center gap-2">
-                    <input type="color" name="color" value="#024938" class="w-10 h-10 rounded-xl border border-gray-200 cursor-pointer">
-                    <input type="text" name="color_text" value="#024938" onchange="this.previousElementSibling.value = this.value" class="form-input flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none transition-all font-mono" placeholder="#024938">
+                <label class="block text-xs font-semibold text-gray-700 mb-2">Profile Logo</label>
+                <div class="flex items-center gap-4">
+                    <div id="logoPreview" class="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 shrink-0 overflow-hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <input type="file" name="logo" id="logoInput" accept="image/*" class="block w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer" onchange="previewLogo(this)">
+                        <p class="text-[10px] text-gray-400 mt-1">PNG, JPG or WEBP. Max 2MB.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-700 mb-1.5">Description</label>
-            <textarea name="description" rows="2" class="form-input w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 outline-none resize-none transition-all" placeholder="Short description shown on payment pages"></textarea>
-        </div>
-        <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" name="is_default" value="1" class="w-4 h-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-            <span class="text-xs font-semibold text-gray-700">Set as default profile</span>
-        </label>
-        <div class="pt-2">
-            <button type="submit" class="px-6 py-2.5 text-sm font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5">Create Profile</button>
-        </div>
-    </form>
+
+            {{-- Name & Business --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Profile Name <span class="text-red-400">*</span></label>
+                    <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all" placeholder="e.g. Main Store">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business Name <span class="text-red-400">*</span></label>
+                    <input type="text" name="business_name" required class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all" placeholder="e.g. SalamaPay Ltd">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business Type</label>
+                    <select name="business_type" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none bg-white transition-all">
+                        <option value="">Select type</option>
+                        <option value="Sole Proprietorship">Sole Proprietorship</option>
+                        <option value="Partnership">Partnership</option>
+                        <option value="Limited Company">Limited Company</option>
+                        <option value="NGO">NGO</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Phone</label>
+                    <input type="text" name="phone" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all" placeholder="+255...">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Email</label>
+                    <input type="email" name="email" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all" placeholder="business@example.com">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Business TIN</label>
+                    <input type="text" name="business_tin" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all" placeholder="123-456-789">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1.5">Brand Color</label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" name="color" id="colorPicker" value="#024938" class="w-10 h-10 rounded-lg border border-gray-200 cursor-pointer p-0.5 bg-white">
+                        <input type="text" id="colorText" value="#024938" oninput="document.getElementById('colorPicker').value = this.value" class="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none transition-all font-mono" placeholder="#024938">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1.5">Description</label>
+                <textarea name="description" rows="2" class="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-emerald-800 outline-none resize-none transition-all" placeholder="Short description shown on payment pages"></textarea>
+            </div>
+
+            {{-- Page Type --}}
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-2.5">Page Type</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="page-type-btn active cursor-pointer border-2 border-gray-200 rounded-xl p-4 hover:border-gray-300" onclick="selectPageType(this, 'fixed')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <svg class="pt-check w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-900">Fixed</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">Collect payment for one specific item, service, fee or contribution</p>
+                        <input type="radio" name="page_type" value="fixed" class="hidden" checked onchange="togglePageType('fixed')">
+                    </label>
+                    <label class="page-type-btn cursor-pointer border-2 border-gray-200 rounded-xl p-4 hover:border-gray-300" onclick="selectPageType(this, 'catalog')">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                            </div>
+                            <svg class="pt-check w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        <p class="text-sm font-bold text-gray-900">Catalog</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">Sell multiple products or services. Customers browse, choose and pay</p>
+                        <input type="radio" name="page_type" value="catalog" class="hidden" onchange="togglePageType('catalog')">
+                    </label>
+                </div>
+            </div>
+
+            {{-- Fixed-specific: Allow custom amount --}}
+            <div id="fixedOptions">
+                <label class="flex items-center gap-2.5 cursor-pointer p-3 rounded-lg border border-gray-200 bg-gray-50/50 hover:bg-gray-50 transition-colors">
+                    <input type="checkbox" name="allow_custom_amount" value="1" class="w-4 h-4 rounded border-gray-300 text-emerald-800 focus:ring-emerald-800">
+                    <div>
+                        <span class="text-sm font-medium text-gray-900">Allow customers to enter their own amount</span>
+                        <p class="text-[11px] text-gray-400">Useful for donations, tips, or pay-what-you-want services</p>
+                    </div>
+                </label>
+            </div>
+
+            {{-- Catalog-specific: Products builder --}}
+            <div id="catalogOptions" class="hidden">
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-xs font-semibold text-gray-700">Products / Services</label>
+                    <button type="button" onclick="addProduct()" class="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800">+ Add Product</button>
+                </div>
+                <div id="productsList" class="space-y-2"></div>
+            </div>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="is_default" value="1" class="w-4 h-4 rounded border-gray-300 text-emerald-800 focus:ring-emerald-800">
+                <span class="text-xs font-semibold text-gray-700">Set as default profile</span>
+            </label>
+
+            <div class="sticky bottom-0 bg-white pt-2 pb-1 border-t border-gray-100 flex items-center gap-3">
+                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2.5 text-sm font-semibold text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2.5 text-sm font-bold bg-emerald-800 text-white rounded-lg hover:bg-emerald-900 transition-colors shadow-sm">Create Profile</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+function openModal() { document.getElementById('createModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeModal() { document.getElementById('createModal').classList.remove('open'); document.body.style.overflow = ''; }
+
+function copyLink(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        alert('Link copied to clipboard!');
+    }).catch(() => {
+        const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert('Link copied!');
+    });
+}
+
+function previewLogo(input) {
+    const preview = document.getElementById('logoPreview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => { preview.innerHTML = '<img src="' + e.target.result + '" class="w-full h-full object-cover">'; };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function selectPageType(el, type) {
+    document.querySelectorAll('.page-type-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    togglePageType(type);
+}
+
+function togglePageType(type) {
+    document.getElementById('fixedOptions').classList.toggle('hidden', type !== 'fixed');
+    document.getElementById('catalogOptions').classList.toggle('hidden', type !== 'catalog');
+}
+
+let productIdx = 0;
+function addProduct() {
+    productIdx++;
+    const div = document.createElement('div');
+    div.className = 'grid grid-cols-12 gap-2 items-center';
+    div.innerHTML = '<div class="col-span-5"><input type="text" name="products[' + productIdx + '][name]" required placeholder="Product name" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-emerald-800"></div><div class="col-span-3"><input type="number" name="products[' + productIdx + '][price]" required placeholder="Price" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-emerald-800"></div><div class="col-span-3"><input type="text" name="products[' + productIdx + '][currency]" value="TZS" class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm outline-none focus:border-emerald-800"></div><div class="col-span-1"><button type="button" onclick="this.parentElement.parentElement.remove()" class="text-red-400 hover:text-red-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>';
+    document.getElementById('productsList').appendChild(div);
+}
+
+// Close modal on overlay click
+document.getElementById('createModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+});
+</script>
 @endsection
