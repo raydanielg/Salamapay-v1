@@ -81,7 +81,9 @@ class ServiceController extends Controller
 
     public function destroy(Service $service)
     {
-        $this->authorize('delete', $service);
+        if ($service->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized');
+        }
         $service->delete();
         return redirect()->route('user.services')->with('success', 'Service deleted successfully.');
     }
