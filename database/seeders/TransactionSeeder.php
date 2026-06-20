@@ -49,11 +49,14 @@ class TransactionSeeder extends Seeder
         ];
 
         foreach ($transactions as $tx) {
-            Transaction::create(array_merge($tx, [
-                'user_id' => $user->id,
-                'currency' => 'TZS',
-                'processed_at' => Carbon::parse($tx['processed_at']),
-            ]));
+            Transaction::updateOrCreate(
+                ['tx_id' => $tx['tx_id']],
+                array_merge($tx, [
+                    'user_id' => $user->id,
+                    'currency' => 'TZS',
+                    'processed_at' => Carbon::parse($tx['processed_at']),
+                ])
+            );
         }
     }
 }
