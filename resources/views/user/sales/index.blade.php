@@ -219,6 +219,67 @@ function doSearch() {
     });
 }
 
+function filterSalesRange(range) {
+    // Update button styles
+    document.querySelectorAll('.range-btn').forEach(btn => {
+        if (btn.dataset.range === range) {
+            btn.classList.remove('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+            btn.classList.add('bg-emerald-600', 'text-white');
+        } else {
+            btn.classList.remove('bg-emerald-600', 'text-white');
+            btn.classList.add('bg-gray-100', 'text-gray-600', 'hover:bg-gray-200');
+        }
+    });
+
+    // Update URL without reload
+    const url = new URL(window.location.href);
+    if (range === 'all') url.searchParams.delete('range');
+    else url.searchParams.set('range', range);
+    url.searchParams.delete('page');
+    window.history.pushState({}, '', url.toString());
+
+    // Fetch new data
+    fetch(url.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    .then(r => r.text())
+    .then(html => {
+        document.getElementById('salesTableBody').innerHTML = html;
+        const pag = document.getElementById('salesPagination');
+        if (pag) pag.style.display = 'none';
+        // Update stats via secondary fetch
+        updateStatsFromRange(range);
+    });
+}
+
+function updateStatsFromRange(range) {
+    // Recalculate stats based on visible rows
+    const rows = document.querySelectorAll('#salesTableBody tr');
+    let total = 0, totalAmount = 0, productsCount = 0, servicesCount = 0;
+    rows.forEach(row => {
+        const rd = row.dataset.sale ? JSON.parse(row.dataset.sale) : null;
+        if (rd) {
+            total++;
+            totalAmount += Number(rd.amount || 0);
+            if (rd.source_type === 'product') productsCount++;
+            if (rd.source_type === 'service') servicesCount++;
+        }
+    });
+    // Update Total Sales
+    const totalEl = document.querySelector('.grid > div:first-child p.text-2xl');
+    if (totalEl) totalEl.textContent = total.toLocaleString();
+    const totalSub = document.querySelector('.grid > div:first-child p.text-\[10px\]');
+    if (totalSub) totalSub.textContent = range === 'all' ? 'All time' : 'In selected period';
+    // Update Revenue
+    const revEl = document.querySelector('.grid > div:nth-child(2) p.text-2xl');
+    if (revEl) revEl.textContent = 'TSh ' + totalAmount.toLocaleString();
+    // Update Avg
+    const avgEl = document.querySelector('.grid > div:nth-child(3) p.text-2xl');
+    if (avgEl) avgEl.textContent = 'TSh ' + (total > 0 ? Math.round(totalAmount / total).toLocaleString() : '0');
+    // Update Products vs Services
+    const prodSvcEls = document.querySelectorAll('.grid > div:nth-child(4) p.text-xl');
+    if (prodSvcEls[0]) prodSvcEls[0].textContent = productsCount;
+    if (prodSvcEls[1]) prodSvcEls[1].textContent = servicesCount;
+}
+
 function toggleExportDropdown() { document.getElementById('exportDropdown').classList.toggle('hidden'); }
 document.addEventListener('click', function(e) {
     const c = document.getElementById('exportDropdownContainer');
