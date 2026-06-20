@@ -53,15 +53,8 @@
         </div>
     </div>
     <div class="relative z-10 max-w-7xl 2xl:max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-12 py-20 lg:py-28 xl:py-36">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
-            {{-- Image Column -- mobile: order 1 (top), desktop: order 2 (right) --}}
-            <div class="flex items-start justify-center relative order-1 lg:order-2 pt-4 lg:pt-0 -mb-8 lg:-mb-16">
-                <div class="relative animate-float w-[380px] h-[480px] sm:w-[520px] sm:h-[640px] md:w-[620px] md:h-[760px] lg:w-[600px] lg:h-[740px] xl:w-[780px] xl:h-[960px] 2xl:w-[880px] 2xl:h-[1080px]">
-                    <img src="{{ asset('cheerful-excited-woman-reading-very-good-news-her-mobile-phone.png') }}" alt="Happy user" class="absolute inset-0 w-full h-full object-contain object-top" style="-webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 55%, rgba(0,0,0,0.3) 80%, rgba(0,0,0,0) 100%);">
-                </div>
-            </div>
-            {{-- Text Column -- mobile: order 2 (bottom), desktop: order 1 (left) --}}
-            <div class="text-center lg:text-left order-2 lg:order-1">
+        <div class="max-w-4xl xl:max-w-5xl mx-auto">
+            <div class="text-center lg:text-left">
                 <a href="#" class="animate-fade-up delay-1 inline-flex justify-between items-center py-1 pr-4 pl-1 xl:pr-5 xl:pl-1.5 mb-6 xl:mb-8 text-xs xl:text-sm text-emerald-100 bg-white/10 backdrop-blur-sm border border-emerald-400/30 rounded-full hover:bg-white/15 hover:border-emerald-400/50 transition-all">
                     <span class="text-[10px] xl:text-xs font-bold bg-emerald-500 rounded-full text-white px-3 py-1 mr-2 uppercase tracking-wide">New</span>
                     <span class="font-medium" data-en="SalamaPay v1 is live" data-sw="SalamaPay v1 imetoka">SalamaPay v1 is live</span>
