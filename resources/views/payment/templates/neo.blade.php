@@ -161,5 +161,138 @@
         </div>
     </section>
 
+    <section id="payment" class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/50' : 'bg-gray-50' }}">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-10">
+                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3" style="background: {{ $primary }}15; color: {{ $primary }};">Payment</span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">Complete Your Payment</h2>
+                <p class="text-sm {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Secure, fast, and hassle-free</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+                {{-- Order Summary --}}
+                <div class="lg:col-span-2">
+                    <div class="rounded-2xl border {{ $dark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-white' }} overflow-hidden">
+                        <div class="p-5">
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-4">Order Summary</h3>
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <p class="text-sm font-semibold">{{ $link->title ?? 'Payment' }}</p>
+                                    <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mt-0.5">{{ $link->description ?? 'Complete your payment securely' }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t {{ $dark ? 'border-gray-700' : 'border-gray-100' }}">
+                                <span class="text-sm {{ $dark ? 'text-gray-400' : 'text-gray-500' }}">Total</span>
+                                <span class="text-xl font-bold brand-primary">{{ number_format($link->amount, 0) }} {{ $link->currency ?? 'TZS' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-center justify-center gap-4 text-[10px] text-gray-400">
+                        <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>SSL Secure</span>
+                        <span class="flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Encrypted</span>
+                    </div>
+                </div>
+
+                {{-- Payment Form --}}
+                <div class="lg:col-span-3">
+                    <div class="rounded-2xl border {{ $dark ? 'border-gray-700 bg-gray-800/50' : 'border-gray-200 bg-white' }} p-6">
+                        <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
+                            @csrf
+                            <div>
+                                <p class="text-sm font-semibold mb-3">Payment Method</p>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <label class="pm-card cursor-pointer rounded-xl border-2 p-4 transition-all" onclick="selectMethod('mobile')" style="border-color: {{ $primary }}; background: {{ $primary }}0D;">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background: {{ $primary }};">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold leading-none">Mobile Money</p>
+                                                <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mt-1">M-Pesa, Tigo, Airtel</p>
+                                            </div>
+                                        </div>
+                                        <input type="radio" name="payment_method_type" value="mobile" class="hidden" checked>
+                                    </label>
+                                    <label class="pm-card cursor-pointer rounded-xl border-2 border-gray-200 p-4 transition-all hover:border-gray-300" onclick="selectMethod('card')">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                            </div>
+                                            <div>
+                                                <p class="text-sm font-bold leading-none">Card</p>
+                                                <p class="text-[11px] {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mt-1">Visa, Mastercard</p>
+                                            </div>
+                                        </div>
+                                        <input type="radio" name="payment_method_type" value="card" class="hidden">
+                                    </label>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="payment_method" id="paymentMethodHidden" value="mobile_money">
+
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Phone Number</p>
+                                <div class="relative">
+                                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">+255</div>
+                                    <input type="tel" id="phoneDisplay" maxlength="12" placeholder="7XX XXX XXX" class="w-full pl-14 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all font-mono" style="--tw-ring-color: {{ $primary }};" required>
+                                    <input type="hidden" name="phone" id="phoneHidden" value="">
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Customer Details</p>
+                                <div class="space-y-3">
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+                                        <input type="text" name="customer_name" placeholder="Full name" class="w-full pl-10 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all" style="--tw-ring-color: {{ $primary }};" required>
+                                    </div>
+                                    @if($profile->require_email ?? true)
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/></svg></div>
+                                        <input type="email" name="customer_email" placeholder="Email address" class="w-full pl-10 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all" style="--tw-ring-color: {{ $primary }};" required>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div id="cardDetails" class="hidden">
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Card Details</p>
+                                <div class="space-y-3">
+                                    <div class="relative">
+                                        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
+                                        <input type="text" name="card_number" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full pl-10 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all font-mono" style="--tw-ring-color: {{ $primary }};">
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <div class="relative">
+                                            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
+                                            <input type="text" name="card_expiry" maxlength="5" placeholder="MM / YY" class="w-full pl-10 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all font-mono" style="--tw-ring-color: {{ $primary }};">
+                                        </div>
+                                        <div class="relative">
+                                            <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+                                            <input type="text" name="card_cvv" maxlength="4" placeholder="CVV" class="w-full pl-10 pr-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all font-mono" style="--tw-ring-color: {{ $primary }};">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="billingInfo" class="hidden">
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Billing Address</p>
+                                <div class="space-y-3">
+                                    <input type="text" name="billing_address" placeholder="Street address" class="w-full px-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all" style="--tw-ring-color: {{ $primary }};">
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <input type="text" name="billing_city" placeholder="City" class="w-full px-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all" style="--tw-ring-color: {{ $primary }};">
+                                        <input type="text" name="billing_postal" placeholder="Postal code" class="w-full px-4 py-3 rounded-xl border {{ $dark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-200 bg-white' }} text-sm outline-none focus:ring-2 focus:ring-opacity-20 transition-all" style="--tw-ring-color: {{ $primary }};">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full py-3.5 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90 active:scale-[0.98] shadow-lg" style="background: {{ $primary }};">Pay {{ number_format($link->amount, 0) }} {{ $link->currency ?? 'TZS' }}</button>
+                            <p class="text-center text-[10px] text-gray-400">Secured by SalamaPay</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>
