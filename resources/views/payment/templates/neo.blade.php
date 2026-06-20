@@ -248,6 +248,18 @@
         </div>
     </section>
 
+    {{-- MINI CTA BANNER --}}
+    <section class="py-10 {{ $dark ? 'bg-gray-800/50' : 'bg-gray-50' }} border-b {{ $dark ? 'border-gray-700' : 'border-gray-200' }}">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <h3 class="text-lg sm:text-xl font-bold mb-2">Ready to make your payment?</h3>
+            <p class="text-xs {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mb-5 max-w-md mx-auto">It takes less than a minute. No account required. Your information is always secure.</p>
+            <a href="#payment" class="inline-flex items-center gap-2 px-6 py-3 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90 active:scale-95 shadow-lg" style="background: {{ $primary }};">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Proceed to Payment
+            </a>
+        </div>
+    </section>
+
     <section id="payment" class="py-16 lg:py-20 {{ $dark ? 'bg-gray-800/50' : 'bg-gray-50' }}">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="text-center mb-10">
