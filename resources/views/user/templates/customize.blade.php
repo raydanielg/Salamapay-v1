@@ -94,6 +94,32 @@
 
     {{-- Right: Content & Preview --}}
     <div class="lg:col-span-2 space-y-5">
+        {{-- Website Content --}}
+        <div class="bg-white rounded-xl border p-5">
+            <h3 class="text-sm font-bold text-gray-900 mb-4">Website Content</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Hero Title</label>
+                    <input type="text" name="template_settings[hero_title]" value="{{ $profile->template_settings['hero_title'] ?? 'Welcome to ' . $profile->business_name }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all">
+                    <p class="text-[10px] text-gray-400 mt-1">Main headline on your homepage</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Hero Text</label>
+                    <textarea name="template_settings[hero_text]" rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all resize-none">{{ $profile->template_settings['hero_text'] ?? $profile->description }}</textarea>
+                    <p class="text-[10px] text-gray-400 mt-1">Subtitle under the hero title</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Button Text</label>
+                    <input type="text" name="template_settings[cta_text]" value="{{ $profile->template_settings['cta_text'] ?? 'Pay Now' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all">
+                    <p class="text-[10px] text-gray-400 mt-1">Text on the main call-to-action button</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Footer Text</label>
+                    <input type="text" name="template_settings[footer_text]" value="{{ $profile->template_settings['footer_text'] ?? 'All rights reserved. Powered by SalamaPay.' }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200/50 transition-all">
+                </div>
+            </div>
+        </div>
+
         {{-- Business Info --}}
         <div class="bg-white rounded-xl border p-5">
             <h3 class="text-sm font-bold text-gray-900 mb-4">Business Information</h3>
