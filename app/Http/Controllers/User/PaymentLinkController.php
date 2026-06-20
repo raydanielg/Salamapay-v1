@@ -87,6 +87,12 @@ class PaymentLinkController extends Controller
         return back()->with('success', 'Payment link updated');
     }
 
+    public function show($id)
+    {
+        $link = PaymentLink::where('user_id', auth()->id())->findOrFail($id);
+        return view('user.payment-links.show', compact('link'));
+    }
+
     public function destroy($id)
     {
         $link = PaymentLink::where('user_id', auth()->id())->findOrFail($id);
