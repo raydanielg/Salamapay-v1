@@ -86,55 +86,75 @@
     </div>
 </div>
 
+@php
+    $revMax = max($revenueDays) ?: 1;
+    $revSvgPoints = [];
+    foreach($revenueDays as $i => $rev) {
+        $x = round($i * (100 / 6), 2);
+        $y = round(40 - (($rev / $revMax) * 35), 2);
+        $revSvgPoints[] = "{$x},{$y}";
+    }
+    $areaPath = "M" . $revSvgPoints[0] . " L" . implode(" L", array_slice($revSvgPoints, 1)) . " L100,40 L0,40 Z";
+    $linePoints = implode(" ", $revSvgPoints);
+@endphp
+
 {{-- Charts Row --}}
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-    {{-- Revenue Chart --}}
-    <div class="bg-white rounded-xl border p-4 lg:p-5">
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-3 mb-6">
+    {{-- Revenue Area Chart --}}
+    <div class="bg-white rounded-xl border p-5 lg:col-span-2">
         <div class="flex items-center justify-between mb-4">
             <div>
                 <h3 class="text-sm font-semibold text-gray-900">Revenue</h3>
                 <p class="text-xs text-gray-400">Last 7 days</p>
             </div>
             <div class="text-right">
-                <p class="text-lg font-bold text-gray-900">{{ $fmtTz($weeklyRevenue) }}</p>
-                <p class="text-[10px] font-medium text-emerald-600">{{ $weeklyRevenueChange > 0 ? '+' . $weeklyRevenueChange : $weeklyRevenueChange }}%</p>
+                <div class="text-lg font-semibold text-gray-900">{{ $fmtTz($weeklyRevenue) }}</div>
+                <div class="text-xs text-emerald-600 font-medium">+{{ $weeklyRevenueChange }}%</div>
             </div>
         </div>
-        <div class="flex items-end gap-[6px] h-32">
-            @foreach($revenueDays as $i => $rev)
-                @php
-                    $max = max($revenueDays) ?: 1;
-                    $pct = ($rev / $max) * 100;
-                    $isToday = $i === count($revenueDays) - 1;
-                @endphp
-                <div class="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer">
-                    <div class="w-full bg-gray-50 rounded-t-md relative h-24 overflow-hidden">
-                        <div class="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-300 {{ $isToday ? 'bar-rev' : 'bar-rev-past' }}" style="height: {{ max($pct, 4) }}%"></div>
-                    </div>
-                    <span class="text-[10px] text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
-                </div>
+        <svg viewBox="0 0 100 40" class="w-full h-56" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="revGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                </linearGradient>
+            </defs>
+            {{-- Grid lines --}}
+            <line x1="0" y1="10" x2="100" y2="10" stroke="#f3f4f6" stroke-dasharray="2"/>
+            <line x1="0" y1="20" x2="100" y2="20" stroke="#f3f4f6" stroke-dasharray="2"/>
+            <line x1="0" y1="30" x2="100" y2="30" stroke="#f3f4f6" stroke-dasharray="2"/>
+            {{-- Area fill --}}
+            <path d="{{ $areaPath }}" fill="url(#revGrad)"/>
+            {{-- Line --}}
+            <polyline points="{{ $linePoints }}" fill="none" stroke="#10b981" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+            {{-- Data points --}}
+            @foreach($revSvgPoints as $pt)
+                @php list($px, $py) = explode(',', $pt); @endphp
+                <circle cx="{{ $px }}" cy="{{ $py }}" r="0.8" fill="#10b981"/>
+            @endforeach
+        </svg>
+        <div class="flex justify-between mt-2">
+            @foreach($dayLabels as $label)
+                <span class="text-[10px] text-gray-400 font-medium">{{ $label }}</span>
             @endforeach
         </div>
     </div>
 
-    {{-- Transaction Volume Chart --}}
-    <div class="bg-white rounded-xl border p-4 lg:p-5">
-        <div class="flex items-center justify-between mb-4">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-900">Transaction volume</h3>
-                <p class="text-xs text-gray-400">Last 7 days</p>
-            </div>
+    {{-- Transaction Volume Bar Chart --}}
+    <div class="bg-white rounded-xl border p-5">
+        <div class="mb-4">
+            <h3 class="text-sm font-semibold text-gray-900">Transaction volume</h3>
+            <p class="text-xs text-gray-400">Last 7 days</p>
         </div>
-        <div class="flex items-end gap-[6px] h-32">
+        <div class="flex items-end gap-2 h-56">
             @foreach($volumeDays as $i => $vol)
                 @php
                     $maxVol = max($volumeDays) ?: 1;
-                    $pctVol = ($vol / $maxVol) * 100;
-                    $isTodayVol = $i === count($volumeDays) - 1;
+                    $pct = ($vol / $maxVol) * 100;
                 @endphp
                 <div class="flex-1 flex flex-col items-center gap-1.5 group cursor-pointer">
-                    <div class="w-full bg-gray-50 rounded-t-md relative h-24 overflow-hidden">
-                        <div class="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-300 {{ $isTodayVol ? 'bar-vol' : 'bar-vol-past' }}" style="height: {{ max($pctVol, 4) }}%"></div>
+                    <div class="w-full bg-gray-50 rounded-t-md relative h-48 overflow-hidden">
+                        <div class="absolute bottom-0 left-0 right-0 rounded-t-md transition-all duration-300 bg-emerald-500" style="height: {{ max($pct, 4) }}%"></div>
                     </div>
                     <span class="text-[10px] text-gray-400 font-medium">{{ $dayLabels[$i] }}</span>
                 </div>
