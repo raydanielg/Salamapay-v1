@@ -130,6 +130,13 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/payments/create', [App\Http\Controllers\User\PaymentController::class, 'create'])->name('user.payments.create');
     Route::get('/payments/{id}', [App\Http\Controllers\User\PaymentController::class, 'show'])->name('user.payments.show');
 
+    // Payment Links
+    Route::get('/payment-links', [App\Http\Controllers\User\PaymentLinkController::class, 'index'])->name('user.payment-links');
+    Route::get('/payment-links/create', [App\Http\Controllers\User\PaymentLinkController::class, 'create'])->name('user.payment-links.create');
+    Route::post('/payment-links', [App\Http\Controllers\User\PaymentLinkController::class, 'store'])->name('user.payment-links.store');
+    Route::put('/payment-links/{id}', [App\Http\Controllers\User\PaymentLinkController::class, 'update'])->name('user.payment-links.update');
+    Route::delete('/payment-links/{id}', [App\Http\Controllers\User\PaymentLinkController::class, 'destroy'])->name('user.payment-links.destroy');
+
     // Wallet
     Route::get('/wallet', [App\Http\Controllers\User\WalletController::class, 'index'])->name('user.wallet');
     Route::get('/wallet/withdraw', [App\Http\Controllers\User\WalletController::class, 'withdraw'])->name('user.wallet.withdraw');
