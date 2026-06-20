@@ -84,6 +84,15 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        return redirect($this->redirectPath());
+        // Flash email and show success page instead of auto-login
+        return redirect()->route('register.success')->with('registered_email', $user->email);
+    }
+
+    /**
+     * Show registration success page.
+     */
+    public function showSuccess()
+    {
+        return view('auth.register-success');
     }
 }
