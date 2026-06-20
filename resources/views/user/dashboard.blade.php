@@ -31,56 +31,58 @@
     @keyframes spark { to { stroke-dashoffset: 0; } }
 </style>
 
-{{-- Welcome --}}
-<div class="mb-6">
-    <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Welcome back, {{ Auth::user()->first_name ?? 'Merchant' }}</h1>
-    <p class="text-sm text-gray-500 mt-0.5">Here's what's happening with your payments today.</p>
+{{-- Welcome + Actions --}}
+<div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900 tracking-tight">Welcome back, {{ Auth::user()->first_name ?? 'Merchant' }}</h1>
+        <p class="text-sm text-gray-500 mt-0.5">Here's what's happening with your payments today.</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <button class="px-3 py-1.5 text-xs font-medium border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">Export</button>
+        <button class="px-3 py-1.5 text-xs font-medium bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">Create payment link</button>
+    </div>
 </div>
 
-{{-- Compact Stats --}}
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-    <div class="card-sm bg-white rounded-lg border p-3 lg:p-4">
-        <div class="flex items-center gap-2 mb-2">
-            <div class="w-7 h-7 rounded-md bg-emerald-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <span class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">+{{ $balanceChange }}%</span>
+{{-- Stats Cards --}}
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-6">
+    {{-- Total Balance --}}
+    <div class="card-sm bg-white rounded-xl border p-5">
+        <div class="flex items-start justify-between">
+            <span class="text-xs font-medium text-gray-500">Total Balance</span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <p class="text-base lg:text-xl font-bold text-gray-900">{{ $fmtTz($totalBalance) }}</p>
-        <p class="text-[11px] text-gray-500 mt-0.5">Total Balance</p>
+        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($totalBalance) }}</div>
+        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $balanceChange }}% vs last week</div>
     </div>
 
-    <div class="card-sm bg-white rounded-lg border p-3 lg:p-4">
-        <div class="flex items-center gap-2 mb-2">
-            <div class="w-7 h-7 rounded-md bg-blue-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            </div>
-            <span class="text-[10px] font-semibold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">+{{ $txChange }}%</span>
+    {{-- Total Transactions --}}
+    <div class="card-sm bg-white rounded-xl border p-5">
+        <div class="flex items-start justify-between">
+            <span class="text-xs font-medium text-gray-500">Total Transactions</span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <p class="text-base lg:text-xl font-bold text-gray-900">{{ number_format($totalTransactions) }}</p>
-        <p class="text-[11px] text-gray-500 mt-0.5">Transactions</p>
+        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ number_format($totalTransactions) }}</div>
+        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $txChange }}% vs last week</div>
     </div>
 
-    <div class="card-sm bg-white rounded-lg border p-3 lg:p-4">
-        <div class="flex items-center gap-2 mb-2">
-            <div class="w-7 h-7 rounded-md bg-amber-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-            </div>
-            <span class="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">+{{ $newPaymentLinks }}</span>
+    {{-- Active Payment Links --}}
+    <div class="card-sm bg-white rounded-xl border p-5">
+        <div class="flex items-start justify-between">
+            <span class="text-xs font-medium text-gray-500">Active Payment Links</span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
         </div>
-        <p class="text-base lg:text-xl font-bold text-gray-900">{{ $activePaymentLinks }}</p>
-        <p class="text-[11px] text-gray-500 mt-0.5">Payment Links</p>
+        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $activePaymentLinks }}</div>
+        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $newPaymentLinks }} new vs last week</div>
     </div>
 
-    <div class="card-sm bg-white rounded-lg border p-3 lg:p-4">
-        <div class="flex items-center gap-2 mb-2">
-            <div class="w-7 h-7 rounded-md bg-violet-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <span class="text-[10px] font-semibold text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">+{{ $todayChange }}%</span>
+    {{-- Revenue Today --}}
+    <div class="card-sm bg-white rounded-xl border p-5">
+        <div class="flex items-start justify-between">
+            <span class="text-xs font-medium text-gray-500">Revenue Today</span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <p class="text-base lg:text-xl font-bold text-gray-900">{{ $fmtTz($revenueToday) }}</p>
-        <p class="text-[11px] text-gray-500 mt-0.5">Revenue Today</p>
+        <div class="mt-3 text-2xl font-semibold tracking-tight text-gray-900">{{ $fmtTz($revenueToday) }}</div>
+        <div class="mt-1 text-xs text-emerald-600 font-medium">+{{ $todayChange }}% vs last week</div>
     </div>
 </div>
 
