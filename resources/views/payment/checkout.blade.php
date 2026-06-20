@@ -166,27 +166,27 @@
                         {{-- Payment Method Selector --}}
                         <div>
                             <p class="text-sm font-semibold mb-2.5 text-gray-900">Payment method</p>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="pm-card cursor-pointer rounded-xl border-2 border-gray-200 p-3 transition-all hover:border-gray-300 {{ old('payment_method') !== 'card' ? 'active border-emerald-800 bg-emerald-50/30' : '' }}" onclick="selectMethod('mobile')">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
-                                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ old('payment_method') !== 'card' ? 'active border-[{{ $link->profile->color ?? '#024938' }}] bg-gray-50' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('mobile')">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ old('payment_method') !== 'card' ? ($link->profile->color ?? '#024938') : '#f3f4f6' }};">
+                                            <svg class="w-5 h-5 {{ old('payment_method') !== 'card' ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
                                         </div>
                                         <div>
-                                            <p class="text-sm font-semibold text-gray-900 leading-none">Mobile Money</p>
-                                            <p class="text-[11px] text-gray-500 mt-0.5">M-Pesa, Tigo, Airtel</p>
+                                            <p class="text-sm font-bold text-gray-900 leading-none">Mobile Money</p>
+                                            <p class="text-[11px] text-gray-500 mt-1">M-Pesa, Tigo, Airtel</p>
                                         </div>
                                     </div>
                                     <input type="radio" name="payment_method_type" value="mobile" class="hidden" {{ old('payment_method') !== 'card' ? 'checked' : '' }}>
                                 </label>
-                                <label class="pm-card cursor-pointer rounded-xl border-2 border-gray-200 p-3 transition-all hover:border-gray-300 {{ old('payment_method') === 'card' ? 'active border-emerald-800 bg-emerald-50/30' : '' }}" onclick="selectMethod('card')">
-                                    <div class="flex items-center gap-2.5">
-                                        <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
-                                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                <label class="pm-card group cursor-pointer rounded-xl border-2 p-4 transition-all {{ old('payment_method') === 'card' ? 'active border-[{{ $link->profile->color ?? '#024938' }}] bg-gray-50' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectMethod('card')">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors" style="background: {{ old('payment_method') === 'card' ? ($link->profile->color ?? '#024938') : '#f3f4f6' }};">
+                                            <svg class="w-5 h-5 {{ old('payment_method') === 'card' ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                                         </div>
                                         <div>
-                                            <p class="text-sm font-semibold text-gray-900 leading-none">Card</p>
-                                            <p class="text-[11px] text-gray-500 mt-0.5">Visa, Mastercard</p>
+                                            <p class="text-sm font-bold text-gray-900 leading-none">Card</p>
+                                            <p class="text-[11px] text-gray-500 mt-1">Visa, Mastercard</p>
                                         </div>
                                     </div>
                                     <input type="radio" name="payment_method_type" value="card" class="hidden" {{ old('payment_method') === 'card' ? 'checked' : '' }}>
@@ -197,26 +197,17 @@
                         {{-- Mobile Money Providers --}}
                         <div id="mobileProviders" class="{{ old('payment_method') === 'card' ? 'hidden' : '' }}">
                             <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Select Provider</p>
-                            <div class="grid grid-cols-3 gap-2">
-                                <label class="provider-btn cursor-pointer rounded-lg border border-gray-200 p-2.5 text-center transition-all hover:border-emerald-300 {{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'active border-emerald-800 bg-emerald-50/30' : '' }}" onclick="selectProvider(this, 'mpesa')">
-                                    <div class="w-7 h-7 rounded-md bg-emerald-100 flex items-center justify-center mx-auto mb-1.5">
-                                        <span class="text-[9px] font-bold text-emerald-700 leading-none">M</span>
-                                    </div>
-                                    <p class="text-[11px] font-medium text-gray-700 leading-none">M-Pesa</p>
+                            <div class="flex items-center gap-2">
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'mpesa')" style="{{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                    <span class="text-xs font-semibold">M-Pesa</span>
                                     <input type="radio" name="payment_method" value="mpesa" class="hidden" {{ old('payment_method') === 'mpesa' || !old('payment_method') ? 'checked' : '' }}>
                                 </label>
-                                <label class="provider-btn cursor-pointer rounded-lg border border-gray-200 p-2.5 text-center transition-all hover:border-emerald-300 {{ old('payment_method') === 'tigopesa' ? 'active border-emerald-800 bg-emerald-50/30' : '' }}" onclick="selectProvider(this, 'tigopesa')">
-                                    <div class="w-7 h-7 rounded-md bg-blue-100 flex items-center justify-center mx-auto mb-1.5">
-                                        <span class="text-[9px] font-bold text-blue-700 leading-none">T</span>
-                                    </div>
-                                    <p class="text-[11px] font-medium text-gray-700 leading-none">Tigo Pesa</p>
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'tigopesa' ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'tigopesa')" style="{{ old('payment_method') === 'tigopesa' ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                    <span class="text-xs font-semibold">Tigo Pesa</span>
                                     <input type="radio" name="payment_method" value="tigopesa" class="hidden" {{ old('payment_method') === 'tigopesa' ? 'checked' : '' }}>
                                 </label>
-                                <label class="provider-btn cursor-pointer rounded-lg border border-gray-200 p-2.5 text-center transition-all hover:border-emerald-300 {{ old('payment_method') === 'airtelmoney' ? 'active border-emerald-800 bg-emerald-50/30' : '' }}" onclick="selectProvider(this, 'airtelmoney')">
-                                    <div class="w-7 h-7 rounded-md bg-red-100 flex items-center justify-center mx-auto mb-1.5">
-                                        <span class="text-[9px] font-bold text-red-700 leading-none">A</span>
-                                    </div>
-                                    <p class="text-[11px] font-medium text-gray-700 leading-none">Airtel</p>
+                                <label class="provider-chip cursor-pointer rounded-full border px-4 py-2 text-center transition-all {{ old('payment_method') === 'airtelmoney' ? 'active' : 'border-gray-200 hover:border-gray-300' }}" onclick="selectProvider(this, 'airtelmoney')" style="{{ old('payment_method') === 'airtelmoney' ? 'border-color:'.($link->profile->color ?? '#024938').'; background:'.($link->profile->color ?? '#024938').'1A; color:'.($link->profile->color ?? '#024938') : '' }}">
+                                    <span class="text-xs font-semibold">Airtel Money</span>
                                     <input type="radio" name="payment_method" value="airtelmoney" class="hidden" {{ old('payment_method') === 'airtelmoney' ? 'checked' : '' }}>
                                 </label>
                             </div>
@@ -230,14 +221,14 @@
                                     <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
                                     </div>
-                                    <input type="text" name="card_number" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular">
+                                    <input type="text" name="card_number" maxlength="19" placeholder="0000 0000 0000 0000" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular" style="--tw-ring-color: {{ $link->profile->color ?? '#024938' }}33;">
                                 </div>
                                 <div class="grid grid-cols-2 gap-2.5">
                                     <div class="relative">
                                         <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                         </div>
-                                        <input type="text" name="card_expiry" maxlength="5" placeholder="MM/YY" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular">
+                                        <input type="text" name="card_expiry" maxlength="5" placeholder="MM / YY" class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 text-sm outline-none bg-white focus:border-emerald-800 focus:ring-1 focus:ring-emerald-800/20 transition-all placeholder:text-gray-400/70 font-mono tabular">
                                     </div>
                                     <div class="relative">
                                         <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
