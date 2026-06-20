@@ -6,22 +6,44 @@
 @section('content')
 <style>
     .profile-card { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
-    .profile-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px -8px rgba(0,0,0,0.1); }
-    .animate-slide-up { animation: slideUp 0.5s ease-out both; }
-    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
+    .profile-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px -12px rgba(0,0,0,0.12); }
+    .animate-fade-up { animation: fadeUp 0.4s ease-out both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+    .delay-1 { animation-delay: 0.06s; }
+    .delay-2 { animation-delay: 0.12s; }
+    .delay-3 { animation-delay: 0.18s; }
+    .modal-overlay { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-panel { transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .modal-overlay.open .modal-panel { transform: translateX(0); }
+    .type-badge.catalog { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+    .type-badge.fixed { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+    .logo-preview { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
+    .page-type-btn { transition: all 0.15s; }
+    .page-type-btn.active { border-color: #024938; background: #f0fdf4; }
+    .page-type-btn.active .pt-check { opacity: 1; transform: scale(1); }
+    .pt-check { opacity: 0; transform: scale(0.5); transition: all 0.15s; }
 </style>
 
 @include('user.partials.alert')
 
-@include('user.partials.page-header', [
-    'title' => 'Payment Profiles',
-    'subtitle' => 'Manage business profiles shown on your payment pages',
-    'action' => true,
-    'actionUrl' => '#createProfile',
-    'actionLabel' => 'New Profile'
-])
+{{-- Header + Filter --}}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 animate-fade-up">
+    <div>
+        <h1 class="text-xl font-bold text-gray-900">Payment Profiles</h1>
+        <p class="text-xs text-gray-500 mt-0.5">Manage business profiles shown on your payment pages</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <form method="GET" action="{{ route('user.payment-profiles') }}" class="relative">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search profiles..." class="pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm focus:border-emerald-500 outline-none w-56">
+        </form>
+        <button onclick="openModal()" class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-800 text-white text-sm font-semibold rounded-lg hover:bg-emerald-900 transition-colors shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New Profile
+        </button>
+    </div>
+</div>
 
 {{-- Profiles Grid --}}
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
