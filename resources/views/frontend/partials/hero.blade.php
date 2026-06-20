@@ -67,7 +67,7 @@
                     <span class="font-medium" data-en="SalamaPay v1 is live" data-sw="SalamaPay v1 imetoka">SalamaPay v1 is live</span>
                     <svg class="ml-1.5 w-3.5 h-3.5 xl:w-4 xl:h-4 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 </a>
-                <h1 class="animate-fade-up delay-2 text-[2.5rem] sm:text-[2.8rem] md:text-6xl lg:text-[4.2rem] xl:text-[5.5rem] 2xl:text-[6.5rem] font-extrabold text-white leading-[1.1] mb-6 xl:mb-8">
+                <h1 class="animate-fade-up delay-2 text-[2rem] sm:text-[2.4rem] md:text-5xl lg:text-[3.4rem] xl:text-[4.5rem] 2xl:text-[5.5rem] font-extrabold text-white leading-[1.1] mb-6 xl:mb-8">
                     <span data-en="Pay With Ease," data-sw="Lipa kwa">Pay With Ease,</span> <span class="text-gold-300 inline-block" data-en="Business Receives Fast" data-sw="Urahisi">Business Receives Fast</span>
                 </h1>
                 <p class="animate-fade-up delay-3 text-lg sm:text-xl md:text-2xl xl:text-3xl text-emerald-100/80 max-w-xl xl:max-w-2xl mx-auto lg:mx-0 mb-8 xl:mb-10 leading-relaxed">
