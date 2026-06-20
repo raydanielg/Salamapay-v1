@@ -296,11 +296,58 @@ function processPayment() {
     if (total <= 0) { alert('Cart is empty. Add products first.'); return; }
     const paid = parseFloat(document.getElementById('amountPaid')?.value) || 0;
     if (paid < total) { alert('Amount received is less than total.'); return; }
-    alert('Payment of ' + currencySymbol + ' ' + total.toLocaleString() + ' processed successfully!');
-    // Here you would save sale, then optionally print or send receipt
-    cart = []; renderCart(); calculateTotals();
-    document.getElementById('discountInput').value = '';
-    document.getElementById('amountPaid').value = '';
+
+    const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+    const discountType = document.getElementById('discountType')?.value || 'flat';
+    let discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
+    if (discountType === 'percent') discount = Math.round(subtotal * (discount / 100));
+    const taxable = Math.max(0, subtotal - discount);
+    const tax = Math.round(taxable * taxRate);
+
+    const payload = {
+        items: cart.map(item => ({ id: item.id, name: item.name, price: item.price, qty: item.qty })),
+        subtotal: subtotal,
+        discount: discount,
+        tax: tax,
+        total: total,
+        customer_name: document.getElementById('customerName')?.value || '',
+        customer_phone: document.getElementById('customerPhone')?.value || '',
+        method: 'cash',
+        amount_paid: paid,
+        change: Math.max(0, paid - total),
+    };
+
+    fetch('{{ route('user.pos.store') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            if (typeof saAlert === 'function') {
+                saAlert({ title: 'Payment Successful!', text: 'Sale ' + data.tx_id + ' saved.', icon: 'success' });
+            } else {
+                alert('Payment of ' + currencySymbol + ' ' + total.toLocaleString() + ' processed! TX: ' + data.tx_id);
+            }
+            cart = []; renderCart(); calculateTotals();
+            document.getElementById('discountInput').value = '';
+            document.getElementById('amountPaid').value = '';
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+        } else {
+            alert('Failed to save sale. Please try again.');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Network error. Please try again.');
+    });
 }
 
 function printReceipt() {
