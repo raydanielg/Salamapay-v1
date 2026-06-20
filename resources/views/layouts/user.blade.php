@@ -177,17 +177,72 @@
                 </button>
                 <h1 class="text-lg font-bold text-gray-800">@yield('page_title', 'Dashboard')</h1>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 sm:gap-4">
                 {{-- Search --}}
-                <div class="hidden md:flex items-center bg-gray-50 rounded-lg px-3 py-1.5 border border-gray-100">
-                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" placeholder="Search..." class="bg-transparent text-sm outline-none w-48 text-gray-600 placeholder-gray-400">
+                <div class="hidden md:flex items-center bg-gray-50 rounded-xl px-3 py-2 border border-gray-200 focus-within:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-100 transition-all">
+                    <svg class="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="globalSearch" placeholder="Search transactions..." class="bg-transparent text-sm outline-none w-48 text-gray-700 placeholder-gray-400">
                 </div>
+
                 {{-- Notifications --}}
-                <button class="relative p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-gold-400 rounded-full"></span>
-                </button>
+                <div class="relative" id="notifContainer">
+                    <button onclick="toggleNotifications()" class="relative p-2 rounded-xl hover:bg-gray-100 text-gray-500 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        <span id="notifBadge" class="absolute top-1 right-1 w-4 h-4 bg-gold-400 rounded-full text-[8px] font-bold text-white flex items-center justify-center shadow-sm">3</span>
+                    </button>
+
+                    {{-- Notification Dropdown --}}
+                    <div id="notifDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 origin-top-right transition-all">
+                        <div class="px-4 py-3 border-b border-gray-50 flex items-center justify-between">
+                            <h4 class="text-sm font-bold text-gray-900">Notifications</h4>
+                            <button onclick="markAllRead()" class="text-[11px] text-emerald-600 font-medium hover:text-emerald-700">Mark all read</button>
+                        </div>
+                        <div class="max-h-72 overflow-y-auto" id="notifList">
+                            {{-- Recent transaction notifications --}}
+                            @php
+                                $notifTxs = \App\Models\Transaction::where('user_id', auth()->id())->orderBy('processed_at', 'desc')->take(5)->get();
+                            @endphp
+                            @forelse($notifTxs as $ntx)
+                            <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0">
+                                <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5
+                                    @if($ntx->status === 'success') bg-emerald-100 text-emerald-600
+                                    @elseif($ntx->status === 'pending') bg-amber-100 text-amber-600
+                                    @else bg-red-100 text-red-600 @endif">
+                                    @if($ntx->status === 'success')
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    @elseif($ntx->status === 'pending')
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    @else
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    @endif
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-semibold text-gray-900 truncate">
+                                        @if($ntx->status === 'success') Payment received
+                                        @elseif($ntx->status === 'pending') Payment pending
+                                        @else Payment failed @endif
+                                    </p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">TSh {{ number_format($ntx->amount) }} from {{ $ntx->customer_name }}</p>
+                                    <p class="text-[10px] text-gray-400 mt-0.5">{{ $ntx->processed_at?->diffForHumans() }}</p>
+                                </div>
+                                @if($loop->index < 3)
+                                <span class="w-1.5 h-1.5 bg-gold-400 rounded-full shrink-0 mt-2"></span>
+                                @endif
+                            </div>
+                            @empty
+                            <div class="px-4 py-8 text-center">
+                                <div class="w-12 h-12 mx-auto bg-gray-50 rounded-full flex items-center justify-center mb-2">
+                                    <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                                </div>
+                                <p class="text-xs text-gray-400">No notifications yet</p>
+                            </div>
+                            @endforelse
+                        </div>
+                        <a href="{{ route('user.transactions') }}" class="block px-4 py-2.5 border-t border-gray-50 text-xs font-medium text-emerald-600 text-center hover:bg-emerald-50 transition-colors">
+                            View all activity
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
