@@ -6,6 +6,17 @@
 @section('content')
 @include('user.partials.alert')
 
+{{-- Announcement Banner --}}
+<div class="mb-6 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 p-4 flex items-start gap-3">
+    <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center shrink-0 mt-0.5">
+        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    </div>
+    <div>
+        <h3 class="text-sm font-bold text-amber-900">New Feature: Website Builder</h3>
+        <p class="text-xs text-amber-700/80 mt-1 leading-relaxed">Create a stunning company website for your payment page. Choose a template, customize colors, content, and preview in real-time. More templates coming soon!</p>
+    </div>
+</div>
+
 {{-- Header --}}
 <div class="flex items-center justify-between mb-6">
     <div>
