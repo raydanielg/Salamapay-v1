@@ -101,17 +101,24 @@ class PaymentProfileController extends Controller
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string|max:500',
             'color' => 'nullable|string|max:7',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|max:5120',
             'page_type' => 'required|in:catalog,fixed',
             'allow_custom_amount' => 'boolean',
             'products' => 'nullable|array',
+            'website_url' => 'nullable|url|max:255',
+            'language' => 'nullable|string|max:10',
+            'success_url' => 'nullable|url|max:255',
+            'webhook_url' => 'nullable|url|max:255',
+            'require_email' => 'boolean',
+            'accepted_methods' => 'nullable|array',
             'is_default' => 'boolean',
         ]);
 
         $data = $request->only([
             'name', 'business_name', 'business_type', 'business_tin',
-            'phone', 'email', 'description', 'color', 'page_type',
-            'allow_custom_amount', 'products', 'is_default'
+            'phone', 'email', 'website_url', 'description', 'color', 'language',
+            'page_type', 'allow_custom_amount', 'products', 'success_url',
+            'webhook_url', 'require_email', 'accepted_methods', 'is_default'
         ]);
 
         if ($request->hasFile('logo')) {
