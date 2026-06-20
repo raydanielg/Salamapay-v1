@@ -102,6 +102,24 @@
                     </div>
                     @endif
 
+                    {{-- Catalog Products --}}
+                    @if($link->profile && $link->profile->page_type === 'catalog' && !empty($link->profile->products))
+                    <div class="mt-4 anim-fade-up delay-1">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Products & Services</p>
+                        <div class="space-y-2">
+                            @foreach($link->profile->products as $product)
+                            <label class="product-option flex items-center gap-3 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50/50 transition-all" onclick="selectProduct({{ $product['price'] ?? 0 }})">
+                                <input type="radio" name="selected_product" value="{{ $loop->index }}" class="w-4 h-4 text-emerald-800 border-gray-300 focus:ring-emerald-800" {{ $loop->first ? 'checked' : '' }}>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $product['name'] }}</p>
+                                </div>
+                                <p class="text-sm font-bold text-gray-900 tabular">{{ ($product['currency'] ?? 'TZS') }} {{ number_format($product['price'] ?? 0) }}</p>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
                     {{-- Custom Fields Preview --}}
                     @if(!empty($link->custom_fields))
                     <div class="mt-4 anim-fade-up delay-1">
