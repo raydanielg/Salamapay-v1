@@ -40,10 +40,16 @@ class PaymentProfileController extends Controller
             'email' => 'nullable|email|max:255',
             'description' => 'nullable|string|max:500',
             'color' => 'nullable|string|max:7',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|max:5120',
             'page_type' => 'required|in:catalog,fixed',
             'allow_custom_amount' => 'boolean',
             'products' => 'nullable|array',
+            'website_url' => 'nullable|url|max:255',
+            'language' => 'nullable|string|max:10',
+            'success_url' => 'nullable|url|max:255',
+            'webhook_url' => 'nullable|url|max:255',
+            'require_email' => 'boolean',
+            'accepted_methods' => 'nullable|array',
         ]);
 
         $data = [
@@ -54,11 +60,17 @@ class PaymentProfileController extends Controller
             'business_tin' => $request->business_tin,
             'phone' => $request->phone,
             'email' => $request->email,
+            'website_url' => $request->website_url,
             'description' => $request->description,
             'color' => $request->color ?? '#024938',
+            'language' => $request->language ?? 'en',
             'page_type' => $request->page_type,
             'allow_custom_amount' => $request->boolean('allow_custom_amount', false),
             'products' => $request->products ?? null,
+            'success_url' => $request->success_url,
+            'webhook_url' => $request->webhook_url,
+            'require_email' => $request->boolean('require_email', true),
+            'accepted_methods' => $request->accepted_methods ?? ['mobile_money','card'],
             'is_default' => $request->boolean('is_default', false),
         ];
 
