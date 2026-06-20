@@ -127,5 +127,39 @@
         </div>
     </section>
 
+    <section id="testimonials" class="py-16 lg:py-20">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3" style="background: {{ $accent }}15; color: {{ $accent }};">Testimonials</span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-3">What Our Clients Say</h2>
+                <p class="text-sm {{ $dark ? 'text-gray-400' : 'text-gray-500' }} max-w-md mx-auto">Real feedback from real people</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="rounded-2xl border {{ $dark ? 'border-gray-700 bg-gray-800/30' : 'border-gray-200 bg-white' }} p-6 relative">
+                    <svg class="w-8 h-8 mb-4 opacity-20" style="color: {{ $primary }};" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-sm {{ $dark ? 'text-gray-300' : 'text-gray-600' }} leading-relaxed mb-4">"The payment process was so smooth and fast. Highly recommended!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs" style="background: {{ $primary }};">J</div>
+                        <div>
+                            <p class="text-xs font-bold">John Doe</p>
+                            <p class="text-[10px] text-gray-400">Customer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-2xl border {{ $dark ? 'border-gray-700 bg-gray-800/30' : 'border-gray-200 bg-white' }} p-6 relative">
+                    <svg class="w-8 h-8 mb-4 opacity-20" style="color: {{ $primary }};" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+                    <p class="text-sm {{ $dark ? 'text-gray-300' : 'text-gray-600' }} leading-relaxed mb-4">"Best payment experience I have had. The interface is beautiful and easy to use."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-xs" style="background: {{ $primary }};">J</div>
+                        <div>
+                            <p class="text-xs font-bold">Jane Smith</p>
+                            <p class="text-[10px] text-gray-400">Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </body>
 </html>
