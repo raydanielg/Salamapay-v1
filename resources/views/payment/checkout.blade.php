@@ -134,44 +134,55 @@
                     <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
                         @csrf
 
-                    {{-- Amount Input (if not fixed) --}}
-                    @if(!$link->amount)
-                    <div class="mb-4">
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Amount (TZS)</label>
-                        <input type="number" name="amount" min="100" value="{{ old('amount') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="e.g. 50000" required>
-                    </div>
-                    @endif
-
-                    {{-- Customer Info --}}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        {{-- Payment Method --}}
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
-                            <input type="text" name="customer_name" value="{{ old('customer_name') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="John Doe" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" name="customer_email" value="{{ old('customer_email') }}" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="john@example.com" required>
-                        </div>
-                    </div>
-
-                    {{-- Custom Fields --}}
-                    @if(!empty($link->custom_fields))
-                    <div class="mb-4 space-y-3">
-                        <p class="text-xs font-medium text-gray-700">Additional Information</p>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            @foreach($link->custom_fields as $field)
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1">{{ $field['label'] }}</label>
-                                @if($field['type'] === 'textarea')
-                                    <textarea name="custom_{{ $field['name'] }}" {{ $field['required'] ? 'required' : '' }} rows="2" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none resize-none" placeholder="{{ $field['label'] }}">{{ old('custom_' . $field['name']) }}</textarea>
-                                @else
-                                    <input type="{{ $field['type'] }}" name="custom_{{ $field['name'] }}" value="{{ old('custom_' . $field['name']) }}" {{ $field['required'] ? 'required' : '' }} class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none" placeholder="{{ $field['label'] }}">
-                                @endif
+                            <p class="text-sm leading-none font-medium mb-2 text-gray-900">Payment method</p>
+                            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                <div class="grid gap-0">
+                                    <label class="pm-option flex cursor-pointer items-center justify-between px-4 py-3.5 border-b border-gray-100 {{ old('payment_method') === 'mobile_money' ? 'active' : '' }}" onclick="selectPm(this)">
+                                        <div class="flex-1 space-y-0.5">
+                                            <p class="text-sm leading-none font-medium text-gray-900">Mobile Money</p>
+                                            <p class="text-gray-500 text-xs">M-Pesa, Tigo Pesa, Airtel Money</p>
+                                        </div>
+                                        <div class="pm-radio w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center ml-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                                        </div>
+                                        <input type="radio" name="payment_method" value="mobile_money" class="hidden" {{ old('payment_method') === 'mobile_money' ? 'checked' : '' }}>
+                                    </label>
+                                    <label class="pm-option flex cursor-pointer items-center justify-between px-4 py-3.5 bg-gray-50/50 {{ old('payment_method') === 'card' || !old('payment_method') ? 'active' : '' }}" onclick="selectPm(this)">
+                                        <div class="flex-1 space-y-0.5">
+                                            <p class="text-sm leading-none font-medium text-gray-900">Card</p>
+                                            <p class="text-gray-500 text-xs">Visa, Mastercard</p>
+                                        </div>
+                                        <div class="pm-radio w-4 h-4 rounded-full border-2 border-gray-300 flex items-center justify-center ml-3">
+                                            <div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+                                        </div>
+                                        <input type="radio" name="payment_method" value="card" class="hidden" {{ old('payment_method') === 'card' || !old('payment_method') ? 'checked' : '' }}>
+                                    </label>
+                                </div>
                             </div>
-                            @endforeach
+                            @error('payment_method')<p class="text-xs text-red-500 mt-1.5">{{ $message }}</p>@enderror
                         </div>
-                    </div>
-                    @endif
+
+                        {{-- Phone Number --}}
+                        <div>
+                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Phone number</p>
+                            <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden focus-within:border-emerald-800 focus-within:ring-1 focus-within:ring-emerald-800/20 transition-all">
+                                <span class="text-sm text-gray-500 px-3 py-2.5 border-r border-gray-200 bg-gray-50/50 font-medium">+255</span>
+                                <input type="tel" id="phoneDisplay" maxlength="9" class="flex-1 py-2.5 px-3 text-sm outline-none bg-transparent tabular" placeholder="712 345 678" value="{{ old('phone') ? substr(old('phone'), 3) : '' }}">
+                                <input type="hidden" name="phone" id="phoneHidden" value="{{ old('phone') }}">
+                            </div>
+                            @error('phone')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
+                        </div>
+
+                        {{-- Contact Information --}}
+                        <div>
+                            <p class="text-sm leading-none font-medium mb-2.5 text-gray-900">Contact Information</p>
+                            <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                <input type="text" name="customer_name" value="{{ old('customer_name') }}" required placeholder="Full name" class="w-full px-4 py-3 text-sm outline-none border-0 border-b border-gray-100 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                                <input type="email" name="customer_email" value="{{ old('customer_email') }}" required placeholder="Email address" class="w-full px-4 py-3 text-sm outline-none border-0 focus:bg-gray-50/50 transition-colors placeholder:text-gray-400/70">
+                            </div>
+                        </div>
 
                     {{-- Payment Method Selection --}}
                     <p class="text-xs font-medium text-gray-700 mb-2">Select Payment Method</p>
