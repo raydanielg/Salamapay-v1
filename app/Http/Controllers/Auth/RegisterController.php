@@ -28,7 +28,18 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
+
+    /**
+     * Get the post-register redirect path based on role.
+     */
+    protected function redirectTo(): string
+    {
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            return '/admin/dashboard';
+        }
+        return '/dashboard';
+    }
 
     /**
      * Get a validator for an incoming registration request.
