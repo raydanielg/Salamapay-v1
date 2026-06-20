@@ -8,23 +8,61 @@
 
 @include('user.partials.page-header', ['title' => 'Products', 'subtitle' => 'Manage your product catalog'])
 
+{{-- Out of Stock Alert Banner --}}
+@if($stats['lowStock'] > 0)
+<div class="mb-4 bg-gradient-to-r from-red-500 to-rose-600 rounded-xl p-4 text-white flex items-center gap-3 shadow-sm animate-fade">
+    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-3.93 6.659a9.955 9.955 0 01-4.56-3.348 9.955 9.955 0 01-1.552-5.503 9.954 9.954 0 013.654-7.608 9.953 9.953 0 017.552-2.106 9.954 9.954 0 017.608 3.654 9.955 9.955 0 012.106 7.552 9.955 9.955 0 01-3.348 4.56M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    </div>
+    <div class="flex-1">
+        <p class="text-sm font-bold">{{ $stats['lowStock'] }} product{{ $stats['lowStock'] > 1 ? 's' : '' }} running low on stock!</p>
+        <p class="text-[11px] text-red-100">Restock soon to avoid losing sales.</p>
+    </div>
+    <a href="{{ route('user.products') }}?status=active" class="px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-bold transition-colors">View</a>
+</div>
+@endif
+
 {{-- Stats --}}
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Products</p>
-        <p class="text-2xl font-black text-gray-900 mt-1">{{ $stats['total'] }}</p>
+    <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-emerald-200">Total Products</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['total'] }}</p>
+        <p class="text-[10px] text-emerald-200 mt-1">All products</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Active</p>
-        <p class="text-2xl font-black text-emerald-600 mt-1">{{ $stats['active'] }}</p>
+    <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-blue-200">Active</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['active'] }}</p>
+        <p class="text-[10px] text-blue-200 mt-1">Available for sale</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Draft</p>
-        <p class="text-2xl font-black text-gray-500 mt-1">{{ $stats['draft'] }}</p>
+    <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-amber-100">Draft</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['draft'] }}</p>
+        <p class="text-[10px] text-amber-100 mt-1">Not yet published</p>
     </div>
-    <div class="bg-white rounded-xl border p-4">
-        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Low Stock</p>
-        <p class="text-2xl font-black text-red-600 mt-1">{{ $stats['lowStock'] }}</p>
+    <div class="bg-gradient-to-br from-red-500 to-rose-600 rounded-xl p-4 text-white shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+            <p class="text-[10px] font-bold uppercase tracking-wider text-red-100">Low Stock</p>
+            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+        <p class="text-2xl font-black">{{ $stats['lowStock'] }}</p>
+        <p class="text-[10px] text-red-100 mt-1">5 or less in stock</p>
     </div>
 </div>
 
