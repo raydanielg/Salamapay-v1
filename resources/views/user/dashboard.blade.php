@@ -133,39 +133,36 @@ window.addEventListener('load', function() {
     </div>
 
     {{-- Total Transactions --}}
-    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
-        <div class="flex items-start justify-between">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Total Transactions</span>
-            <div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            </div>
+    <div class="card-sm bg-gradient-to-br from-sky-500 to-sky-600 rounded-xl border border-sky-400 p-3 sm:p-5 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
+        <div class="flex items-start justify-between relative z-10">
+            <span class="text-[10px] sm:text-xs font-medium text-sky-100">Total Transactions</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
         </div>
-        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-gray-900">{{ number_format($totalTransactions) }}</div>
-        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $txChange }}% vs last week</div>
+        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-white relative z-10">{{ number_format($totalTransactions) }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-sky-100 font-medium relative z-10">+{{ $txChange }}% vs last week</div>
     </div>
 
     {{-- Active Payment Links --}}
-    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
-        <div class="flex items-start justify-between">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Active Payment Links</span>
-            <div class="w-7 h-7 rounded-lg bg-gold-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-gold-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
-            </div>
+    <div class="card-sm bg-gradient-to-br from-amber-400 to-amber-500 rounded-xl border border-amber-300 p-3 sm:p-5 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
+        <div class="flex items-start justify-between relative z-10">
+            <span class="text-[10px] sm:text-xs font-medium text-amber-50">Active Payment Links</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
         </div>
-        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-gray-900">{{ $activePaymentLinks }}</div>
-        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $newPaymentLinks }} new this week</div>
+        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-white relative z-10">{{ $activePaymentLinks }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-amber-50 font-medium relative z-10">+{{ $newPaymentLinks }} new this week</div>
     </div>
 
     {{-- Revenue Today --}}
-    <div class="card-sm bg-white rounded-xl border p-3 sm:p-5">
-        <div class="flex items-start justify-between">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Revenue Today</span>
-            <div class="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
-            </div>
+    <div class="card-sm bg-gradient-to-br from-violet-500 to-violet-600 rounded-xl border border-violet-400 p-3 sm:p-5 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
+        <div class="flex items-start justify-between relative z-10">
+            <span class="text-[10px] sm:text-xs font-medium text-violet-100">Revenue Today</span>
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-violet-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-gray-900">{{ $fmtTzFull($revenueToday) }}</div>
-        <div class="mt-1 text-[10px] sm:text-xs text-emerald-600 font-medium">+{{ $todayChange }}% vs yesterday</div>
+        <div class="mt-2 sm:mt-3 text-xl sm:text-3xl font-bold tracking-tight text-white relative z-10">{{ $fmtTzFull($revenueToday) }}</div>
+        <div class="mt-1 text-[10px] sm:text-xs text-violet-100 font-medium relative z-10">+{{ $todayChange }}% vs yesterday</div>
     </div>
 </div>
 
