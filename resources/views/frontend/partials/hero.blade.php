@@ -60,25 +60,26 @@
                     <span class="font-medium" data-en="SalamaPay v1 is live" data-sw="SalamaPay v1 imetoka">SalamaPay v1 is live</span>
                     <svg class="ml-1.5 w-3.5 h-3.5 text-emerald-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                 </a>
-                <h1 class="animate-fade-up delay-2 text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                <h1 class="animate-fade-up delay-2 text-[2.8rem] md:text-6xl lg:text-[4.5rem] font-extrabold text-white leading-[1.1] mb-6">
                     <span data-en="Pay With Ease," data-sw="Lipa kwa">Pay With Ease,</span> <span class="text-gold-300" data-en="Business Receives Fast" data-sw="Urahisi">Business Receives Fast</span>
                 </h1>
-                <p class="animate-fade-up delay-3 text-lg md:text-xl text-emerald-100/80 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+                <p class="animate-fade-up delay-3 text-xl md:text-2xl text-emerald-100/80 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
                     <span data-en="SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place." data-sw="SalamaPay ni daraja kati ya mteja anayelipa na biashara inayopokea pesa. Lipa kwa M-Pesa, Airtel Money, benki au kadi - kila kitu kimoja.">SalamaPay is the bridge between the paying customer and the receiving business. Pay via M-Pesa, Airtel Money, bank or card - everything in one place.</span>
                 </p>
-                <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-3 justify-center lg:justify-start mb-10">
-                    <a href="{{ route('register') }}" class="group inline-flex items-center gap-1 px-4 py-2 text-xs font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-md shadow-lg shadow-gold-500/30 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-0.5">
+                <div class="animate-fade-up delay-4 flex flex-row flex-wrap items-center gap-4 justify-center lg:justify-start mb-10">
+                    <a href="{{ route('register') }}" class="group inline-flex items-center gap-2 px-7 py-3.5 text-base font-bold text-gray-900 bg-gradient-to-r from-gold-300 to-gold-400 hover:from-gold-400 hover:to-gold-500 rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/40 transition-all duration-300 hover:-translate-y-0.5">
                         <span data-en="Get Started" data-sw="Anza Sasa">Get Started</span>
-                        <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        <svg class="w-5 h-5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </a>
-                    <a href="#how-it-works" class="inline-flex items-center gap-1 px-4 py-2 text-xs font-semibold text-white border border-white/30 hover:border-white/60 rounded-md backdrop-blur-sm transition-all hover:-translate-y-0.5">
+                    <a href="#how-it-works" class="inline-flex items-center gap-2 px-7 py-3.5 text-base font-semibold text-white border border-white/30 hover:border-white/60 rounded-lg backdrop-blur-sm transition-all hover:-translate-y-0.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span data-en="How It Works" data-sw="Jinsi Inavyofanya Kazi">How It Works</span>
                     </a>
                 </div>
-                <div class="animate-fade-up delay-5 flex flex-wrap items-center gap-4 justify-center lg:justify-start text-emerald-200/70 text-xs">
-                    <div class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Online Payments Only</div>
-                    <div class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Bank-Level Security</div>
-                    <div class="flex items-center gap-1"><svg class="w-3.5 h-3.5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Instant Transactions</div>
+                <div class="animate-fade-up delay-5 flex flex-wrap items-center gap-5 justify-center lg:justify-start text-emerald-200/80 text-sm">
+                    <div class="flex items-center gap-1.5"><svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Online Payments Only</div>
+                    <div class="flex items-center gap-1.5"><svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>Bank-Level Security</div>
+                    <div class="flex items-center gap-1.5"><svg class="w-5 h-5 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Instant Transactions</div>
                 </div>
             </div>
             <div class="hidden lg:flex items-center justify-center relative">
