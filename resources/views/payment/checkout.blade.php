@@ -68,11 +68,17 @@
                             <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 font-medium">TZS</span>
                             @if($link->amount)
                                 <input type="text" readonly value="{{ number_format($link->amount) }}" class="tabular w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 text-base font-semibold text-gray-900 bg-gray-50 outline-none">
+                            @elseif($link->profile && $link->profile->page_type === 'catalog' && !empty($link->profile->products))
+                                <input type="text" id="amountInput" readonly value="{{ number_format($link->profile->products[0]['price'] ?? 0) }}" class="tabular w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 text-base font-semibold text-gray-900 bg-gray-50 outline-none">
                             @else
                                 <input type="number" name="amount" id="amountInput" min="100" value="{{ old('amount') }}" placeholder="1,000" class="tabular w-full pl-12 pr-4 py-2.5 rounded-lg border border-gray-200 text-base font-semibold text-gray-900 bg-white outline-none input-field transition-all" required>
                             @endif
                         </div>
-                        <p class="text-gray-400 mt-1.5 text-xs">Between TSh 1,000 and TSh 500,000</p>
+                        @if($link->profile && $link->profile->page_type === 'catalog' && !empty($link->profile->products))
+                            <p class="text-gray-400 mt-1.5 text-xs">Price based on selected product</p>
+                        @elseif(!$link->amount)
+                            <p class="text-gray-400 mt-1.5 text-xs">Between TSh 1,000 and TSh 500,000</p>
+                        @endif
                     </div>
 
                     {{-- Title --}}
@@ -151,6 +157,11 @@
                 <div class="flex h-full flex-col px-5 pt-6 pb-10 lg:p-10">
                     <form action="{{ route('payment.process', $link->slug) }}" method="POST" id="paymentForm" class="space-y-5">
                         @csrf
+
+                        {{-- Hidden amount for catalog products --}}
+                        @if($link->profile && $link->profile->page_type === 'catalog' && !empty($link->profile->products))
+                            <input type="hidden" name="amount" id="catalogAmount" value="{{ $link->profile->products[0]['price'] ?? 0 }}">
+                        @endif
 
                         {{-- Payment Method --}}
                         <div>
