@@ -45,17 +45,52 @@
     </div>
 </div>
 
-{{-- Table --}}
-<div class="bg-white rounded-xl border overflow-hidden">
-    <div class="px-5 py-4 border-b flex items-center justify-between">
-        <h3 class="text-sm font-bold text-gray-900">All Invoices</h3>
-        <button class="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-colors">+ New Invoice</button>
+{{-- Filters + Add --}}
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-3 mb-4">
+    <div class="relative flex-1 max-w-sm">
+        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" id="invoiceSearch" placeholder="Search invoices..." value="{{ request('search') }}" class="w-full pl-10 pr-4 py-2.5 border rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all">
     </div>
+    <select id="invoiceStatus" onchange="doInvoiceSearch()" class="px-3 py-2.5 border rounded-xl text-xs font-medium text-gray-600 outline-none focus:border-emerald-500 cursor-pointer">
+        <option value="all">All Status</option>
+        <option value="draft" {{ request('status')==='draft'?'selected':'' }}>Draft</option>
+        <option value="sent" {{ request('status')==='sent'?'selected':'' }}>Sent</option>
+        <option value="paid" {{ request('status')==='paid'?'selected':'' }}>Paid</option>
+        <option value="overdue" {{ request('status')==='overdue'?'selected':'' }}>Overdue</option>
+        <option value="cancelled" {{ request('status')==='cancelled'?'selected':'' }}>Cancelled</option>
+    </select>
+    <div class="flex gap-2">
+        <div class="relative" id="exportDropdownContainer">
+            <button onclick="toggleExportDropdown()" class="px-4 py-2.5 border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5 active:scale-95">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Export
+            </button>
+            <div id="exportDropdown" class="hidden absolute right-0 top-full mt-2 w-48 bg-white rounded-xl border shadow-lg py-1.5 z-50">
+                <button onclick="printInvoices()" class="w-full text-left px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Print
+                </button>
+                <button onclick="exportInvoiceCSV()" class="w-full text-left px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2.5 transition-colors">
+                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Export CSV
+                </button>
+            </div>
+        </div>
+        <button onclick="openInvoiceDrawer()" class="px-4 py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl hover:bg-emerald-700 transition-colors flex items-center justify-center gap-1.5 active:scale-95">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Create Invoice
+        </button>
+    </div>
+</div>
+
+{{-- Printable Area --}}
+<div id="printableArea">
+<div class="bg-white rounded-xl border overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead>
                 <tr class="bg-gray-50/50 text-gray-500 text-[10px] uppercase tracking-wider">
-                    <th class="text-left px-5 py-3 font-semibold">Invoice #</th>
+                    <th class="text-left px-5 py-3 font-semibold">Invoice</th>
                     <th class="text-left px-5 py-3 font-semibold">Customer</th>
                     <th class="text-left px-5 py-3 font-semibold">Amount</th>
                     <th class="text-left px-5 py-3 font-semibold">Status</th>
@@ -63,39 +98,17 @@
                     <th class="text-left px-5 py-3 font-semibold">Action</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
-                @forelse($invoices as $invoice)
-                <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-5 py-3.5 font-mono text-xs font-bold text-gray-900">{{ $invoice->tx_id }}</td>
-                    <td class="px-5 py-3.5">
-                        <p class="font-semibold text-gray-900 text-xs">{{ $invoice->customer_name }}</p>
-                        <p class="text-[10px] text-gray-400">{{ $invoice->customer_email }}</p>
-                    </td>
-                    <td class="px-5 py-3.5 font-bold text-gray-900 text-xs">TSh {{ number_format($invoice->amount) }}</td>
-                    <td class="px-5 py-3.5">
-                        @if($invoice->status === 'success')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">Paid</span>
-                        @elseif($invoice->status === 'pending')
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">Pending</span>
-                        @else
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-100">Failed</span>
-                        @endif
-                    </td>
-                    <td class="px-5 py-3.5 text-[11px] text-gray-500">{{ $invoice->processed_at?->format('M d, Y') ?? 'N/A' }}</td>
-                    <td class="px-5 py-3.5">
-                        <a href="{{ route('user.payments.show', $invoice->id) }}" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700">View</a>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6" class="px-5 py-8 text-center text-gray-400 text-sm">No invoices found.</td>
-                </tr>
-                @endforelse
+            <tbody class="divide-y divide-gray-100" id="invoiceTableBody">
+                @include('user.invoices._table')
             </tbody>
         </table>
     </div>
     @if($invoices->hasPages())
-    <div class="px-5 py-3 border-t">{{ $invoices->links() }}</div>
+    <div class="px-5 py-3 border-t" id="invoicePagination">{{ $invoices->links() }}</div>
     @endif
 </div>
+</div>
+
+@include('user.invoices._drawer')
+
 @endsection
