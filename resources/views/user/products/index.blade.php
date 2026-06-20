@@ -203,6 +203,7 @@
     <div class="px-5 py-3 border-t">{{ $products->links() }}</div>
     @endif
 </div>
+</div>
 
 {{-- Slide-in Product Drawer --}}
 <style>
