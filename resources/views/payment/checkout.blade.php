@@ -269,8 +269,8 @@
                             @error('customer_email')<p class="text-xs text-red-500 mt-1">{{ $message }}</p>@enderror
                         </div>
 
-                        {{-- Phone Number (for Mobile Money) --}}
-                        <div id="mobilePhone" class="{{ old('payment_method') === 'card' ? 'hidden' : '' }}">
+                        {{-- Phone Number --}}
+                        <div>
                             <p class="text-sm font-semibold mb-2.5 text-gray-900">Phone Number</p>
                             <div class="relative">
                                 <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
