@@ -142,12 +142,13 @@
 {{-- Phone Input Scripts --}}
 <script>
 (function() {
-    const phoneInput = document.getElementById('phone');
-    const form = document.getElementById('registerForm');
+    const phoneDisplay = document.getElementById('phone-display');
+    const phoneHidden  = document.getElementById('phone-hidden');
+    const form         = document.getElementById('registerForm');
 
-    if (phoneInput) {
-        // Only allow digits
-        phoneInput.addEventListener('input', function(e) {
+    if (phoneDisplay && phoneHidden) {
+        // Only allow digits in display input
+        phoneDisplay.addEventListener('input', function() {
             let val = this.value.replace(/\D/g, '');
             // Must start with 7 or 6
             if (val.length > 0 && !/^[67]/.test(val)) {
@@ -157,12 +158,12 @@
             this.value = val;
         });
 
-        // Format on submit: prepend 255
+        // On submit: put 255 + display value into hidden input
         if (form) {
-            form.addEventListener('submit', function(e) {
-                const raw = phoneInput.value.replace(/\D/g, '');
-                if (raw.length === 9) {
-                    phoneInput.value = '255' + raw;
+            form.addEventListener('submit', function() {
+                const raw = phoneDisplay.value.replace(/\D/g, '');
+                if (/^[67]/.test(raw) && raw.length === 9) {
+                    phoneHidden.value = '255' + raw;
                 }
             });
         }
