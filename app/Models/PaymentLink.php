@@ -13,8 +13,10 @@ class PaymentLink extends Model
 
     protected $fillable = [
         'user_id',
+        'profile_id',
         'title',
         'description',
+        'custom_fields',
         'amount',
         'currency',
         'slug',
@@ -29,6 +31,7 @@ class PaymentLink extends Model
             'amount' => 'decimal:2',
             'is_active' => 'boolean',
             'expires_at' => 'datetime',
+            'custom_fields' => 'array',
         ];
     }
 
@@ -45,5 +48,19 @@ class PaymentLink extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function profile(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProfile::class, 'profile_id');
+    }
+
+    public function merchantName(): string
+    {
+        if ($this->profile && $this->profile->business_name) {
+            return $this->profile->business_name;
+        }
+        $user = $this->user;
+        return $user->business_name ?? ($user->first_name . ' ' . $user->last_name);
     }
 }
