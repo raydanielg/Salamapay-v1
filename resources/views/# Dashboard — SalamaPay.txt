@@ -1,0 +1,45 @@
+# Dashboard — SalamaPay
+
+[SSalamaPayLive mode](https://salama-pay-ui.lovable.app/dashboard)
+- [Dashboard](https://salama-pay-ui.lovable.app/dashboard)
+- [Analytics](https://salama-pay-ui.lovable.app/analytics)
+[Dashboard](https://salama-pay-ui.lovable.app/dashboard)
+[Analytics](https://salama-pay-ui.lovable.app/analytics)
+- [Transactions](https://salama-pay-ui.lovable.app/transactions)
+- [Payments](https://salama-pay-ui.lovable.app/payments)
+- [Payouts](https://salama-pay-ui.lovable.app/payouts)
+- [Payment Links](https://salama-pay-ui.lovable.app/payment-links)
+- [Payment Pages](https://salama-pay-ui.lovable.app/payment-pages)
+[Transactions](https://salama-pay-ui.lovable.app/transactions)
+[Payments](https://salama-pay-ui.lovable.app/payments)
+[Payouts](https://salama-pay-ui.lovable.app/payouts)
+[Payment Links](https://salama-pay-ui.lovable.app/payment-links)
+[Payment Pages](https://salama-pay-ui.lovable.app/payment-pages)
+- [Marketing](https://salama-pay-ui.lovable.app/marketing)
+[Marketing](https://salama-pay-ui.lovable.app/marketing)
+- [API Keys](https://salama-pay-ui.lovable.app/api-keys)
+- [Webhooks](https://salama-pay-ui.lovable.app/webhooks)
+- [Logs](https://salama-pay-ui.lovable.app/logs)
+[API Keys](https://salama-pay-ui.lovable.app/api-keys)
+[Webhooks](https://salama-pay-ui.lovable.app/webhooks)
+[Logs](https://salama-pay-ui.lovable.app/logs)
+- [General](https://salama-pay-ui.lovable.app/settings)
+- [Profile](https://salama-pay-ui.lovable.app/profile)
+- [Security](https://salama-pay-ui.lovable.app/security)
+[General](https://salama-pay-ui.lovable.app/settings)
+[Profile](https://salama-pay-ui.lovable.app/profile)
+[Security](https://salama-pay-ui.lovable.app/security)
+API latency normal · 99.99% uptime
+
+# Welcome back, Ezra
+Here's what's happening with your payments today.
+
+### Revenue
+Last 7 days
+
+### Transaction volume
+Last 7 days
+
+### Recent activity
+Latest transactions across all channels
+[Edit with](https://lovable.dev/projects/2a79da60-cb4f-43e1-942a-db97391849d1?utm_source=lovable-badge)
