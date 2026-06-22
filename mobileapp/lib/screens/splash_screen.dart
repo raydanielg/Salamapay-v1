@@ -5,8 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
 import '../widgets/salamapay_logo.dart';
+import '../services/api_service.dart';
 import 'onboarding_screen.dart';
-import 'home_screen.dart';
+import 'main_screen.dart';
+import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -81,12 +83,22 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
     final prefs = await SharedPreferences.getInstance();
     final onboardingDone = prefs.getBool('onboarding_done') ?? false;
+    final isAuth = await ApiService.isAuthenticated();
 
     if (!mounted) return;
+
+    Widget destination;
+    if (!onboardingDone) {
+      destination = const OnboardingScreen();
+    } else if (isAuth) {
+      destination = const MainScreen();
+    } else {
+      destination = const LoginScreen();
+    }
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) =>
-            onboardingDone ? const HomeScreen() : const OnboardingScreen(),
+        pageBuilder: (_, __, ___) => destination,
         transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (_, animation, __, child) => FadeTransition(
           opacity: animation,
