@@ -1,13 +1,9 @@
-// LOGIN SCREEN — REBUILT
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/salamapay_logo.dart';
-import '../../widgets/gradient_button.dart';
-import '../../widgets/custom_text_field.dart';
 import '../main_screen.dart';
 import 'register_screen.dart';
 
@@ -24,10 +20,10 @@ class _LoginScreenState extends State<LoginScreen>
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   bool _loading = false;
+  bool _obscure = true;
   String? _error;
 
   late AnimationController _animCtrl;
-  late Animation<Offset> _slideAnim;
   late Animation<double> _fadeAnim;
 
   @override
@@ -37,13 +33,9 @@ class _LoginScreenState extends State<LoginScreen>
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
-    _animCtrl =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
-    _slideAnim = Tween<Offset>(
-            begin: const Offset(0, 0.08), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeOutCubic));
-    _fadeAnim = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: _animCtrl, curve: Curves.easeIn));
+    _animCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 600));
+    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeIn);
     _animCtrl.forward();
   }
 
@@ -85,126 +77,108 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Stack(
-        children: [
-          // Green header background
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: size.height * 0.38,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.emeraldMedium, AppColors.emeraldDark],
+      backgroundColor: const Color(0xFFF3F4F6),
+      body: FadeTransition(
+        opacity: _fadeAnim,
+        child: SafeArea(
+          bottom: false,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // ── Emerald Header (matches web: from-emerald-600 to-emerald-700) ──
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF059669), Color(0xFF065F46)],
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      // Logo box (matches web: w-16 h-16 bg-white/10 rounded-2xl)
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            'assets/images/salamapaylogo.png',
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Welcome Back',
+                        style: GoogleFonts.nunito(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Sign in to your SalamaPay account',
+                        style: GoogleFonts.nunito(
+                          color: const Color(0xFFD1FAE5),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              child: Stack(
-                children: [
-                  // Decorative circles
-                  Positioned(
-                    top: -40,
-                    right: -40,
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.05),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 30,
-                    left: -30,
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.05),
-                      ),
-                    ),
-                  ),
-                  // Logo
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 36,
-                    left: 0,
-                    right: 0,
-                    child: const Center(
-                      child: SalamaPayLogo(size: 0.85, dark: true),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
 
-          // Bottom white content card
-          Positioned(
-            top: size.height * 0.29,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-              ),
-              child: FadeTransition(
-                opacity: _fadeAnim,
-                child: SlideTransition(
-                  position: _slideAnim,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Karibu Tena! 👋',
-                          style: GoogleFonts.nunito(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.emeraldDark,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Ingia kwenye akaunti yako ya SalamaPay',
-                          style: GoogleFonts.nunito(
-                            fontSize: 13,
-                            color: AppColors.grey400,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 28),
-
-                        // Error banner
-                        if (_error != null)
+                // ── White Card Form (matches web card style) ──
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
+                    border: Border.all(color: const Color(0xFFF3F4F6)),
+                  ),
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Error banner
+                      if (_error != null) ...
+                        [
                           Container(
                             margin: const EdgeInsets.only(bottom: 16),
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 10),
                             decoration: BoxDecoration(
-                              color: Colors.red.shade50,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.red.shade200),
+                              color: const Color(0xFFFEF2F2),
+                              borderRadius: BorderRadius.circular(10),
+                              border:
+                                  Border.all(color: const Color(0xFFFCA5A5)),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.error_outline,
-                                    color: Colors.red, size: 18),
+                                const Icon(Icons.error_outline_rounded,
+                                    color: Color(0xFFDC2626), size: 16),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
                                     _error!,
                                     style: GoogleFonts.nunito(
-                                      color: Colors.red.shade700,
+                                      color: const Color(0xFFB91C1C),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -213,173 +187,304 @@ class _LoginScreenState extends State<LoginScreen>
                               ],
                             ),
                           ),
+                        ],
 
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              CustomTextField(
-                                label: 'Barua Pepe',
-                                hint: 'email@biashara.com',
-                                controller: _emailCtrl,
-                                keyboardType: TextInputType.emailAddress,
-                                prefixIcon: Icons.email_outlined,
-                                validator: (v) => v == null || !v.contains('@')
-                                    ? 'Weka barua pepe sahihi'
-                                    : null,
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Email
+                            _WebLabel(label: 'Email Address'),
+                            const SizedBox(height: 6),
+                            _WebField(
+                              ctrl: _emailCtrl,
+                              hint: 'you@example.com',
+                              icon: Icons.alternate_email_rounded,
+                              keyboard: TextInputType.emailAddress,
+                              validator: (v) =>
+                                  v == null || !v.contains('@')
+                                      ? 'Enter a valid email'
+                                      : null,
+                            ),
+                            const SizedBox(height: 18),
+
+                            // Password
+                            _WebLabel(label: 'Password'),
+                            const SizedBox(height: 6),
+                            _WebField(
+                              ctrl: _passwordCtrl,
+                              hint: 'Enter your password',
+                              icon: Icons.lock_outline_rounded,
+                              obscure: _obscure,
+                              suffixIcon: GestureDetector(
+                                onTap: () =>
+                                    setState(() => _obscure = !_obscure),
+                                child: Icon(
+                                  _obscure
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
+                                  color: const Color(0xFF9CA3AF),
+                                  size: 18,
+                                ),
                               ),
-                              const SizedBox(height: 16),
-                              CustomTextField(
-                                label: 'Nenosiri',
-                                hint: '••••••••',
-                                controller: _passwordCtrl,
-                                obscure: true,
-                                prefixIcon: Icons.lock_outline_rounded,
-                                textInputAction: TextInputAction.done,
-                                onEditingComplete: _login,
-                                validator: (v) => v == null || v.length < 6
-                                    ? 'Nenosiri lazima liwe na herufi 6+'
-                                    : null,
+                              onEditingComplete: _login,
+                              validator: (v) =>
+                                  v == null || v.length < 6
+                                      ? 'Min 6 characters'
+                                      : null,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 14),
+                      // Remember + Forgot
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: Checkbox(
+                                  value: false,
+                                  onChanged: (_) {},
+                                  activeColor: AppColors.emeraldPrimary,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4)),
+                                  side: const BorderSide(
+                                      color: Color(0xFFD1D5DB)),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text('Remember me',
+                                  style: GoogleFonts.nunito(
+                                      fontSize: 13,
+                                      color: const Color(0xFF4B5563),
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                          Text(
+                            'Forgot password?',
+                            style: GoogleFonts.nunito(
+                              fontSize: 13,
+                              color: AppColors.emeraldPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      // ── Gold Sign In Button (matches web exactly) ──
+                      GestureDetector(
+                        onTap: _loading ? null : _login,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          width: double.infinity,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFCC33), Color(0xFFE5AC00)],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    const Color(0xFFE5AC00).withOpacity(0.4),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: _loading
+                                ? const SizedBox(
+                                    width: 22,
+                                    height: 22,
+                                    child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        color: Color(0xFF1C4532)),
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                          Icons.login_rounded,
+                                          color: Color(0xFF1C4532),
+                                          size: 18),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Sign In',
+                                        style: GoogleFonts.nunito(
+                                          color: const Color(0xFF1C4532),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 22),
+                      // ── Divider (matches web) ──
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Divider(
+                                  color: const Color(0xFFE5E7EB),
+                                  thickness: 1)),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text('or',
+                                style: GoogleFonts.nunito(
+                                    color: const Color(0xFF9CA3AF),
+                                    fontSize: 13)),
+                          ),
+                          Expanded(
+                              child: Divider(
+                                  color: const Color(0xFFE5E7EB),
+                                  thickness: 1)),
+                        ],
+                      ),
+
+                      const SizedBox(height: 18),
+                      // ── Register link (matches web) ──
+                      Center(
+                        child: RichText(
+                          text: TextSpan(
+                            style: GoogleFonts.nunito(
+                                fontSize: 13,
+                                color: const Color(0xFF6B7280)),
+                            children: [
+                              const TextSpan(text: "Don't have an account? "),
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            const RegisterScreen()),
+                                  ),
+                                  child: Text(
+                                    'Create account',
+                                    style: GoogleFonts.nunito(
+                                      color: AppColors.emeraldPrimary,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
-
-                        const SizedBox(height: 12),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'Umesahau Nenosiri?',
-                            style: GoogleFonts.nunito(
-                              color: AppColors.emeraldPrimary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        GradientButton(
-                          label: 'Ingia',
-                          onPressed: _login,
-                          isLoading: _loading,
-                        ),
-
-                        const SizedBox(height: 20),
-                        // Divider
-                        Row(
-                          children: [
-                            Expanded(
-                                child: Divider(color: AppColors.grey400.withOpacity(0.3))),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                'au',
-                                style: GoogleFonts.nunito(
-                                    color: AppColors.grey400,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Expanded(
-                                child: Divider(color: AppColors.grey400.withOpacity(0.3))),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Social quick actions
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _SocialButton(
-                                icon: Icons.phone_android_rounded,
-                                label: 'M-Pesa',
-                                color: const Color(0xFF00A651),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _SocialButton(
-                                icon: Icons.phone_rounded,
-                                label: 'Tigo Pesa',
-                                color: const Color(0xFF003087),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 28),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Huna akaunti? ',
-                              style: GoogleFonts.nunito(
-                                color: AppColors.grey700,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => const RegisterScreen()),
-                              ),
-                              child: Text(
-                                'Jiandikishe',
-                                style: GoogleFonts.nunito(
-                                  color: AppColors.emeraldPrimary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
+
+                // Footer
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 32),
+                  child: Text(
+                    '© ${DateTime.now().year} SalamaPay. All rights reserved.',
+                    style: GoogleFonts.nunito(
+                        fontSize: 11, color: const Color(0xFF9CA3AF)),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
+// ── Shared web-style field widgets ──
 
-  const _SocialButton(
-      {required this.icon, required this.label, required this.color});
+class _WebLabel extends StatelessWidget {
+  final String label;
+  const _WebLabel({required this.label});
+
+  @override
+  Widget build(BuildContext context) => Text(
+        label,
+        style: GoogleFonts.nunito(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFF374151),
+        ),
+      );
+}
+
+class _WebField extends StatelessWidget {
+  final TextEditingController ctrl;
+  final String hint;
+  final IconData icon;
+  final bool obscure;
+  final TextInputType keyboard;
+  final Widget? suffixIcon;
+  final VoidCallback? onEditingComplete;
+  final String? Function(String?)? validator;
+
+  const _WebField({
+    required this.ctrl,
+    required this.hint,
+    required this.icon,
+    this.obscure = false,
+    this.keyboard = TextInputType.text,
+    this.suffixIcon,
+    this.onEditingComplete,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
-        borderRadius: BorderRadius.circular(14),
-        color: color.withOpacity(0.04),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 18),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: GoogleFonts.nunito(
-              color: color,
-              fontWeight: FontWeight.w700,
-              fontSize: 13,
-            ),
-          ),
-        ],
+    return TextFormField(
+      controller: ctrl,
+      obscureText: obscure,
+      keyboardType: keyboard,
+      onEditingComplete: onEditingComplete,
+      validator: validator,
+      style: GoogleFonts.nunito(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFF111827)),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: GoogleFonts.nunito(
+            color: const Color(0xFF9CA3AF), fontSize: 13),
+        prefixIcon: Icon(icon, size: 18, color: const Color(0xFF9CA3AF)),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide:
+              const BorderSide(color: Color(0xFF059669), width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFFCA5A5), width: 1),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFFDC2626), width: 1.5),
+        ),
       ),
     );
   }
