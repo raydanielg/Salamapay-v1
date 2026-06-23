@@ -120,19 +120,44 @@ class _SplashScreenState extends State<SplashScreen>
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: const Color(0xFFF0FDF4),
       body: Stack(
         children: [
-          // Top cream circle decoration
+          // Background gradient
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFECFDF5), Color(0xFFF0FDF4)],
+              ),
+            ),
+          ),
+
+          // Top-left gold blob
           Positioned(
-            top: -size.height * 0.08,
+            top: -size.width * 0.2,
             left: -size.width * 0.15,
             child: Container(
-              width: size.width * 0.55,
-              height: size.width * 0.55,
-              decoration: const BoxDecoration(
+              width: size.width * 0.65,
+              height: size.width * 0.65,
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFFFF4D6),
+                color: AppColors.gold.withOpacity(0.12),
+              ),
+            ),
+          ),
+
+          // Bottom-right emerald blob
+          Positioned(
+            bottom: size.height * 0.28,
+            right: -size.width * 0.2,
+            child: Container(
+              width: size.width * 0.5,
+              height: size.width * 0.5,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.emeraldPrimary.withOpacity(0.07),
               ),
             ),
           ),
@@ -145,11 +170,26 @@ class _SplashScreenState extends State<SplashScreen>
                 opacity: _logoOpacity.value,
                 child: Transform.scale(
                   scale: _logoScale.value,
-                  child: Image.asset(
-                    'assets/images/salamapaylogo.png',
-                    width: 220,
-                    height: 120,
-                    fit: BoxFit.contain,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/images/salamapaylogo.png',
+                        width: 240,
+                        height: 130,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Lipa kwa Urahisi',
+                        style: GoogleFonts.nunito(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.emeraldPrimary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
