@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
 import '../main_screen.dart';
+import 'login_screen.dart' show _AuthField, _ErrorBanner, _PrimaryButton;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
