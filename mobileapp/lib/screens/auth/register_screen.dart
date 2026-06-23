@@ -4,9 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/api_service.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/salamapay_logo.dart';
-import '../../widgets/gradient_button.dart';
-import '../../widgets/custom_text_field.dart';
 import '../main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
