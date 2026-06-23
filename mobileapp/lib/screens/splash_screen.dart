@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_theme.dart';
-import '../widgets/salamapay_logo.dart';
 import '../services/api_service.dart';
 import 'onboarding_screen.dart';
 import 'main_screen.dart';
@@ -146,7 +145,12 @@ class _SplashScreenState extends State<SplashScreen>
                 opacity: _logoOpacity.value,
                 child: Transform.scale(
                   scale: _logoScale.value,
-                  child: const SalamaPayLogo(size: 1.3),
+                  child: Image.asset(
+                    'assets/images/salamapaylogo.png',
+                    width: 220,
+                    height: 120,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
