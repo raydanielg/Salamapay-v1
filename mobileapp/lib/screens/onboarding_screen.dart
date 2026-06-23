@@ -2,9 +2,78 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../theme/app_theme.dart';
-import 'home_screen.dart';
+import 'auth/login_screen.dart';
+
+// ─── Data Model ───────────────────────────────────────────────────────────────
+
+class _Slide {
+  final String imageUrl;
+  final String badge;
+  final String title;
+  final String subtitle;
+  final Color circleColor;
+  final Color badgeColor;
+  final Color badgeBg;
+  final List<String> features;
+
+  const _Slide({
+    required this.imageUrl,
+    required this.badge,
+    required this.title,
+    required this.subtitle,
+    required this.circleColor,
+    required this.badgeColor,
+    required this.badgeBg,
+    required this.features,
+  });
+}
+
+const List<_Slide> _slides = [
+  _Slide(
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2489/2489756.png',
+    badge: 'M-Pesa · Tigo · Airtel',
+    title: 'Lipa kwa Urahisi',
+    subtitle: 'Tuma na pokea malipo kwa sekunde moja kutoka kwa wateja wako bila msongo.',
+    circleColor: Color(0xFFD1FAE5),
+    badgeColor: Color(0xFF065F46),
+    badgeBg: Color(0xFFECFDF5),
+    features: ['M-Pesa & Tigo Pesa', 'Malipo ya Haraka', 'Bila Ada ya Ziada'],
+  ),
+  _Slide(
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2784/2784461.png',
+    badge: 'Ripoti za Wakati Halisi',
+    title: 'Fuatilia Mauzo Yako',
+    subtitle: 'Angalia mauzo, mapato, na takwimu za biashara yako wakati wowote unapotaka.',
+    circleColor: Color(0xFFFFF8E1),
+    badgeColor: Color(0xFF92400E),
+    badgeBg: Color(0xFFFFFBEB),
+    features: ['Grafu za Mauzo', 'Ripoti za Kila Siku', 'Uchambuzi wa Data'],
+  ),
+  _Slide(
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/3388/3388834.png',
+    badge: 'PDF · WhatsApp · Email',
+    title: 'Tuma Ankara Haraka',
+    subtitle: 'Tengeneza ankara za kitaalamu kwa dakika moja na zitume moja kwa moja kwa wateja.',
+    circleColor: Color(0xFFEFF6FF),
+    badgeColor: Color(0xFF1E40AF),
+    badgeBg: Color(0xFFDBEAFE),
+    features: ['Ankara za PDF', 'Tuma WhatsApp', 'Fuatilia Malipo'],
+  ),
+  _Slide(
+    imageUrl: 'https://cdn-icons-png.flaticon.com/512/2092/2092663.png',
+    badge: 'Usalama wa Hali ya Juu',
+    title: 'Biashara Salama Daima',
+    subtitle: 'Data yako na pesa ya biashara yako vinalindwa kwa teknolojia ya hali ya juu.',
+    circleColor: Color(0xFFF5F3FF),
+    badgeColor: Color(0xFF5B21B6),
+    badgeBg: Color(0xFFEDE9FE),
+    features: ['Enkripsheni 256-bit', 'Akaunti Salama', 'Msaada 24/7'],
+  ),
+];
+
+// ─── Main Screen ──────────────────────────────────────────────────────────────
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -13,451 +82,570 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen>
-    with TickerProviderStateMixin {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
-
-  final List<_OnboardingPage> _pages = [
-    _OnboardingPage(
-      title: 'Malipo Salama',
-      subtitle: 'Lipa na Upokee kwa Urahisi',
-      description:
-          'Tuma na pokea malipo yako kwa urahisi na usalama wa hali ya juu. SalamaPay inahifadhi pesa yako kila wakati.',
-      gradient: [Color(0xFF024938), Color(0xFF035E48)],
-      iconData: Icons.security_rounded,
-      accentColor: AppColors.gold,
-      decorationColor: Color(0xFF035E48),
-      features: ['M-Pesa & Tigo Pesa', 'Malipo ya Haraka', 'Salama 100%'],
-    ),
-    _OnboardingPage(
-      title: 'Biashara Rahisi',
-      subtitle: 'Zana za Biashara Yako',
-      description:
-          'Simamia biashara yako kwa urahisi. Tengeneza ankara, angalia ripoti, na simamia bidhaa zako zote mahali pamoja.',
-      gradient: [Color(0xFF1a237e), Color(0xFF283593)],
-      iconData: Icons.store_rounded,
-      accentColor: Color(0xFFFFD54F),
-      decorationColor: Color(0xFF283593),
-      features: ['Ankara za Haraka', 'Ripoti za Biashara', 'Simamia Bidhaa'],
-    ),
-    _OnboardingPage(
-      title: 'Haraka & Rahisi',
-      subtitle: 'Anza Leo, Bila Msongo',
-      description:
-          'Jiunge na maelfu ya wafanyabiashara wanaotumia SalamaPay kila siku. Anza bure, kukua pamoja nasi.',
-      gradient: [Color(0xFF4a148c), Color(0xFF6a1b9a)],
-      iconData: Icons.rocket_launch_rounded,
-      accentColor: Color(0xFFFF80AB),
-      decorationColor: Color(0xFF6a1b9a),
-      features: ['Bure Kujisajili', 'Msaada 24/7', 'Anza Haraka'],
-    ),
-  ];
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _ctrl = PageController();
+  int _current = 0;
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
     ));
-    _fadeController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
-    );
-    _fadeController.forward();
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
-    _fadeController.dispose();
+    _ctrl.dispose();
     super.dispose();
   }
 
-  Future<void> _completeOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_done', true);
-    if (!mounted) return;
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const HomeScreen(),
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (_, anim, __, child) => SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(1.0, 0.0),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  void _nextPage() {
-    if (_currentPage < _pages.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOutCubic,
-      );
+  void _next() {
+    if (_current < _slides.length - 1) {
+      _ctrl.nextPage(
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeInOut);
     } else {
-      _completeOnboarding();
+      _showSetupComplete();
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            // Pages
-            PageView.builder(
-              controller: _pageController,
-              itemCount: _pages.length,
-              onPageChanged: (i) => setState(() => _currentPage = i),
-              itemBuilder: (_, i) => _OnboardingPageView(page: _pages[i]),
-            ),
-
-            // Skip button
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 16,
-              right: 20,
-              child: AnimatedOpacity(
-                opacity: _currentPage < _pages.length - 1 ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 300),
-                child: GestureDetector(
-                  onTap: _completeOnboarding,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: Colors.white.withOpacity(0.4), width: 1),
-                    ),
-                    child: Text(
-                      'Ruka',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Bottom controls
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.fromLTRB(
-                    28, 20, 28, MediaQuery.of(context).padding.bottom + 28),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Page indicator dots
-                    SmoothPageIndicator(
-                      controller: _pageController,
-                      count: _pages.length,
-                      effect: ExpandingDotsEffect(
-                        activeDotColor: AppColors.gold,
-                        dotColor: Colors.white.withOpacity(0.4),
-                        dotHeight: 8,
-                        dotWidth: 8,
-                        expansionFactor: 3.5,
-                        spacing: 6,
-                      ),
-                    ),
-
-                    // Next / Get Started button
-                    GestureDetector(
-                      onTap: _nextPage,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        height: 56,
-                        width: _currentPage == _pages.length - 1 ? 180 : 56,
-                        decoration: BoxDecoration(
-                          color: AppColors.gold,
-                          borderRadius: BorderRadius.circular(28),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.gold.withOpacity(0.4),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: _currentPage == _pages.length - 1
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Anza Sasa',
-                                      style: GoogleFonts.nunito(
-                                        color: AppColors.emeraldDark,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.arrow_forward_rounded,
-                                      color: AppColors.emeraldDark,
-                                      size: 20,
-                                    ),
-                                  ],
-                                )
-                              : const Icon(
-                                  Icons.arrow_forward_rounded,
-                                  color: AppColors.emeraldDark,
-                                  size: 24,
-                                ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+  void _skip() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        title: Text('Ruka Mwongozo?',
+            style: GoogleFonts.nunito(
+                fontSize: 17,
+                fontWeight: FontWeight.w900,
+                color: AppColors.grey900)),
+        content: Text(
+          'Unaweza kuangalia mwongozo tena kutoka kwenye mipangilio. Je, unataka kuruka?',
+          style: GoogleFonts.nunito(
+              fontSize: 13, color: AppColors.grey700, height: 1.5),
         ),
-      ),
-    );
-  }
-}
-
-class _OnboardingPage {
-  final String title;
-  final String subtitle;
-  final String description;
-  final List<Color> gradient;
-  final IconData iconData;
-  final Color accentColor;
-  final Color decorationColor;
-  final List<String> features;
-
-  const _OnboardingPage({
-    required this.title,
-    required this.subtitle,
-    required this.description,
-    required this.gradient,
-    required this.iconData,
-    required this.accentColor,
-    required this.decorationColor,
-    required this.features,
-  });
-}
-
-class _OnboardingPageView extends StatelessWidget {
-  final _OnboardingPage page;
-
-  const _OnboardingPageView({required this.page});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: page.gradient,
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Background decorative circles
-          Positioned(
-            top: -size.width * 0.3,
-            right: -size.width * 0.2,
-            child: Container(
-              width: size.width * 0.75,
-              height: size.width * 0.75,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
-              ),
-            ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Ghairi',
+                style: GoogleFonts.nunito(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.grey700)),
           ),
-          Positioned(
-            bottom: size.height * 0.12,
-            left: -size.width * 0.25,
-            child: Container(
-              width: size.width * 0.6,
-              height: size.width * 0.6,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.04),
-              ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showSetupComplete();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.emeraldPrimary,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
             ),
-          ),
-
-          // Main content
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: size.height * 0.06),
-
-                  // Illustration card
-                  Center(
-                    child: Container(
-                      width: size.width * 0.72,
-                      height: size.width * 0.72,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(36),
-                        color: Colors.white.withOpacity(0.1),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.15),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Inner glow
-                          Container(
-                            width: size.width * 0.45,
-                            height: size.width * 0.45,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: page.accentColor.withOpacity(0.15),
-                            ),
-                          ),
-                          // Icon
-                          Icon(
-                            page.iconData,
-                            size: size.width * 0.25,
-                            color: page.accentColor,
-                          ),
-                          // Floating chips
-                          ..._buildFloatingChips(size),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: size.height * 0.05),
-
-                  // Title
-                  Text(
-                    page.title,
-                    style: GoogleFonts.nunito(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    page.subtitle,
-                    style: GoogleFonts.nunito(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: page.accentColor,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    page.description,
-                    style: GoogleFonts.nunito(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white.withOpacity(0.75),
-                      height: 1.6,
-                    ),
-                  ),
-
-                  SizedBox(height: size.height * 0.04),
-
-                  // Feature chips
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: page.features
-                        .map((f) => _FeatureChip(label: f, color: page.accentColor))
-                        .toList(),
-                  ),
-                ],
-              ),
-            ),
+            child: Text('Ruka',
+                style: GoogleFonts.nunito(
+                    color: Colors.white, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _buildFloatingChips(Size size) {
-    final positions = [
-      Offset(size.width * 0.05, size.width * 0.08),
-      Offset(size.width * 0.38, size.width * 0.02),
-      Offset(size.width * 0.05, size.width * 0.44),
-    ];
-    final icons = [Icons.check_circle_outline, Icons.bolt_rounded, Icons.star_rounded];
+  void _showSetupComplete() {
+    showModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _SetupCompleteSheet(
+        onDone: _finish,
+      ),
+    );
+  }
 
-    return List.generate(3, (i) {
-      return Positioned(
-        left: positions[i].dx,
-        top: positions[i].dy,
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.18),
-            borderRadius: BorderRadius.circular(12),
+  Future<void> _finish() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('onboarding_done', true);
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => const LoginScreen(),
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (_, anim, __, child) =>
+            FadeTransition(opacity: anim, child: child),
+      ),
+      (r) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: SafeArea(
+        child: Column(children: [
+          // ── Header: logo + skip ──
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset('assets/images/salamapaylogo.png',
+                      width: 44, height: 44, fit: BoxFit.contain),
+                ),
+                const SizedBox(width: 10),
+                Text('SalamaPay',
+                    style: GoogleFonts.nunito(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.emeraldDark)),
+                const Spacer(),
+                if (_current < _slides.length - 1)
+                  GestureDetector(
+                    onTap: _skip,
+                    child: Text('Ruka',
+                        style: GoogleFonts.nunito(
+                            fontSize: 14,
+                            color: AppColors.grey400,
+                            fontWeight: FontWeight.w600)),
+                  ),
+              ],
+            ),
           ),
-          child: Icon(icons[i], color: page.accentColor, size: 18),
-        ),
-      );
-    });
+
+          // ── Slides ──
+          Expanded(
+            child: PageView.builder(
+              controller: _ctrl,
+              itemCount: _slides.length,
+              onPageChanged: (i) => setState(() => _current = i),
+              itemBuilder: (_, i) => _SlidePage(slide: _slides[i]),
+            ),
+          ),
+
+          // ── Bottom: dots + buttons ──
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            child: Column(
+              children: [
+                // Animated dots (xerin style)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _slides.length,
+                    (i) => AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: _current == i ? 28 : 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: _current == i
+                            ? AppColors.emeraldPrimary
+                            : AppColors.grey200,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Skip + Next row (xerin style)
+                Row(
+                  children: [
+                    if (_current < _slides.length - 1)
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: _skip,
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(
+                                color: AppColors.grey200),
+                            foregroundColor: AppColors.grey700,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14)),
+                          ),
+                          child: Text('Ruka',
+                              style: GoogleFonts.nunito(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                    if (_current < _slides.length - 1)
+                      const SizedBox(width: 16),
+                    Expanded(
+                      flex: _current < _slides.length - 1 ? 2 : 1,
+                      child: GestureDetector(
+                        onTap: _next,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(colors: [
+                              AppColors.gold,
+                              AppColors.goldDark,
+                            ]),
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.goldDark
+                                    .withOpacity(0.35),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              _current == _slides.length - 1
+                                  ? 'Anza Sasa'
+                                  : 'Endelea',
+                              style: GoogleFonts.nunito(
+                                color: AppColors.emeraldDark,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }
+
+// ─── Slide Page ───────────────────────────────────────────────────────────────
+
+class _SlidePage extends StatelessWidget {
+  final _Slide slide;
+  const _SlidePage({required this.slide});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          const SizedBox(height: 16),
+
+          // ── Illustration area ──
+          Expanded(
+            child: Center(
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  color: slide.circleColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(40),
+                  child: CachedNetworkImage(
+                    imageUrl: slide.imageUrl,
+                    fit: BoxFit.contain,
+                    placeholder: (_, __) => const Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.emeraldPrimary,
+                      ),
+                    ),
+                    errorWidget: (_, __, ___) => Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 80,
+                      color: AppColors.grey400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 28),
+
+          // ── Badge (like xerin) ──
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: slide.badgeBg,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: slide.badgeColor.withOpacity(0.25)),
+            ),
+            child: Text(
+              slide.badge,
+              style: GoogleFonts.nunito(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: slide.badgeColor,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── Title ──
+          Text(
+            slide.title,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+              fontSize: 26,
+              fontWeight: FontWeight.w900,
+              color: AppColors.grey900,
+              height: 1.2,
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // ── Subtitle ──
+          Text(
+            slide.subtitle,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+              fontSize: 14,
+              color: AppColors.grey700,
+              height: 1.6,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ── Feature chips ──
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 8,
+            children: slide.features
+                .map((f) => _FeatureChip(label: f, color: slide.badgeColor, bg: slide.badgeBg))
+                .toList(),
+          ),
+
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Feature Chip ─────────────────────────────────────────────────────────────
 
 class _FeatureChip extends StatelessWidget {
   final String label;
   final Color color;
-
-  const _FeatureChip({required this.label, required this.color});
+  final Color bg;
+  const _FeatureChip(
+      {required this.label, required this.color, required this.bg});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
+        color: bg,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check_circle_rounded, color: color, size: 14),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: GoogleFonts.nunito(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
+          Icon(Icons.check_circle_rounded, color: color, size: 13),
+          const SizedBox(width: 5),
+          Text(label,
+              style: GoogleFonts.nunito(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: color)),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Setup Complete Bottom Sheet ──────────────────────────────────────────────
+
+class _SetupCompleteSheet extends StatefulWidget {
+  final VoidCallback onDone;
+  const _SetupCompleteSheet({required this.onDone});
+
+  @override
+  State<_SetupCompleteSheet> createState() => _SetupCompleteSheetState();
+}
+
+class _SetupCompleteSheetState extends State<_SetupCompleteSheet> {
+  double _progress = 0;
+  bool _done = false;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 60), (t) {
+      if (!mounted) { t.cancel(); return; }
+      setState(() => _progress += 0.01);
+      if (_progress >= 1.0) {
+        t.cancel();
+        setState(() { _progress = 1.0; _done = true; });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pct = (_progress * 100).toInt();
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      padding: const EdgeInsets.fromLTRB(32, 28, 32, 48),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Handle
+          Container(
+            width: 40, height: 4,
+            margin: const EdgeInsets.only(bottom: 24),
+            decoration: BoxDecoration(
+              color: AppColors.grey200,
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
+
+          // Logo
+          Image.asset('assets/images/salamapaylogo.png',
+              width: 80, height: 48, fit: BoxFit.contain),
+
+          const SizedBox(height: 24),
+
+          // Spinning / check icon
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 400),
+            child: _done
+                ? Container(
+                    key: const ValueKey('done'),
+                    width: 64,
+                    height: 64,
+                    decoration: const BoxDecoration(
+                      color: AppColors.successBg,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.check_rounded,
+                        color: AppColors.success, size: 34),
+                  )
+                : SizedBox(
+                    key: const ValueKey('loading'),
+                    width: 64,
+                    height: 64,
+                    child: CircularProgressIndicator(
+                      value: _progress,
+                      strokeWidth: 5,
+                      backgroundColor: AppColors.grey200,
+                      valueColor: const AlwaysStoppedAnimation(
+                          AppColors.emeraldPrimary),
+                    ),
+                  ),
+          ),
+
+          const SizedBox(height: 20),
+
+          Text(
+            _done ? 'Umefanikiwa!' : 'Inaandaa SalamaPay...',
+            style: GoogleFonts.nunito(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              color: _done ? AppColors.success : AppColors.grey900,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            '$pct%',
+            style: GoogleFonts.nunito(
+              fontSize: 42,
+              fontWeight: FontWeight.w900,
+              color: _done ? AppColors.success : AppColors.emeraldPrimary,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: LinearProgressIndicator(
+              value: _progress,
+              minHeight: 10,
+              backgroundColor: AppColors.grey200,
+              valueColor: AlwaysStoppedAnimation(
+                _done ? AppColors.success : AppColors.emeraldPrimary,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Text(
+            _done
+                ? 'Umefanikiwa! Twende kwenye akaunti yako.'
+                : 'Tunaandaa mazingira yako ya biashara...',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.nunito(
+                fontSize: 13,
+                color: AppColors.grey700,
+                height: 1.5),
+          ),
+
+          const SizedBox(height: 24),
+
+          if (_done)
+            GestureDetector(
+              onTap: widget.onDone,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.gold, AppColors.goldDark],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.goldDark.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    )
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    'Anza Sasa →',
+                    style: GoogleFonts.nunito(
+                      color: AppColors.emeraldDark,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
