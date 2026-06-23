@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiException implements Exception {
@@ -12,9 +13,17 @@ class ApiException implements Exception {
   String toString() => message;
 }
 
+http.Client _buildClient() {
+  final ctx = SecurityContext.defaultContext;
+  final ioClient = HttpClient(context: ctx)
+    ..badCertificateCallback = (cert, host, port) => true;
+  return IOClient(ioClient);
+}
+
 class ApiService {
   static const _storage = FlutterSecureStorage();
   static const String _tokenKey = 'auth_token';
+  static final http.Client _client = _buildClient();
 
   static Future<String?> getToken() async {
     return await _storage.read(key: _tokenKey);
@@ -53,66 +62,74 @@ class ApiService {
       if (params != null && params.isNotEmpty) {
         uri = uri.replace(queryParameters: params);
       }
-      final response = await http
+      final response = await _client
           .get(uri, headers: await _headers())
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 20));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('No internet connection');
+      throw ApiException('Hakuna muunganisho wa mtandao');
+    } on HandshakeException {
+      throw ApiException('SSL error: Tatizo la cheti cha seva');
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Request failed: $e');
+      throw ApiException('Ombi limeshindwa: $e');
     }
   }
 
   static Future<dynamic> post(String url, Map<String, dynamic> body,
       {bool auth = true}) async {
     try {
-      final response = await http
+      final response = await _client
           .post(
             Uri.parse(url),
             headers: await _headers(auth: auth),
             body: jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 20));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('No internet connection');
+      throw ApiException('Hakuna muunganisho wa mtandao');
+    } on HandshakeException {
+      throw ApiException('SSL error: Tatizo la cheti cha seva');
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Request failed: $e');
+      throw ApiException('Ombi limeshindwa: $e');
     }
   }
 
   static Future<dynamic> put(String url, Map<String, dynamic> body) async {
     try {
-      final response = await http
+      final response = await _client
           .put(
             Uri.parse(url),
             headers: await _headers(),
             body: jsonEncode(body),
           )
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 20));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('No internet connection');
+      throw ApiException('Hakuna muunganisho wa mtandao');
+    } on HandshakeException {
+      throw ApiException('SSL error: Tatizo la cheti cha seva');
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Request failed: $e');
+      throw ApiException('Ombi limeshindwa: $e');
     }
   }
 
   static Future<dynamic> delete(String url) async {
     try {
-      final response = await http
+      final response = await _client
           .delete(Uri.parse(url), headers: await _headers())
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 20));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('No internet connection');
+      throw ApiException('Hakuna muunganisho wa mtandao');
+    } on HandshakeException {
+      throw ApiException('SSL error: Tatizo la cheti cha seva');
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Request failed: $e');
+      throw ApiException('Ombi limeshindwa: $e');
     }
   }
 
